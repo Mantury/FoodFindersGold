@@ -1,8 +1,12 @@
 package com.example.christoph.ur.mi.de.foodfinders;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -14,6 +18,7 @@ public class starting_screen_activity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("test");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_restaurantmaps);
