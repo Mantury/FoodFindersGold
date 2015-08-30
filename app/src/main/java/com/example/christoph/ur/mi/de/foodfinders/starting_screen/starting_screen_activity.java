@@ -21,9 +21,26 @@ public class starting_screen_activity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("test");
         super.onCreate(savedInstanceState);
+<<<<<<< Updated upstream
        setContentView(R.layout.starting_screen_layout);
-
+=======
+        setContentView(R.layout.starting_screen_layout);
         setUpMapIfNeeded();
+        setUpMarker();
+        Log.d("test");
+    }
+
+    private void setUpMarker() {
+        //Setzt den PersonenMarker
+        String locService = Context.LOCATION_SERVICE;
+        LocationManager locationManager= (LocationManager)getSystemService(locService);
+        String provider = LocationManager.GPS_PROVIDER;
+        Location location = locationManager.getLastKnownLocation(provider);
+        Log.d(String.valueOf(location));
+>>>>>>> Stashed changes
+
+        //lat/log  von location des handys....
+        mMap.addMarker(new MarkerOptions().position(new LatLng(47, 13)).title("You are here!!!"));
     }
 
     @Override

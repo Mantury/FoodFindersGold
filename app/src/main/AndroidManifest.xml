@@ -28,7 +28,7 @@
 
 
         <activity
-            android:name=".starting_screen.starting_screen_activity"
+            android:name="starting_screen_activity"
             android:label="@string/title_activity_restaurantmaps" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
