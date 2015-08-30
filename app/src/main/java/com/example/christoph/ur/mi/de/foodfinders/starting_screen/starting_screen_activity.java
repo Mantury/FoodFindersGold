@@ -1,4 +1,4 @@
-package com.example.christoph.ur.mi.de.foodfinders;
+package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
