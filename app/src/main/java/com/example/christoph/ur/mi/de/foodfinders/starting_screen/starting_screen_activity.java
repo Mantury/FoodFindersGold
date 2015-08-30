@@ -36,7 +36,6 @@ public class starting_screen_activity extends FragmentActivity {
         Location location = locationManager.getLastKnownLocation(provider);
         Log.d(String.valueOf(location));
 
-
         //lat/log  von location des handys....
         mMap.addMarker(new MarkerOptions().position(new LatLng(47, 13)).title("You are here!!!"));
     }
