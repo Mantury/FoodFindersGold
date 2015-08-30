@@ -1,11 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders;
 
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -20,22 +16,7 @@ public class restaurantmaps extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurantmaps);
-        com.example.christoph.ur.mi.de.foodfinders.log.Log.d("App startet");
-
         setUpMapIfNeeded();
-        setUpMarker();
-    }
-
-    private void setUpMarker() {
-        //Setzt den PersonenMarker
-        String locService = Context.LOCATION_SERVICE;
-        LocationManager locationManager= (LocationManager)getSystemService(locService);
-        String provider = LocationManager.NETWORK_PROVIDER;
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        com.example.christoph.ur.mi.de.foodfinders.log.Log.d(String.valueOf(location));
-        //lat/log  von location des handys....
-        mMap.addMarker(new MarkerOptions().position(new LatLng(47, 13)).title("You are here!!!"));
     }
 
     @Override
