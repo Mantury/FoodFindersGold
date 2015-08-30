@@ -8,14 +8,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class restaurantmaps extends FragmentActivity {
+public class starting_screen_activity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_restaurantmaps);
+
+
+
+       setContentView(R.layout.starting_screen_layout);
+
         setUpMapIfNeeded();
     }
 
