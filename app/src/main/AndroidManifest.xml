@@ -23,7 +23,9 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBZELi4vKefXVU8I-TwFNOkgdA5wd5Q-mM" />
+            android:value="AIzaSyBZELi4vKefXVU8I-TwFNOkgdA5wd5Q-mM"
+            />
+
 
         <activity
             android:name=".restaurantmaps"
