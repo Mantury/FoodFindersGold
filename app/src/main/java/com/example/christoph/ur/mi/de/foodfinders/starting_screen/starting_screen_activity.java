@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -16,29 +18,42 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class starting_screen_activity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private double lat;
+    private double lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("test");
         super.onCreate(savedInstanceState);
-
-       setContentView(R.layout.starting_screen_layout);
+        setContentView(R.layout.starting_screen_layout);
         setUpMapIfNeeded();
         setUpMarker();
-        Log.d("test");
     }
 
     private void setUpMarker() {
         //Setzt den PersonenMarker
         String locService = Context.LOCATION_SERVICE;
         LocationManager locationManager= (LocationManager)getSystemService(locService);
-        String provider = LocationManager.GPS_PROVIDER;
+        String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
         Log.d(String.valueOf(location));
 
-        //lat/log  von location des handys....
-        mMap.addMarker(new MarkerOptions().position(new LatLng(47, 13)).title("You are here!!!"));
+        String locationData;
+        if (location != null) {
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+            Log.d("Länge: " + lat + "\n" + "Breite: " + lng );
+            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("You are here!!!"));
+            CameraUpdate update= CameraUpdateFactory.newLatLng(new LatLng(lat, lng));
+            mMap.moveCamera(update);
+        }
+        else {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("You are here!!!"));
+        }
+
     }
+
+
 
     @Override
     protected void onResume() {
