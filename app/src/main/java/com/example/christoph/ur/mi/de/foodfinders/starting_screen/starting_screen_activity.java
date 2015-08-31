@@ -20,6 +20,7 @@ public class starting_screen_activity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private double lat;
     private double lng;
+    private download download;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,8 @@ public class starting_screen_activity extends FragmentActivity {
         setContentView(R.layout.starting_screen_layout);
         setUpMapIfNeeded();
         setUpMarker();
+        download= new download();
+        download.getDataForWeekday("https://maps.googleapis.com/maps/api/place/radarsearch/json?location=48.9984593454694,12.097473442554474&radius=5000&types=restaurants&key=AIzaSyBZELi4vKefXVU8I-TwFNOkgdA5wd5Q-mM");
     }
 
     private void setUpMarker() {
