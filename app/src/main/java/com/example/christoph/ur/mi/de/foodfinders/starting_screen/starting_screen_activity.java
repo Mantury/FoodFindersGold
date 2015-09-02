@@ -55,7 +55,7 @@ public class starting_screen_activity extends FragmentActivity {
             PlacePicker.IntentBuilder intentBuilder=new PlacePicker.IntentBuilder();
             Intent intent =intentBuilder.build(this);
         //null pointer akt ort auswählen  LatLngBounds posforPlace= new LatLngBounds(postion,postion);//????
-          //  intentBuilder.setLatLngBounds(posforPlace);
+        //  intentBuilder.setLatLngBounds(posforPlace);
             startActivityForResult(intent, REQUEST_PLACE_PICKER);
             Log.d("Builder set up");
 
@@ -73,7 +73,9 @@ public class starting_screen_activity extends FragmentActivity {
 
 
     protected void onActivityResult(int requestCode, int resultCode,Intent data){
+
         Log.d("Builder Activityfor result"+requestCode+resultCode+"   "+Activity.RESULT_OK);
+
         if(requestCode==REQUEST_PLACE_PICKER&&resultCode== Activity.RESULT_OK) {
             //ort wird vom Benutzer ausgewählt.
 
@@ -88,7 +90,6 @@ public class starting_screen_activity extends FragmentActivity {
 
             if (attributions == null) {
                 attributions = "";
-
             }
 
             //tvName.setText(name);
