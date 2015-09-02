@@ -15,7 +15,9 @@
         android:inputType="text" />
 
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
         tools:ignore="MissingPrefix"
     xmlns:map="http://schemas.android.com/apk/res-auto"
