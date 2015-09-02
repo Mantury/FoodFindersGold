@@ -1,108 +1,62 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
-import android.animation.AnimatorSet;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-
-import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.List;
-import java.util.Locale;
-
 
 public class starting_screen_activity extends FragmentActivity {
 
-
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private LatLng postion;
-    private int REQUEST_PLACE_PICKER = 79;
-
+    private double lat;
+    private double lng;
+    private GoogleApiClient mGoogleApiClient;
+    private download download;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("test");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
+
+
+
+
         setUpMapIfNeeded();
         setUpMarker();
-        tryBuildPicker();
+
+
+
+
+        download= new download();
+        download.getDataForWeekday("https://maps.googleapis.com/maps/api/place/radarsearch/json?location=48.9984593454694,12.097473442554474&radius=5000&types=restaurants&key=AIzaSyBZELi4vKefXVU8I-TwFNOkgdA5wd5Q-mM");
     }
 
-    private void tryBuildPicker() {
-        try {
-            PlacePicker.IntentBuilder intentBuilder=new PlacePicker.IntentBuilder();
-            Intent intent =intentBuilder.build(this);
-        //null pointer akt ort auswählen  LatLngBounds posforPlace= new LatLngBounds(postion,postion);//????
-          //  intentBuilder.setLatLngBounds(posforPlace);
-            startActivityForResult(intent, REQUEST_PLACE_PICKER);
-            Log.d("Builder set up");
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
 
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-            Log.d("Builder fail");
-
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-            Log.d("Builder fail");
-
-        }
-
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
 
-    protected void onActivityResult(int requestCode, int resultCode,Intent data){
-        Log.d("Builder Activityfor result"+requestCode+resultCode+"   "+Activity.RESULT_OK);
-        if(requestCode==REQUEST_PLACE_PICKER&&resultCode== Activity.RESULT_OK) {
-            //ort wird vom Benutzer ausgewählt.
-
-            final Place place = PlacePicker.getPlace(data, this);
-            final CharSequence name = place.getName();
-            final CharSequence address = place.getAddress();
-            String attributions = PlacePicker.getAttributions(data);
-
-            Log.d(String.valueOf(name));
-            Log.d("Builder tries to get data");
-            int i = 0;
-
-            if (attributions == null) {
-                attributions = "";
-
-            }
-
-            //tvName.setText(name);
-            //tvAddress.setText(address);
-            //tvAttributions.setText(Html.fromHtml(attributions));
-            Log.d(String.valueOf(place.getLocale()));
-            i++;
-            Log.d("Builder has data" + i);
-        }
-            else{
-                super.onActivityResult(requestCode, resultCode, data);
-            }
-
-    }
 
 
 
@@ -112,18 +66,16 @@ public class starting_screen_activity extends FragmentActivity {
         LocationManager locationManager= (LocationManager)getSystemService(locService);
         String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
-
         Log.d(String.valueOf(location));
 
         String locationData;
-
         if (location != null) {
-            postion= new LatLng(location.getLatitude(), location.getLongitude());
-            Log.d("Länge: " + location.getLatitude() + "\n" + "Breite: " + location.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(postion).title("You are here!!!"));
-            CameraUpdate update= CameraUpdateFactory.newLatLng(postion);
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+            Log.d("Länge: " + lat + "\n" + "Breite: " + lng );
+            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("You are here!!!"));
+            CameraUpdate update= CameraUpdateFactory.newLatLng(new LatLng(lat, lng));
             mMap.moveCamera(update);
-
         }
         else {
             mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("You are here!!!"));
@@ -176,9 +128,4 @@ public class starting_screen_activity extends FragmentActivity {
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
-
-
-
-
-
 }
