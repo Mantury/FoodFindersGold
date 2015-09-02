@@ -1,38 +1,94 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
+import android.animation.AnimatorSet;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class starting_screen_activity extends FragmentActivity {
+import java.util.List;
+import java.util.Locale;
+
+
+public class starting_screen_activity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private double lat;
-    private double lng;
-    private GoogleApiClient mGoogleApiClient;
-    private download download;
+    private LatLng postion;
+    private int REQUEST_PLACE_PICKER = 79;
+    GoogleApiClient mGoogleApiClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("test");
+        Log.d("start");
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
+        setUpMapIfNeeded();
+        setUpMarker();
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .enableAutoManage(this,0,this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        tryBuildPicker();
 
-<<<<<<< HEAD
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
+    }
+
     private void tryBuildPicker() {
+        
+        Log.d(String.valueOf(mGoogleApiClient.isConnected()));
+        mGoogleApiClient.connect();
+        if( mGoogleApiClient == null || !mGoogleApiClient.isConnected()){
+            mGoogleApiClient.connect();
+        }
+        Log.d(String.valueOf(mGoogleApiClient.isConnected()));
+
         try {
             PlacePicker.IntentBuilder intentBuilder=new PlacePicker.IntentBuilder();
             Intent intent =intentBuilder.build(this);
@@ -40,49 +96,52 @@ public class starting_screen_activity extends FragmentActivity {
         //  intentBuilder.setLatLngBounds(posforPlace);
             startActivityForResult(intent, REQUEST_PLACE_PICKER);
             Log.d("Builder set up");
-=======
->>>>>>> origin/master
+
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+            Log.d("Builder fail");
+
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+            Log.d("Builder fail");
+
+        }
+
+    }
 
 
-
-        setUpMapIfNeeded();
-        setUpMarker();
-
-
-<<<<<<< HEAD
     protected void onActivityResult(int requestCode, int resultCode,Intent data){
 
-        Log.d("Builder Activityfor result"+requestCode+resultCode+"   "+Activity.RESULT_OK);
+        Log.d("Builder Activityfor result"+ requestCode+ resultCode+"   "+Activity.RESULT_OK);
 
         if(requestCode==REQUEST_PLACE_PICKER&&resultCode== Activity.RESULT_OK) {
             //ort wird vom Benutzer ausgewählt.
-=======
->>>>>>> origin/master
 
+            final Place place = PlacePicker.getPlace(data, this);
+            final CharSequence name = place.getName();
+            final CharSequence address = place.getAddress();
+            String attributions = PlacePicker.getAttributions(data);
 
-        download= new download();
-        download.getDataForWeekday("https://maps.googleapis.com/maps/api/place/radarsearch/json?location=48.9984593454694,12.097473442554474&radius=5000&types=restaurants&key=AIzaSyBZELi4vKefXVU8I-TwFNOkgdA5wd5Q-mM");
-    }
+            Log.d(String.valueOf(name));
+            Log.d("Builder tries to get data");
+            int i = 0;
 
-<<<<<<< HEAD
             if (attributions == null) {
                 attributions = "";
             }
-=======
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
+
+            //tvName.setText(name);
+            //tvAddress.setText(address);
+            //tvAttributions.setText(Html.fromHtml(attributions));
+            Log.d(String.valueOf(place.getLocale()));
+            i++;
+            Log.d("Builder has data" + i);
+        }
+            else{
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+
     }
-
-    @Override
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
->>>>>>> origin/master
-
-
 
 
 
@@ -92,16 +151,18 @@ public class starting_screen_activity extends FragmentActivity {
         LocationManager locationManager= (LocationManager)getSystemService(locService);
         String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
+
         Log.d(String.valueOf(location));
 
         String locationData;
+
         if (location != null) {
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-            Log.d("Länge: " + lat + "\n" + "Breite: " + lng );
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("You are here!!!"));
-            CameraUpdate update= CameraUpdateFactory.newLatLng(new LatLng(lat, lng));
+            postion= new LatLng(location.getLatitude(), location.getLongitude());
+            Log.d("Länge: " + location.getLatitude() + "\n" + "Breite: " + location.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(postion).title("You are here!!!"));
+            CameraUpdate update= CameraUpdateFactory.newLatLng(postion);
             mMap.moveCamera(update);
+
         }
         else {
             mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("You are here!!!"));
@@ -153,5 +214,21 @@ public class starting_screen_activity extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }
