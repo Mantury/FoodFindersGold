@@ -31,8 +31,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCanRYxlnjkRLv7uBeI7Z5_7BjvCqCwHk0" />
-
+            android:value="AIzaSyCHXK-sYqNoWwJZN6_sFmJDm1nBAVPXYpw" />
 
 
         <activity
@@ -40,13 +39,12 @@
             android:label="@string/title_activity_restaurantmaps" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyCanRYxlnjkRLv7uBeI7Z5_7BjvCqCwHk0"/>
+                android:value="AIzaSyCHXK-sYqNoWwJZN6_sFmJDm1nBAVPXYpw"/>
 
             <meta-data
                 android:name="com.google.android.gms.version"

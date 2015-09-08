@@ -4,12 +4,15 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
@@ -17,9 +20,14 @@ import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
 
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
@@ -29,19 +37,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 import java.util.Locale;
 
 
-public class starting_screen_activity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class starting_screen_activity extends FragmentActivity  {
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LatLng postion;
-    private int REQUEST_PLACE_PICKER = 79;
-    GoogleApiClient mGoogleApiClient;
+    private double lat;
+    private double lng;
+
+
+
+    private download data;
 
 
     @Override
@@ -53,96 +66,13 @@ public class starting_screen_activity extends FragmentActivity implements Google
         setContentView(R.layout.starting_screen_layout);
         setUpMapIfNeeded();
         setUpMarker();
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .enableAutoManage(this,0,this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        tryBuildPicker();
+        data=new download();
+        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=49.010006,12.093229&radius=500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+        Log.d(String.valueOf(lat)+"   "+String.valueOf(lng));
+
+        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+"," +lng+ "&radius=500&types=food&name=cruise&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
 
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(mGoogleApiClient != null)
-            mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-        super.onStop();
-    }
-
-    private void tryBuildPicker() {
-        
-        Log.d(String.valueOf(mGoogleApiClient.isConnected()));
-        mGoogleApiClient.connect();
-        if( mGoogleApiClient == null || !mGoogleApiClient.isConnected()){
-            mGoogleApiClient.connect();
-        }
-        Log.d(String.valueOf(mGoogleApiClient.isConnected()));
-
-        try {
-            PlacePicker.IntentBuilder intentBuilder=new PlacePicker.IntentBuilder();
-            Intent intent =intentBuilder.build(this);
-        //null pointer akt ort auswählen  LatLngBounds posforPlace= new LatLngBounds(postion,postion);//????
-        //  intentBuilder.setLatLngBounds(posforPlace);
-            startActivityForResult(intent, REQUEST_PLACE_PICKER);
-            Log.d("Builder set up");
-
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-            Log.d("Builder fail");
-
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-            Log.d("Builder fail");
-
-        }
-
-    }
-
-
-    protected void onActivityResult(int requestCode, int resultCode,Intent data){
-
-        Log.d("Builder Activityfor result"+ requestCode+ resultCode+"   "+Activity.RESULT_OK);
-
-        if(requestCode==REQUEST_PLACE_PICKER&&resultCode== Activity.RESULT_OK) {
-            //ort wird vom Benutzer ausgewählt.
-
-            final Place place = PlacePicker.getPlace(data, this);
-            final CharSequence name = place.getName();
-            final CharSequence address = place.getAddress();
-            String attributions = PlacePicker.getAttributions(data);
-
-            Log.d(String.valueOf(name));
-            Log.d("Builder tries to get data");
-            int i = 0;
-
-            if (attributions == null) {
-                attributions = "";
-            }
-
-            //tvName.setText(name);
-            //tvAddress.setText(address);
-            //tvAttributions.setText(Html.fromHtml(attributions));
-            Log.d(String.valueOf(place.getLocale()));
-            i++;
-            Log.d("Builder has data" + i);
-        }
-            else{
-                super.onActivityResult(requestCode, resultCode, data);
-            }
-
-    }
-
 
 
     private void setUpMarker() {
@@ -158,13 +88,18 @@ public class starting_screen_activity extends FragmentActivity implements Google
 
         if (location != null) {
             postion= new LatLng(location.getLatitude(), location.getLongitude());
+            lat=location.getLatitude();
+            lng=location.getLongitude();
             Log.d("Länge: " + location.getLatitude() + "\n" + "Breite: " + location.getLongitude());
+            Log.d(String.valueOf(postion));
             mMap.addMarker(new MarkerOptions().position(postion).title("You are here!!!"));
             CameraUpdate update= CameraUpdateFactory.newLatLng(postion);
             mMap.moveCamera(update);
 
         }
         else {
+            lat=48.9984593454694;
+            lng=12.097473442554474;
             mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("You are here!!!"));
         }
 
@@ -172,11 +107,6 @@ public class starting_screen_activity extends FragmentActivity implements Google
 
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUpMapIfNeeded();
-    }
 
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
@@ -216,19 +146,4 @@ public class starting_screen_activity extends FragmentActivity implements Google
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
 }
