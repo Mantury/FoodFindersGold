@@ -40,11 +40,12 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
-public class starting_screen_activity extends FragmentActivity  {
+public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener  {
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -52,6 +53,7 @@ public class starting_screen_activity extends FragmentActivity  {
     private double lat;
     private double lng;
     private download data;
+    private ArrayList<restaurantitemstart> table=new ArrayList<>();
 
 
     @Override
@@ -65,9 +67,10 @@ public class starting_screen_activity extends FragmentActivity  {
         setUpMarker();
         data=new download();
         data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=49.010006,12.093229&radius=500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
-        Log.d(String.valueOf(lat)+"   "+String.valueOf(lng));
-        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&types=food&name=cruise&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+        Log.d(String.valueOf(lat)+","+String.valueOf(lng));
+      //  data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ lat +","+ lng +"&radius=500&types=food&name=cruise&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
 
+        data.setRestaurantDataProviderListener(this);
     }
 
 
@@ -146,4 +149,11 @@ public class starting_screen_activity extends FragmentActivity  {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
+
+    @Override
+    public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
+        Log.d("funktioniert"+restaurants.size());
+
+
+    }
 }

@@ -17,11 +17,18 @@ import java.util.ArrayList;
  */
 public class download{
 
+    private ArrayList<restaurantitemstart> restaurants;
+    private OnRestaurantDataProviderListener onrestaurantDataProviderListener;
+
+    public void setRestaurantDataProviderListener(OnRestaurantDataProviderListener onrestaurantDataProviderListener) {
+        this.onrestaurantDataProviderListener = onrestaurantDataProviderListener;
+    }
 
     public void getlocationdata(String request) {
 
         new DataAsyncTask().execute(request);
         // gets the data in an Arraylist from converter.convertJSONToMensaDishList();
+
     }
 
     private class DataAsyncTask  extends AsyncTask<String, Integer, String> {
@@ -67,7 +74,24 @@ public class download{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            Log.d("result   "+result);
+            JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
+            restaurants = new ArrayList<restaurantitemstart>();
+            restaurants = converter.convertJSONTorestaurantitemstart();
+
+            Log.d(String.valueOf(restaurants.size()));
+            onrestaurantDataProviderListener.onRestaurantDataReceived(restaurants);
+
+            Log.d("alle restaurantitemstartobjecte");
+            Log.d(String.valueOf(restaurants));
 
         }
     }
+
+    public interface OnRestaurantDataProviderListener {
+
+        public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants);
+
+    }
+
 }

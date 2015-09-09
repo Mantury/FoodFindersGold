@@ -2,19 +2,20 @@ package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
 
 public class restaurantitemstart {
+
     private String name;
     private long latitude;
     private long longitude;
-    private int phonenumber;
+    private String  place_id;
     private boolean openednow;
     private String address;
 
 
-    public restaurantitemstart (String name, long latitude, long longitude, int phonenumber, boolean openednow, String address){
+    public restaurantitemstart (String name, long latitude, long longitude, String place_id, boolean openednow, String address){
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.phonenumber = phonenumber;
+        this.place_id = place_id;
         this.openednow = openednow;
         this.address = address;
     }
@@ -27,8 +28,8 @@ public class restaurantitemstart {
         return openednow;
     }
 
-    public int getPhonenumber() {
-        return phonenumber;
+    public String getPhonenumber() {
+        return place_id;
     }
 
     public String getAddress() {
