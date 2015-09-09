@@ -6,10 +6,15 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Suchergebnisse für:"/>
+        android:text="Suchergebnisse für:"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"/>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"
+        android:id="@+id/search_results_arrayList">
+
+    </ListView>
 
 </LinearLayout>

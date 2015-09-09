@@ -1,6 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_dish_cancelbutton"
+            android:layout_width=""
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="0.5"
+            android:background="@color/red"
+            android:text="@string/add_dish_layout_cancelbutton_text" />
+
+        <Button
+            android:id="@+id/add_dish_addbutton"
+            android:layout_width=""
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="0.5"
+            android:background="@color/green"
+            android:text="@string/add_dish_layout_addbutton_text" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/add_dish_photoimage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/add_dish_nameedit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name des Gerichts" />
+
+    <RatingBar
+        android:id="@+id/add_dish_ratingbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vegan?"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"/>
+
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_vegan_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonVeganClicked"
+            android:text="@string/add_dish_layout_radio_yes"
+            />
+
+        <RadioButton
+            android:id="@+id/radio_vegan_noinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonVeganClicked"
+            android:text="@string/add_dish_layout_radio_noinfo" />
+
+        <RadioButton
+            android:id="@+id/radio_vegan_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonVeganClicked"
+            android:text="@string/add_dish_layout_radio_no" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Glutenfrei?"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"/>
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_glutenfree_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonGlutenfreiClicked"
+            android:text="@string/add_dish_layout_radio_yes" />
+
+        <RadioButton
+            android:id="@+id/radio_glutenfree_noinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonGlutenfreiClicked"
+            android:text="@string/add_dish_layout_radio_noinfo" />
+
+        <RadioButton
+            android:id="@+id/radio_glutenfree_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonGlutenfreiClicked"
+            android:text="@string/add_dish_layout_radio_no" />
+    </RadioGroup>
+
+
+    <EditText
+        android:id="@+id/add_dish_comment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/add_dish_layout_Gericht_zum_Kommentar" />
 
 </LinearLayout>
