@@ -51,9 +51,6 @@ public class starting_screen_activity extends FragmentActivity  {
     private LatLng postion;
     private double lat;
     private double lng;
-
-
-
     private download data;
 
 
@@ -69,10 +66,10 @@ public class starting_screen_activity extends FragmentActivity  {
         data=new download();
         data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=49.010006,12.093229&radius=500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
         Log.d(String.valueOf(lat)+"   "+String.valueOf(lng));
-
-        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+"," +lng+ "&radius=500&types=food&name=cruise&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&types=food&name=cruise&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
 
     }
+
 
 
     private void setUpMarker() {
@@ -143,6 +140,9 @@ public class starting_screen_activity extends FragmentActivity  {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
+
+
+
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
