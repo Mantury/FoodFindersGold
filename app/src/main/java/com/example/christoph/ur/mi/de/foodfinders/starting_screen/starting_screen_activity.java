@@ -34,6 +34,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -66,9 +67,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         setUpMapIfNeeded();
         setUpMarker();
         data=new download();
-        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=49.010006,12.093229&radius=500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
-        Log.d(String.valueOf(lat)+","+String.valueOf(lng));
-      //  data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+ lat +","+ lng +"&radius=500&types=food&name=cruise&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
 
         data.setRestaurantDataProviderListener(this);
     }
@@ -143,17 +142,28 @@ public class starting_screen_activity extends FragmentActivity implements downlo
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-
-
-
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
 
     @Override
-    public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
-        Log.d("funktioniert"+restaurants.size());
+    public void onRestaurantDataReceived(final ArrayList<restaurantitemstart> restaurants) {
+        Log.d("funktioniert" + restaurants.size());
 
+        for(int i=0;i<restaurants.size();i++){
+         restaurantitemstart item = restaurants.get(i);
+        postion= new LatLng(item.getLatitude(), item.getLongitude());
+            String name =item.getName();
 
+        mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    Log.d(String.valueOf(marker.getTitle()));
+                }
+            });
+
+        }
     }
 }

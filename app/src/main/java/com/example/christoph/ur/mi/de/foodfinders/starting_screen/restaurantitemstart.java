@@ -4,14 +4,14 @@ package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 public class restaurantitemstart {
 
     private String name;
-    private long latitude;
-    private long longitude;
+    private double latitude;
+    private double longitude;
     private String  place_id;
     private boolean openednow;
     private String address;
 
 
-    public restaurantitemstart (String name, long latitude, long longitude, String place_id, boolean openednow, String address){
+    public restaurantitemstart (String name, double latitude, double longitude, String place_id, boolean openednow, String address){
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -20,15 +20,13 @@ public class restaurantitemstart {
         this.address = address;
     }
 
-    public long getLongitude() {
-        return longitude;
-    }
+
 
     public boolean isOpenednow() {
         return openednow;
     }
 
-    public String getPhonenumber() {
+    public String getPlace_id() {
         return place_id;
     }
 
@@ -41,7 +39,11 @@ public class restaurantitemstart {
         return name;
     }
 
-    public long getLatitude() {
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
         return latitude;
     }
 }

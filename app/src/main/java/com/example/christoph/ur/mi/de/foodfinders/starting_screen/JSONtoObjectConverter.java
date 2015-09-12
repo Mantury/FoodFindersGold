@@ -49,8 +49,8 @@ public class JSONtoObjectConverter {
 
                 JSONObject locationobject = jsonObject.getJSONObject("geometry");
                 JSONObject latlngobject = locationobject.getJSONObject("location");
-                long lng = latlngobject.getLong(LAT);
-                long lat = latlngobject.getLong(LNG);
+                double lng = latlngobject.getDouble(LNG);
+                double lat = latlngobject.getDouble(LAT);
 
 
 
