@@ -3,6 +3,7 @@ package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 import android.os.AsyncTask;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurantdetailitem;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,18 +20,31 @@ public class download{
 
     private ArrayList<restaurantitemstart> restaurants;
     private OnRestaurantDataProviderListener onrestaurantDataProviderListener;
+    private OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener;
 
+    //for Starting_screen_activity
     public void setRestaurantDataProviderListener(OnRestaurantDataProviderListener onrestaurantDataProviderListener) {
         this.onrestaurantDataProviderListener = onrestaurantDataProviderListener;
     }
 
-    public void getlocationdata(String request) {
+    //for restaurant_detail_activity
+    public void setOnRestaurantDetailDataProviderListener(OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener){
+        this.onRestaurantDetailDataProviderListener=onRestaurantDetailDataProviderListener;
+    }
 
+
+    //for Starting_screen_activity
+    public void getlocationdata(String request) {
         new DataAsyncTask().execute(request);
         // gets the data in an Arraylist from converter.convertJSONToMensaDishList();
 
     }
 
+    public void getrestaurantdata(String request){
+        new  RestaurantAsyncTask().execute(request);
+    }
+
+    ////for Starting_screen_activity
     private class DataAsyncTask  extends AsyncTask<String, Integer, String> {
 
 
@@ -88,10 +102,26 @@ public class download{
         }
     }
 
+    //for restaurant_detail_activity
+    private class RestaurantAsyncTask extends AsyncTask<String, Integer,String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result){}
+    }
+
+
     public interface OnRestaurantDataProviderListener {
 
         public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants);
 
+    }
+
+    public interface OnRestaurantDetailDataProviderListener{
+        public void onRestautantDetailDataReceived(restaurantdetailitem item);
     }
 
 }

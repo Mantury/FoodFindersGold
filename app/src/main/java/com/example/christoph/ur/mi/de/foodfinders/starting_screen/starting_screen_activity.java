@@ -17,6 +17,7 @@ import android.view.View;
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 
+import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -68,7 +69,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         setUpMarker();
         data=new download();
         data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
-
         data.setRestaurantDataProviderListener(this);
     }
 
@@ -89,7 +89,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             postion= new LatLng(location.getLatitude(), location.getLongitude());
             lat=location.getLatitude();
             lng=location.getLongitude();
-            Log.d("Länge: " + location.getLatitude() + "\n" + "Breite: " + location.getLongitude());
             Log.d(String.valueOf(postion));
             mMap.addMarker(new MarkerOptions().position(postion).title("You are here!!!"));
             CameraUpdate update= CameraUpdateFactory.newLatLng(postion);
@@ -130,40 +129,51 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
-                setUpMap();
+
             }
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
-    private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-    }
-
-
     @Override
-    public void onRestaurantDataReceived(final ArrayList<restaurantitemstart> restaurants) {
+    public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
         Log.d("funktioniert" + restaurants.size());
+        table=restaurants;
 
         for(int i=0;i<restaurants.size();i++){
          restaurantitemstart item = restaurants.get(i);
         postion= new LatLng(item.getLatitude(), item.getLongitude());
             String name =item.getName();
 
-        mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet("place_id"));
 
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
                     Log.d(String.valueOf(marker.getTitle()));
+                    openRestaurantDetail(getPlaceId(marker.getTitle()));
                 }
             });
 
         }
+    }
+
+    public String getPlaceId(String title){
+        String place_id="null";
+        for(int i=0;i<table.size();i++){
+            if(table.get(i).getName().equals(title)){
+                Log.d("treffer");
+                 place_id =table.get(i).getPlace_id();
+
+            }
+
+        }
+        return place_id;
+    }
+
+    private void openRestaurantDetail(String place_id) {
+        Intent i =new Intent(starting_screen_activity.this,restaurant_detail_activity.class);
+        i.putExtra("name",place_id);
+        startActivity(i);
+
     }
 }

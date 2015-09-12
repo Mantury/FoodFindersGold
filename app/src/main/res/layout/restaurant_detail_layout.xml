@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE LinearLayout [<!ELEMENT LinearLayout (ImageView|TextView|LinearLayout|Button)*><!ATTLIST LinearLayoutandroid:layout_height CDATA #REQUIREDandroid:layout_width CDATA #REQUIREDandroid:orientation CDATA #REQUIREDxmlns:android CDATA #IMPLIED><!ELEMENT ImageView (#PCDATA)><!ATTLIST ImageViewandroid:layout_width CDATA #REQUIREDandroid:layout_height CDATA #REQUIREDandroid:id CDATA #REQUIRED><!ELEMENT TextView (#PCDATA)><!ATTLIST TextViewandroid:id CDATA #IMPLIEDandroid:layout_height CDATA #REQUIREDandroid:layout_width CDATA #REQUIREDandroid:text CDATA #IMPLIED><!ELEMENT Button (#PCDATA)><!ATTLIST Buttonandroid:layout_width CDATA #REQUIREDandroid:layout_height CDATA #REQUIREDandroid:text CDATA #REQUIRED>]>
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +8,7 @@
         android:id="@+id/restaurant_detail_imageview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src=""/>
+       />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
 
         <TextView
             android:id="@+id/restaurant_detail_dishcounter"
-            android:layout_width=""
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
             android:text="@string/restaurant_detail_layout_eingetragene_gerichte"
@@ -59,7 +59,7 @@
 
         <Button
             android:id="@+id/restaurant_detail_dishaddbutton"
-            android:layout_width=""
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
             android:background="@color/yellow"
