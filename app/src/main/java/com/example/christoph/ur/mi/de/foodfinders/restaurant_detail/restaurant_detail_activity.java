@@ -2,6 +2,7 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
@@ -14,6 +15,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     private String name;
     private download data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +41,25 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         Log.d(name+"place_id");
     }
 
+
+
     @Override
-    public void onRestautantDetailDataReceived(restaurantdetailitem item) {
-        //set up all information
+    public void onRestaurantDetailDataReceived(restaurantdetailitem item) {
+     Log.d("got item");
+        Log.d(item.getName() + item.getNumber()+item.getRating());
+        TextView name=(TextView) findViewById(R.id.restaurant_detail_textview_name);
+        name.setText(item.getName());
+
+        TextView öffnungzeiten=(TextView)findViewById(R.id.restaurant_detail_textview_openinghours);
+        if(item.getOpenweekday()==null){
+            öffnungzeiten.setText("Keine Öffnungszeiten verfügbar!!!!!!");
+        }else {
+            öffnungzeiten.setText(item.getOpenweekday());
+        }
+        TextView number=(TextView)findViewById(R.id.restaurant_detail_textview_telephonenumber);
+        number.setText(item.getNumber());
+
+        TextView address=(TextView)findViewById(R.id.restaurant_detail_textview_address);
+        address.setText(item.getAddress());
     }
 }

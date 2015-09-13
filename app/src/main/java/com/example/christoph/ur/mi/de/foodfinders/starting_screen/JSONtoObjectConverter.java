@@ -1,6 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurantdetailitem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,6 +77,40 @@ public class JSONtoObjectConverter {
         return list;
     }
 
+//converts from JsonStringRestauranzdetail to Restaurantdetailitem
+    public restaurantdetailitem convertToRestaurantDetailItem(){
+        restaurantdetailitem restaurantdetail=null;
+        try {
 
+            JSONObject jsonOb = new JSONObject(JSONResponse);
+            Log.d(String.valueOf(jsonOb));
+            JSONObject jsonrestaurant =jsonOb.getJSONObject("result");
+
+                String address= jsonrestaurant.getString("formatted_address");
+                String number = jsonrestaurant.getString("formatted_phone_number");
+                String name = jsonrestaurant.getString(NAME);
+
+                String id = jsonrestaurant.getString(ID);
+
+               // JSONObject openinghours=jsonrestaurant.getJSONObject("opening_hours");
+               // boolean openednow=openinghours.getBoolean("open_now");
+
+               // String openweekday=openinghours.getString("weekday_text");
+
+             //   String rating=jsonrestaurant.getString("rating");
+
+              //  String image=jsonrestaurant.getString("photos");
+
+
+                Log.d("restaurantdetail"+name+address+"image"+"openweekday");
+
+               restaurantdetail = new restaurantdetailitem(name,"image",address,number, "rating",id,true,"openweekday");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return restaurantdetail;
+
+    }
 
 }

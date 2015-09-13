@@ -136,7 +136,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
-        Log.d("funktioniert" + restaurants.size());
+      //  Log.d("funktioniert" + restaurants.size());
         table=restaurants;
 
         for(int i=0;i<restaurants.size();i++){

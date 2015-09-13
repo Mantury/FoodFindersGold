@@ -21,6 +21,7 @@ public class download{
     private ArrayList<restaurantitemstart> restaurants;
     private OnRestaurantDataProviderListener onrestaurantDataProviderListener;
     private OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener;
+    private final String restaurantdetailurl="https://maps.googleapis.com/maps/api/place/details/json?placeid=";
 
     //for Starting_screen_activity
     public void setRestaurantDataProviderListener(OnRestaurantDataProviderListener onrestaurantDataProviderListener) {
@@ -93,7 +94,7 @@ public class download{
             restaurants = new ArrayList<restaurantitemstart>();
             restaurants = converter.convertJSONTorestaurantitemstart();
 
-            Log.d(String.valueOf(restaurants.size()));
+            //Log.d(String.valueOf(restaurants.size()));
             onrestaurantDataProviderListener.onRestaurantDataReceived(restaurants);
 
             Log.d("alle restaurantitemstartobjecte");
@@ -107,10 +108,50 @@ public class download{
 
         @Override
         protected String doInBackground(String... params) {
-            return null;
+            String jsonString = "";
+
+            try {
+
+                URL url = new URL(restaurantdetailurl+params[0]+"&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+
+                    InputStream is = conn.getInputStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+                    String line;
+
+                    while ((line = br.readLine()) != null) {
+                        jsonString += line;
+                    }
+
+                    br.close();
+                    is.close();
+                    conn.disconnect();
+
+                } else {
+                    throw new IllegalStateException("HTTP response: " + responseCode);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d(jsonString);
+            return jsonString;
         }
+
         @Override
-        protected void onPostExecute(String result){}
+        protected void onPostExecute(String result){
+            super.onPostExecute(result);
+            JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
+            restaurantdetailitem restaurant=converter.convertToRestaurantDetailItem();
+            Log.d("post execute"+restaurant.getAddress());
+            onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
+
+        }
     }
 
 
@@ -121,7 +162,7 @@ public class download{
     }
 
     public interface OnRestaurantDetailDataProviderListener{
-        public void onRestautantDetailDataReceived(restaurantdetailitem item);
+        public void onRestaurantDetailDataReceived(restaurantdetailitem item);
     }
 
 }
