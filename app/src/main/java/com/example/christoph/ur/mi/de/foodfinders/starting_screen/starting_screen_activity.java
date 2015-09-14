@@ -141,16 +141,26 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
         for(int i=0;i<restaurants.size();i++){
          restaurantitemstart item = restaurants.get(i);
+
         postion= new LatLng(item.getLatitude(), item.getLongitude());
             String name =item.getName();
 
-        mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet("place_id"));
+        mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(String.valueOf(item.isOpenednow())));
+            mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter());
 
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    marker.showInfoWindow();
+                    return true;
+                }
+            });
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker marker) {
                     Log.d(String.valueOf(marker.getTitle()));
                     openRestaurantDetail(getPlaceId(marker.getTitle()));
+
                 }
             });
 
@@ -175,5 +185,25 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         i.putExtra("name",place_id);
         startActivity(i);
 
+    }
+
+    public class MarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        public MarkerInfoWindowAdapter()
+        {
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker)
+        {
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            View v = getLayoutInflater().inflate(R.layout.custom_marker_layout, null);
+
+
+            return v;
+        }
     }
 }

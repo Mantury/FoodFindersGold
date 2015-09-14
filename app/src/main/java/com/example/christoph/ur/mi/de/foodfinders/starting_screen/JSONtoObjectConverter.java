@@ -56,17 +56,21 @@ public class JSONtoObjectConverter {
 
 
                 String name = jsonObject.getString(NAME);
+                boolean open=true;
 
-           //   JSONObject openobject = jsonObject.getJSONObject("opening_hours");
-           //   boolean open = openobject.getBoolean(OPEN);
-
+                if(jsonObject.getJSONObject("opening_hours")==null){
+                   open=false;
+                }else{
+                      JSONObject openobject = jsonObject.getJSONObject("opening_hours");
+                    open = openobject.getBoolean(OPEN);
+                }
                 String id = jsonObject.getString(ID);
                 String address = jsonObject.getString(ADDRESS);
 
                 Log.d(name);
 
 
-                restaurantitemstart item = new restaurantitemstart(name, lat, lng, id, true, address);
+                restaurantitemstart item = new restaurantitemstart(name, lat, lng, id, open, address);
                 list.add(item);
 
 
