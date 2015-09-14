@@ -56,13 +56,11 @@ public class JSONtoObjectConverter {
 
 
                 String name = jsonObject.getString(NAME);
-                boolean open=true;
+                boolean open=false;
 
-                if(jsonObject.getJSONObject("opening_hours")==null){
-                   open=false;
-                }else{
-                      JSONObject openobject = jsonObject.getJSONObject("opening_hours");
-                    open = openobject.getBoolean(OPEN);
+                      JSONObject openobject = jsonObject.optJSONObject("opening_hours");
+                if(openobject!=null){
+                    open = openobject.optBoolean(OPEN);
                 }
                 String id = jsonObject.getString(ID);
                 String address = jsonObject.getString(ADDRESS);
@@ -96,19 +94,23 @@ public class JSONtoObjectConverter {
 
                 String id = jsonrestaurant.getString(ID);
 
-               // JSONObject openinghours=jsonrestaurant.getJSONObject("opening_hours");
-               // boolean openednow=openinghours.getBoolean("open_now");
 
-               // String openweekday=openinghours.getString("weekday_text");
+                JSONObject openinghours=jsonrestaurant.optJSONObject("opening_hours");
+                boolean open=false;
+                String openweekday="nicht in google vorhanden";
 
-             //   String rating=jsonrestaurant.getString("rating");
+            if(openinghours!=null){
+                open=openinghours.getBoolean("open_now");
+                openweekday=openinghours.getString("weekday_text");
+            }
+
 
               //  String image=jsonrestaurant.getString("photos");
 
 
                 Log.d("restaurantdetail"+name+address+"image"+"openweekday");
 
-               restaurantdetail = new restaurantdetailitem(name,"image",address,number, "rating",id,true,"openweekday");
+               restaurantdetail = new restaurantdetailitem(name,"image",address,number, "rating",id,open,openweekday);
 
         } catch (JSONException e) {
             e.printStackTrace();
