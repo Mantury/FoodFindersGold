@@ -47,15 +47,16 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     public void onRestaurantDetailDataReceived(restaurantdetailitem item) {
      Log.d("got item");
         Log.d(item.getName() + item.getNumber()+item.getRating());
+
         TextView name=(TextView) findViewById(R.id.restaurant_detail_textview_name);
         name.setText(item.getName());
-
         TextView öffnungzeiten=(TextView)findViewById(R.id.restaurant_detail_textview_openinghours);
         if(item.getOpenweekday()==null){
             öffnungzeiten.setText("Keine Öffnungszeiten verfügbar!!!!!!");
         }else {
             öffnungzeiten.setText(item.getOpenweekday());
         }
+
         TextView number=(TextView)findViewById(R.id.restaurant_detail_textview_telephonenumber);
         number.setText(item.getNumber());
 
