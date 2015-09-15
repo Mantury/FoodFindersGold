@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
+        android:padding="5dp"
         android:id="@+id/restaurant_detail_linearlayout_top"
         android:background="@color/green">
 
@@ -23,19 +24,21 @@
         android:id="@+id/restaurant_detail_textview_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test"/>
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:text="@string/waiting_string"/>
 
     <TextView
         android:id="@+id/restaurant_detail_textview_openinghours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test öffnungszeiten"/>
+        android:text="@string/waiting_string"/>
 
     <TextView
         android:id="@+id/restaurant_detail_textview_telephonenumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test"/>
+        android:text="@string/waiting_string"/>
 
     <TextView
         android:id="@+id/restaurant_detail_textview_address"
@@ -48,7 +51,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:outlineProvider="bounds" >
 
         <TextView
             android:id="@+id/restaurant_detail_dishcounter"
@@ -66,7 +70,7 @@
             android:layout_weight="0.2"
             android:background="@color/yellow"
             android:text="+"
-            android:layout_margin="10dp"/>
+            android:layout_margin="5dp"/>
 
     </LinearLayout>
 

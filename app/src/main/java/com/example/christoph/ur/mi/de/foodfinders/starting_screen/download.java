@@ -16,12 +16,12 @@ import java.util.ArrayList;
 /**
  * Created by juli on 08.09.15.
  */
-public class download{
+public class download {
 
     private ArrayList<restaurantitemstart> restaurants;
     private OnRestaurantDataProviderListener onrestaurantDataProviderListener;
     private OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener;
-    private final String restaurantdetailurl="https://maps.googleapis.com/maps/api/place/details/json?placeid=";
+    private final String restaurantdetailurl = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
 
     //for Starting_screen_activity
     public void setRestaurantDataProviderListener(OnRestaurantDataProviderListener onrestaurantDataProviderListener) {
@@ -29,8 +29,8 @@ public class download{
     }
 
     //for restaurant_detail_activity
-    public void setOnRestaurantDetailDataProviderListener(OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener){
-        this.onRestaurantDetailDataProviderListener=onRestaurantDetailDataProviderListener;
+    public void setOnRestaurantDetailDataProviderListener(OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener) {
+        this.onRestaurantDetailDataProviderListener = onRestaurantDetailDataProviderListener;
     }
 
 
@@ -41,12 +41,12 @@ public class download{
 
     }
 
-    public void getrestaurantdata(String request){
-        new  RestaurantAsyncTask().execute(request);
+    public void getrestaurantdata(String request) {
+        new RestaurantAsyncTask().execute(request);
     }
 
     ////for Starting_screen_activity
-    private class DataAsyncTask  extends AsyncTask<String, Integer, String> {
+    private class DataAsyncTask extends AsyncTask<String, Integer, String> {
 
 
         @Override
@@ -89,7 +89,7 @@ public class download{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.d("result   "+result);
+            Log.d("result   " + result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             restaurants = new ArrayList<restaurantitemstart>();
             restaurants = converter.convertJSONTorestaurantitemstart();
@@ -104,7 +104,7 @@ public class download{
     }
 
     //for restaurant_detail_activity
-    private class RestaurantAsyncTask extends AsyncTask<String, Integer,String>{
+    private class RestaurantAsyncTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -112,7 +112,7 @@ public class download{
 
             try {
 
-                URL url = new URL(restaurantdetailurl+params[0]+"&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
+                URL url = new URL(restaurantdetailurl + params[0] + "&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -144,11 +144,11 @@ public class download{
         }
 
         @Override
-        protected void onPostExecute(String result){
+        protected void onPostExecute(String result) {
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
-            restaurantdetailitem restaurant=converter.convertToRestaurantDetailItem();
-            Log.d("post execute"+restaurant.getAddress());
+            restaurantdetailitem restaurant = converter.convertToRestaurantDetailItem();
+            Log.d("post execute" + restaurant.getAddress());
             onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
 
         }
@@ -161,7 +161,7 @@ public class download{
 
     }
 
-    public interface OnRestaurantDetailDataProviderListener{
+    public interface OnRestaurantDetailDataProviderListener {
         public void onRestaurantDetailDataReceived(restaurantdetailitem item);
     }
 

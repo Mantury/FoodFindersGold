@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener  {
+public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener {
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -55,7 +55,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private double lat;
     private double lng;
     private download data;
-    private ArrayList<restaurantitemstart> table=new ArrayList<>();
+    private ArrayList<restaurantitemstart> table = new ArrayList<>();
 
 
     @Override
@@ -67,17 +67,16 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         setContentView(R.layout.starting_screen_layout);
         setUpMapIfNeeded();
         setUpMarker();
-        data=new download();
+        data = new download();
         data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
         data.setRestaurantDataProviderListener(this);
     }
 
 
-
     private void setUpMarker() {
         //Setzt den PersonenMarker
         String locService = Context.LOCATION_SERVICE;
-        LocationManager locationManager= (LocationManager)getSystemService(locService);
+        LocationManager locationManager = (LocationManager) getSystemService(locService);
         String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
 
@@ -86,24 +85,21 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         String locationData;
 
         if (location != null) {
-            postion= new LatLng(location.getLatitude(), location.getLongitude());
-            lat=location.getLatitude();
-            lng=location.getLongitude();
+            postion = new LatLng(location.getLatitude(), location.getLongitude());
+            lat = location.getLatitude();
+            lng = location.getLongitude();
             Log.d(String.valueOf(postion));
-            mMap.addMarker(new MarkerOptions().position(postion).title("You are here!!!"));
-            CameraUpdate update= CameraUpdateFactory.newLatLng(postion);
+            mMap.addMarker(new MarkerOptions().position(postion).title("You are here!!!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            CameraUpdate update = CameraUpdateFactory.newLatLng(postion);
             mMap.moveCamera(update);
 
-        }
-        else {
-            lat=48.9984593454694;
-            lng=12.097473442554474;
-            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("You are here!!!"));
+        } else {
+            lat = 48.9984593454694;
+            lng = 12.097473442554474;
+            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("You are here!!!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         }
 
     }
-
-
 
 
     /**
@@ -133,49 +129,59 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
-      //  Log.d("funktioniert" + restaurants.size());
-        table=restaurants;
+        //  Log.d("funktioniert" + restaurants.size());
+        table = restaurants;
 
-        for(int i=0;i<restaurants.size();i++){
-         restaurantitemstart item = restaurants.get(i);
+        for (int i = 0; i < restaurants.size(); i++) {
+            restaurantitemstart item = restaurants.get(i);
 
-        postion= new LatLng(item.getLatitude(), item.getLongitude());
-            String name =item.getName();
+            postion = new LatLng(item.getLatitude(), item.getLongitude());
+            String name = item.getName();
             String opennow;
+            if (item.isOpenednow() == null) {
+                opennow = "Öffnungszeiten n.A.";
+                mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
 
-        if(item.isOpenednow()){
-            opennow="offen";
-            mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
-        }else{
-            opennow="geschlossen oder nicht in google";
-            mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
-        }
-        //   mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter());
+            }else {
+                if (item.isOpenednow()) {
+                    opennow = "Offen";
+                    mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
 
-        //    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-        //        @Override
-        //        public boolean onMarkerClick(Marker marker) {
-        //            marker.showInfoWindow();
-        //            return true;
-        //        }
-        //    });
-            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    Log.d(String.valueOf(marker.getTitle()));
-                    openRestaurantDetail(getPlaceId(marker.getTitle()));
                 }
-            });
+                if (!item.isOpenednow()) {
+                    opennow = "Geschlossen";
+                    mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
 
+                }
+            }
+
+                //   mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter());
+
+                //    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                //        @Override
+                //        public boolean onMarkerClick(Marker marker) {
+                //            marker.showInfoWindow();
+                //            return true;
+                //        }
+                //    });
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        Log.d(String.valueOf(marker.getTitle()));
+                        openRestaurantDetail(getPlaceId(marker.getTitle()));
+                    }
+                });
+
+            }
         }
-    }
 
-    public String getPlaceId(String title){
-        String place_id="null";
-        for(int i=0;i<table.size();i++){
-            if(table.get(i).getName().equals(title)){
+
+    public String getPlaceId(String title) {
+        String place_id = "null";
+        for (int i = 0; i < table.size(); i++) {
+            if (table.get(i).getName().equals(title)) {
                 Log.d("treffer");
-                 place_id =table.get(i).getPlace_id();
+                place_id = table.get(i).getPlace_id();
 
             }
 
@@ -184,10 +190,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     }
 
 
-
     private void openRestaurantDetail(String place_id) {
-        Intent i =new Intent(starting_screen_activity.this,restaurant_detail_activity.class);
-        i.putExtra("name",place_id);
+        Intent i = new Intent(starting_screen_activity.this, restaurant_detail_activity.class);
+        i.putExtra("name", place_id);
         startActivity(i);
 
     }

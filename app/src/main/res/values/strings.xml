@@ -13,4 +13,5 @@
     <string name="add_dish_layout_radio_noinfo">Nicht angegeben</string>
     <string name="add_dish_layout_radio_yes">Ja</string>
     <string name="add_dish_layout_radio_no">Nein</string>
+    <string name="waiting_string">Kurzen Moment ...</string>
 </resources>
