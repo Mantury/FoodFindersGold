@@ -7,11 +7,11 @@ public class restaurantitemstart {
     private double latitude;
     private double longitude;
     private String  place_id;
-    private Boolean openednow;
+    private int openednow;
     private String address;
 
 
-    public restaurantitemstart (String name, double latitude, double longitude, String place_id, Boolean openednow, String address){
+    public restaurantitemstart (String name, double latitude, double longitude, String place_id, int openednow, String address){
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -22,7 +22,7 @@ public class restaurantitemstart {
 
 
 
-    public Boolean isOpenednow() {
+    public int isOpenednow() {
         return openednow;
     }
 

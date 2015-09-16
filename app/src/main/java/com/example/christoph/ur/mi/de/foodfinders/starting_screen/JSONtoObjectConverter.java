@@ -23,7 +23,8 @@ public class JSONtoObjectConverter {
     private static final String ADDRESS = "vicinity";
     //private static final String RATING = "rating";
     private static final String ID = "place_id";
-    public Boolean open;
+    public int openint;
+
 
 
     private ArrayList<restaurantitemstart> list;
@@ -61,10 +62,14 @@ public class JSONtoObjectConverter {
                 JSONObject openobject = jsonObject.optJSONObject("opening_hours");
                 if (openobject != null) {
                    boolean openbool = openobject.optBoolean(OPEN);
-                  open = Boolean.valueOf(openbool);
-                    Log.d("hier sollte der Boolean sein" + open.toString() + i);
+                  if(openbool){
+                      openint = 1;
+                  }else{
+                     openint = 2;
+                  }
+                    Log.d("hier sollte der Boolean sein" + openint + i);
                 }else{
-                    open = null;
+                    openint = 0;
                 }
 
 
@@ -74,7 +79,7 @@ public class JSONtoObjectConverter {
                 Log.d(name);
 
 
-                restaurantitemstart item = new restaurantitemstart(name, lat, lng, id, open, address);
+                restaurantitemstart item = new restaurantitemstart(name, lat, lng, id, openint, address);
                 list.add(item);
 
 

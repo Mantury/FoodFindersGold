@@ -138,17 +138,17 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             postion = new LatLng(item.getLatitude(), item.getLongitude());
             String name = item.getName();
             String opennow;
-            if (item.isOpenednow() == null) {
+            if (item.isOpenednow() == 0) {
                 opennow = "Öffnungszeiten n.A.";
                 mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
 
             }else {
-                if (item.isOpenednow()) {
+                if (item.isOpenednow() == 1) {
                     opennow = "Offen";
                     mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
 
                 }
-                if (!item.isOpenednow()) {
+                if (item.isOpenednow() == 2) {
                     opennow = "Geschlossen";
                     mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
 
