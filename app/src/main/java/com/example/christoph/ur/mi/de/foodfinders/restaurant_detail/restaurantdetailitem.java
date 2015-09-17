@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.restaurantitemstart;
 
+import java.util.ArrayList;
+
 /**
  * Created by juli on 12.09.15.
  */
@@ -17,9 +19,11 @@ public class restaurantdetailitem  {
     private String  place_id;
     private boolean openednow;
     private String openweekday;
+    //Arraylist für kommentare??
+    private ArrayList<String> comments;
 
 
-    public restaurantdetailitem(String name, String image, String address, String number, String rating, String place_id, boolean openednow, String openweekday) {
+    public restaurantdetailitem(String name, String image, String address, String number, String rating, String place_id, boolean openednow, String openweekday, ArrayList comments) {
         this.name=name;
         this.image=image;
         this.address=address;
@@ -28,6 +32,7 @@ public class restaurantdetailitem  {
         this.place_id=place_id;
         this.openednow=openednow;
         this.openweekday=openweekday;
+        this.comments=comments;
     }
 
     public  String getName() {
@@ -55,5 +60,8 @@ public class restaurantdetailitem  {
     }
     public String getOpenweekday(){
         return openweekday;
+    }
+    public ArrayList getComments(){
+        return comments;
     }
 }
