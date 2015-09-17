@@ -26,6 +26,7 @@ public class JSONtoObjectConverter {
 
 
     private ArrayList<restaurantitemstart> list;
+    private ArrayList<String> commentlist;
 
     public JSONtoObjectConverter(String JSONResponse) {
         Log.d("Set up converter");
@@ -104,13 +105,20 @@ public class JSONtoObjectConverter {
                 openweekday=openinghours.getString("weekday_text");
             }
 
-
+            JSONArray comments= jsonrestaurant.getJSONArray("reviews");
+            commentlist = new ArrayList<String>();
+            for (int i = 0; i < comments.length(); i++) {
+                JSONObject jsonObject = comments.getJSONObject(i);
+                String comment = jsonObject.getString("text");
+                commentlist.add(comment);
+            }
+            Log.d(String.valueOf(commentlist));
               //  String image=jsonrestaurant.getString("photos");
 
 
                 Log.d("restaurantdetail"+name+address+"image"+"openweekday");
 
-               restaurantdetail = new restaurantdetailitem(name,"image",address,number, "rating",id,open,openweekday);
+               restaurantdetail = new restaurantdetailitem(name,"image",address,number, "rating",id,open,openweekday,commentlist);
 
         } catch (JSONException e) {
             e.printStackTrace();
