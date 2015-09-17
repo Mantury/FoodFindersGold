@@ -44,7 +44,7 @@
         android:id="@+id/restaurant_detail_textview_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test"/>
+        android:text="@string/waiting_string"/>
 
     </LinearLayout>
 
@@ -73,6 +73,16 @@
             android:layout_margin="5dp"/>
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Restaurant bewerten"
+        android:textSize="20dp"
+        android:layoutpadding="5dp"
+        android:background="@color/yellow"
+        android:id="@+id/restaurant_comment_button"/>
+
 
     <ListView
         android:id="@+id/restaurant_detail_commentlistview"
