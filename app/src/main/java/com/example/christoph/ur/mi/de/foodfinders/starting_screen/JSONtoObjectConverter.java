@@ -27,6 +27,7 @@ public class JSONtoObjectConverter {
 
     private ArrayList<restaurantitemstart> list;
     private ArrayList<String> commentlist;
+    public int open;
 
     public JSONtoObjectConverter(String JSONResponse) {
         Log.d("Set up converter");
@@ -57,11 +58,20 @@ public class JSONtoObjectConverter {
 
 
                 String name = jsonObject.getString(NAME);
-                boolean open=false;
+
 
                       JSONObject openobject = jsonObject.optJSONObject("opening_hours");
-                if(openobject!=null){
-                    open = openobject.optBoolean(OPEN);
+                if(openobject!=null) {
+                    if (openobject.getBoolean("open_now")){
+                        open = 1;
+                    } else {
+                        open = 2;
+                    }
+
+                }else{
+                    open = 0;
+
+
                 }
                 String id = jsonObject.getString(ID);
                 String address = jsonObject.getString(ADDRESS);
