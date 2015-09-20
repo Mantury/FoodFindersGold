@@ -82,6 +82,7 @@
         android:layout_height="wrap_content"
         android:text="Restaurant bewerten"
         android:textSize="20dp"
+        android:layout_margin="5dp"
         android:padding="5dp"
         android:background="@color/yellow"
         android:id="@+id/restaurant_comment_button"/>

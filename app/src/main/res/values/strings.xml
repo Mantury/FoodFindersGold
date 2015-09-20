@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">FoodFinders</string>
-    <string name="title_activity_restaurantmaps">Map</string>
+    <string name="title_activity_restaurantmaps">FoodFinders</string>
     <string name="test">test</string>
     <string name="tt">tt</string>
     <string name="ichgehwasessen">Mhmlecker</string>
