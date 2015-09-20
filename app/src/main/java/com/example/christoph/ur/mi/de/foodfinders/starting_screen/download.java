@@ -15,9 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by juli on 08.09.15.
- */
+
 public class download {
 
     private ArrayList<restaurantitemstart> restaurants;

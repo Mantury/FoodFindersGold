@@ -6,9 +6,7 @@ import com.example.christoph.ur.mi.de.foodfinders.starting_screen.restaurantitem
 
 import java.util.ArrayList;
 
-/**
- * Created by juli on 12.09.15.
- */
+
 public class restaurantdetailitem  {
 
     private String image;
