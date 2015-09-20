@@ -67,7 +67,6 @@
             android:id="@+id/radio_vegan_yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonVeganClicked"
             android:text="@string/add_dish_layout_radio_yes"
             />
 
@@ -75,14 +74,12 @@
             android:id="@+id/radio_vegan_noinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonVeganClicked"
             android:text="@string/add_dish_layout_radio_noinfo" />
 
         <RadioButton
             android:id="@+id/radio_vegan_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonVeganClicked"
             android:text="@string/add_dish_layout_radio_no" />
     </RadioGroup>
 
@@ -103,21 +100,18 @@
             android:id="@+id/radio_glutenfree_yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonGlutenfreiClicked"
             android:text="@string/add_dish_layout_radio_yes" />
 
         <RadioButton
             android:id="@+id/radio_glutenfree_noinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonGlutenfreiClicked"
             android:text="@string/add_dish_layout_radio_noinfo" />
 
         <RadioButton
             android:id="@+id/radio_glutenfree_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRadioButtonGlutenfreiClicked"
             android:text="@string/add_dish_layout_radio_no" />
     </RadioGroup>
 
@@ -126,6 +120,6 @@
         android:id="@+id/add_dish_comment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="Zeile 1 /n Zeile 2 \n Zeile 3" />
+        android:hint="Zeile 1 \n Zeile 2 \n Zeile 3" />
 
 </LinearLayout>

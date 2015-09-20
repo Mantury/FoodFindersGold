@@ -1,6 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Adapter;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
+import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
 
@@ -21,8 +23,8 @@ import java.util.ArrayList;
  */
 public class restaurant_detail_activity extends Activity implements download.OnRestaurantDetailDataProviderListener{
 
-    private String name;
     private download data;
+    private String place_id;
 
 
     @Override
@@ -42,10 +44,13 @@ public class restaurant_detail_activity extends Activity implements download.OnR
             @Override
             public void onClick(View v) {
                 //open restaurant add_dish_activity!
-
+                Intent i = new Intent(restaurant_detail_activity.this, add_dish_activity.class);
+                i.putExtra("name", place_id);
+                startActivity(i);
             }
         });
         TextView dishcounter=(TextView) findViewById(R.id.restaurant_detail_dishcounter);
+
         int dishes=0;
         dishcounter.setText(dishes+" eingetragene Gerichte");
     }
@@ -53,16 +58,14 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     private void setUpDownload() {
         data=new download();
-        data.getrestaurantdata(name);
+        data.getrestaurantdata(place_id);
         data.setOnRestaurantDetailDataProviderListener(this);
-
-
     }
 
 
     private void getIntentdata(){
-        name=getIntent().getStringExtra("name");
-        Log.d(name+"place_id");
+        place_id=getIntent().getStringExtra("name");
+        Log.d(place_id+" place_id");
     }
 
 
@@ -89,7 +92,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
         //Kommentare??? arraylist(String) aus item!!!
         ListView disheslist=(ListView) findViewById(R.id.restaurant_detail_commentlistview);
-       // new ArrayList<String>()=item.getComments();
         Adapter aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, item.getComments());
         disheslist.setAdapter((ListAdapter) aa);
 

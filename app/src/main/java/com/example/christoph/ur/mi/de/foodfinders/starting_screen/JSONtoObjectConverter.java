@@ -102,10 +102,7 @@ public class JSONtoObjectConverter {
                 String address= jsonrestaurant.getString("formatted_address");
                 String number = jsonrestaurant.getString("formatted_phone_number");
                 String name = jsonrestaurant.getString(NAME);
-
                 String id = jsonrestaurant.getString(ID);
-
-
                 JSONObject openinghours=jsonrestaurant.optJSONObject("opening_hours");
                 boolean open=false;
                 String openweekday="nicht in google vorhanden";
@@ -124,11 +121,12 @@ public class JSONtoObjectConverter {
             }
             Log.d(String.valueOf(commentlist));
               //  String image=jsonrestaurant.getString("photos");
+            String rating =jsonrestaurant.getString("user_ratings_total");
 
 
                 Log.d("restaurantdetail"+name+address+"image"+"openweekday");
 
-               restaurantdetail = new restaurantdetailitem(name,"image",address,number, "rating",id,open,openweekday,commentlist);
+               restaurantdetail = new restaurantdetailitem(name,"image",address,number, rating,id,open,openweekday,commentlist);
 
         } catch (JSONException e) {
             e.printStackTrace();
