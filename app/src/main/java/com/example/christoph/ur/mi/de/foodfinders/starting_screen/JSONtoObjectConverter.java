@@ -136,7 +136,7 @@ public class JSONtoObjectConverter {
 
                 Log.d("restaurantdetail"+name+image_ref+openweekday);
 
-               restaurantdetail = new restaurantdetailitem(name,image_ref,"address",number,rating,id,open,openweekday,commentlist);
+               restaurantdetail = new restaurantdetailitem(name,image_ref,address,number,rating,id,open,openweekday,commentlist);
 
         } catch (JSONException e) {
             e.printStackTrace();

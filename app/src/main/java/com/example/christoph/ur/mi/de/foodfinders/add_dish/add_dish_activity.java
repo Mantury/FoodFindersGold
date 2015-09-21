@@ -29,9 +29,9 @@ public class add_dish_activity extends Activity {
         Log.d("start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_dish_layout);
-        //Set up parse
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
+        //Set up parse nur einmal!!!!!---> hier nicht nötig????
+       // Parse.enableLocalDatastore(this);
+        //Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
         getIntentdata();
         SetUpUi();
 
@@ -60,7 +60,7 @@ public class add_dish_activity extends Activity {
     }
 
     private void getIntentdata() {
-        place_id = getIntent().getStringExtra("name");
+        place_id = getIntent().getStringExtra("place_id");
     }
 
     private void publishDish(){

@@ -6,6 +6,7 @@
     android:id="@+id/restaurant_detail_layout">
 
     <ImageView
+        android:padding="5dp"
         android:id="@+id/restaurant_detail_imageview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
