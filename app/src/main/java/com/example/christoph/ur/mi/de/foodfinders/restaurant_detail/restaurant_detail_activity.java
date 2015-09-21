@@ -2,11 +2,13 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -60,6 +62,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         data=new download();
         data.getrestaurantdata(place_id);
         data.setOnRestaurantDetailDataProviderListener(this);
+
     }
 
 
@@ -74,6 +77,8 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     public void onRestaurantDetailDataReceived(restaurantdetailitem item) {
      Log.d("got item");
         Log.d(item.getName() + item.getNumber()+item.getRating());
+
+        data.getRestaurantPicturefromURL(item.getImage());
 
         TextView name=(TextView) findViewById(R.id.restaurant_detail_textview_name);
         name.setText(item.getName());
@@ -95,6 +100,14 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         Adapter aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, item.getComments());
         disheslist.setAdapter((ListAdapter) aa);
 
+
+    }
+
+    @Override
+    public void onRestaurantDetailPictureReceived(Bitmap result) {
+        Log.d("versucht Bild");
+        ImageView image=(ImageView) findViewById(R.id.restaurant_detail_imageview);
+        image.setImageBitmap(result);
 
     }
 }

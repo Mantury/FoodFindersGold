@@ -33,7 +33,9 @@
     <ImageView
         android:id="@+id/add_dish_photoimage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+
+        />
 
     <EditText
         android:id="@+id/add_dish_nameedit"
@@ -121,6 +123,6 @@
         android:id="@+id/add_dish_comment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="Zeile 1 \n Zeile 2 \n Zeile 3" />
+        android:hint="Zeile 1 \nZeile 2 \nZeile 3" />
 
 </LinearLayout>

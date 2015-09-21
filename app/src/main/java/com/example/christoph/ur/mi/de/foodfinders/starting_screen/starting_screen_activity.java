@@ -70,7 +70,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         setUpMapIfNeeded();
         setUpMarker();
         data = new download();
-        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
         data.setRestaurantDataProviderListener(this);
 
         //set up parse

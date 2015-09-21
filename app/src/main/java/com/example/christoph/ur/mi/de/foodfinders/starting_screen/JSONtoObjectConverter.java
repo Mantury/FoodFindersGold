@@ -93,13 +93,16 @@ public class JSONtoObjectConverter {
 //converts from JsonStringRestauranzdetail to Restaurantdetailitem
     public restaurantdetailitem convertToRestaurantDetailItem(){
         restaurantdetailitem restaurantdetail=null;
+        Log.d("öffnet methode!");
         try {
-
+            Log.d("versuch");
             JSONObject jsonOb = new JSONObject(JSONResponse);
             Log.d(String.valueOf(jsonOb));
             JSONObject jsonrestaurant =jsonOb.getJSONObject("result");
 
-                String address= jsonrestaurant.getString("formatted_address");
+                String address="nicht in google vorhanden";
+                address= jsonrestaurant.optString("formatted_address");
+
                 String number = jsonrestaurant.getString("formatted_phone_number");
                 String name = jsonrestaurant.getString(NAME);
                 String id = jsonrestaurant.getString(ID);
@@ -119,17 +122,25 @@ public class JSONtoObjectConverter {
                 String comment = jsonObject.getString("text");
                 commentlist.add(comment);
             }
+
+
             Log.d(String.valueOf(commentlist));
-              //  String image=jsonrestaurant.getString("photos");
             String rating =jsonrestaurant.getString("user_ratings_total");
 
+            String image_ref="no Image!!";
+            JSONArray jsonImage =jsonrestaurant.optJSONArray("photos");
+            if(jsonImage!=null) {
+                JSONObject image1=jsonImage.getJSONObject(0);
+                 image_ref = image1.getString("photo_reference");
+            }
 
-                Log.d("restaurantdetail"+name+address+"image"+"openweekday");
+                Log.d("restaurantdetail"+name+image_ref+openweekday);
 
-               restaurantdetail = new restaurantdetailitem(name,"image",address,number, rating,id,open,openweekday,commentlist);
+               restaurantdetail = new restaurantdetailitem(name,image_ref,"address",number,rating,id,open,openweekday,commentlist);
 
         } catch (JSONException e) {
             e.printStackTrace();
+
         }
         return restaurantdetail;
 

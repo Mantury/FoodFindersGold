@@ -1,5 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
@@ -38,11 +40,14 @@ public class download {
     public void getlocationdata(String request) {
         new DataAsyncTask().execute(request);
         // gets the data in an Arraylist from converter.convertJSONToMensaDishList();
-
     }
 
     public void getrestaurantdata(String request) {
         new RestaurantAsyncTask().execute(request);
+    }
+
+    public void getRestaurantPicturefromURL(String URL){
+        new RestaurantDetailPictureAsyncTask().execute(URL);
     }
 
     ////for Starting_screen_activity
@@ -148,12 +153,39 @@ public class download {
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             restaurantdetailitem restaurant = converter.convertToRestaurantDetailItem();
-            Log.d("post execute" + restaurant.getAddress());
+            Log.d("post execute" + restaurant.getName());
             onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
 
         }
     }
 
+
+    private  class RestaurantDetailPictureAsyncTask extends AsyncTask<String, Integer, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap picture=null;
+            try {
+                URL url=new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+params[0]+"&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setDoInput(true);
+                conn.connect();
+                InputStream is= conn.getInputStream();
+                picture= BitmapFactory.decodeStream(is);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return picture;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            onRestaurantDetailDataProviderListener.onRestaurantDetailPictureReceived(result);
+
+        }
+    }
 
     public interface OnRestaurantDataProviderListener {
 
@@ -163,6 +195,9 @@ public class download {
 
     public interface OnRestaurantDetailDataProviderListener {
         public void onRestaurantDetailDataReceived(restaurantdetailitem item);
+
+        public void onRestaurantDetailPictureReceived(Bitmap result);
     }
+
 
 }
