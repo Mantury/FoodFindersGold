@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
+import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 
 import java.util.List;
 
@@ -44,8 +45,6 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         RatingBar rating=(RatingBar) v.findViewById(R.id.dish_ratingbar);
         TextView vegan=(TextView) v.findViewById(R.id.dish_vegan);
         TextView gluten=(TextView) v.findViewById(R.id.dish_gluten);
-
-
 
 
 

@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
+import com.example.christoph.ur.mi.de.foodfinders.dish_detail.dish_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
+import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseFile;
@@ -28,7 +31,7 @@ import java.util.List;
 /**
  * Created by Christoph on 30.08.15.
  */
-public class restaurant_dishes_detail_activity extends Activity {
+public class restaurant_dishes_detail_activity extends Activity implements dish_item_ArrayAdapter.OnDetailRequestedListener {
 
     private String place_id;
     private String name;
@@ -51,7 +54,7 @@ public class restaurant_dishes_detail_activity extends Activity {
     private void initAdapter() {
         ListView list = (ListView) findViewById(R.id.restaurant_dishes_detail_list);
         adapter=new dish_item_ArrayAdapter(restaurant_dishes_detail_activity.this, dishes);
-     //   adapter.setOnDetailRequestedListener((dish_item_ArrayAdapter.OnDetailRequestedListener) this);//???
+       adapter.setOnDetailRequestedListener( this);//???
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -82,7 +85,7 @@ public class restaurant_dishes_detail_activity extends Activity {
             ParseObject dish=list.get(i);
             String name=dish.getString("Name");
             String comment=dish.getString("comment");
-            String parse_id=dish.getString("objectId");
+            String parse_id=dish.getObjectId();
             String vegan=dish.getString("vegan");
             String gluten=dish.getString("gluten");
             int rating=dish.getInt("rating");
@@ -123,5 +126,13 @@ public class restaurant_dishes_detail_activity extends Activity {
     private void getIntentData() {
         place_id=getIntent().getStringExtra("place_id");
         name=getIntent().getStringExtra("name");
+    }
+
+    @Override
+    public void onDetailRequested(String parse_id) {
+        Log.d("Detail activity  " + parse_id);
+        Intent next=new Intent(restaurant_dishes_detail_activity.this, dish_detail_activity.class);
+        next.putExtra("parse_id",parse_id);
+        startActivity(next);
     }
 }
