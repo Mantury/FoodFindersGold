@@ -1,6 +1,8 @@
 package com.example.christoph.ur.mi.de.foodfinders.dish_detail;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -25,7 +27,7 @@ public class dish_detail_activity extends Activity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("start");
+        Log.d("detailActivity+");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_detail_layout);
         //Set up parse
@@ -41,6 +43,7 @@ public class dish_detail_activity extends Activity{
 
     private void setUpData() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("gericht");
+        Log.d(parse_id);
         query.whereEqualTo("objectId", parse_id);
         query.findInBackground(new FindCallback<ParseObject>() {
 
@@ -73,7 +76,22 @@ public class dish_detail_activity extends Activity{
         gluten.setText(dish.getString("gluten"));
         comment.setText(dish.getString("comment"));
 
+        Bitmap bitmap=null;
         ParseFile imagefile=dish.getParseFile("image");
+        if (imagefile !=null) {
+            //image Bytes to bitmap!!!!
+
+
+            try {
+                byte[] in = imagefile.getData();
+                bitmap = BitmapFactory.decodeByteArray(in, 0, in.length);
+                Log.d("bitmap ready");
+            } catch (com.parse.ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        image.setImageBitmap(bitmap);
 
     }
 }

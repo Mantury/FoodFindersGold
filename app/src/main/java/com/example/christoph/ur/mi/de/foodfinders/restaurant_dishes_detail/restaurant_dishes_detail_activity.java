@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
+import com.example.christoph.ur.mi.de.foodfinders.dish_detail.dish_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.parse.FindCallback;
 import com.parse.Parse;
@@ -19,16 +20,13 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Christoph on 30.08.15.
  */
-public class restaurant_dishes_detail_activity extends Activity {
+public class restaurant_dishes_detail_activity extends Activity implements dish_item_ArrayAdapter.OnDetailRequestedListener {
 
     private String place_id;
     private String name;
@@ -43,7 +41,8 @@ public class restaurant_dishes_detail_activity extends Activity {
         getIntentData();
         setUpButtons();
         initAdapter();
-        initDishList();
+       // initDishList();
+
      //   Parse.enableLocalDatastore(this);
      //   Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
     }
@@ -51,8 +50,9 @@ public class restaurant_dishes_detail_activity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
-        initAdapter();
+       // initAdapter();
         initDishList();
+
 
 
     }
@@ -60,12 +60,13 @@ public class restaurant_dishes_detail_activity extends Activity {
     private void initAdapter() {
         ListView list = (ListView) findViewById(R.id.restaurant_dishes_detail_list);
         adapter=new dish_item_ArrayAdapter(restaurant_dishes_detail_activity.this, dishes);
-     //   adapter.setOnDetailRequestedListener((dish_item_ArrayAdapter.OnDetailRequestedListener) this);//???
+        adapter.setOnDetailRequestedListener((dish_item_ArrayAdapter.OnDetailRequestedListener) this);//???
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
     private void initDishList() {
+        dishes.clear();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("gericht");
         query.whereEqualTo("restaurant_id", place_id);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -87,29 +88,35 @@ public class restaurant_dishes_detail_activity extends Activity {
 
     private void parseListToArraylist(List<ParseObject> list) {
 
-        for(int i=0;i<list.size();i++){
-            ParseObject dish=list.get(i);
-            String name=dish.getString("Name");
-            String comment=dish.getString("comment");
-            String parse_id=dish.getString("objectId");
-            String vegan=dish.getString("vegan");
-            String gluten=dish.getString("gluten");
-            int rating=dish.getInt("rating");
-            ParseFile imagefile=dish.getParseFile("image");
-            //image Bytes to bitmap!!!!
-            Bitmap bitmap=null;
+        for(int i=0;i<list.size();i++) {
+            ParseObject dish = list.get(i);
+            String name = dish.getString("Name");
+            String comment = dish.getString("comment");
+            String parse_id = dish.getObjectId();
+            String vegan = dish.getString("vegan");
+            String gluten = dish.getString("gluten");
+            int rating = dish.getInt("rating");
+            ParseFile imagefile = dish.getParseFile("image");
+            Bitmap bitmap = null;
+            if (imagefile !=null) {
+                //image Bytes to bitmap!!!!
 
-         //   try {
-           //     byte[] in=imagefile.getData();
-           //     bitmap = BitmapFactory.decodeByteArray(in, 0, in.length);
-           //     Log.d("bitmap ready");
-          //  } catch (com.parse.ParseException e) {
-          //      e.printStackTrace();
-          //  }
 
-           dish_item item=new dish_item(name,place_id,parse_id,rating,gluten,vegan,comment,bitmap);
-            dishes.add(item);
-            adapter.notifyDataSetChanged();
+                    try {
+                        byte[] in = imagefile.getData();
+                        bitmap = BitmapFactory.decodeByteArray(in, 0, in.length);
+                        Log.d("bitmap ready");
+                    } catch (com.parse.ParseException e) {
+                        e.printStackTrace();
+                    }
+
+            }
+
+                    dish_item item = new dish_item(name, place_id, parse_id, rating, gluten, vegan, comment, bitmap);
+                    dishes.add(item);
+                    adapter.notifyDataSetChanged();
+
+
         }
 
     }
@@ -128,11 +135,16 @@ public class restaurant_dishes_detail_activity extends Activity {
         });
     }
 
-
     private void getIntentData() {
         place_id=getIntent().getStringExtra("place_id");
         name=getIntent().getStringExtra("name");
     }
 
 
+    @Override
+    public void onDetailRequested(String parse_id) {
+        Intent in = new Intent(restaurant_dishes_detail_activity.this, dish_detail_activity.class);
+        in.putExtra("parse_id", parse_id);
+        startActivity(in);
+    }
 }

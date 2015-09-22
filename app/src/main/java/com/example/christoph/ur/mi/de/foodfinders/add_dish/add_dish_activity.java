@@ -59,12 +59,15 @@ public class add_dish_activity extends Activity {
 
         name=(EditText) findViewById(R.id.add_dish_nameedit);
         //neuer Button für Foto hinzufügen nötig; Layout!!!
-        name.setOnClickListener(new View.OnClickListener() {
+        final Button addimage=(Button) findViewById(R.id.add_dish_add_picture_button);
+        addimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
+                addimage.setVisibility(View.GONE);
             }
         });
+
         rating=(RatingBar) findViewById(R.id.add_dish_ratingbar);
         comment=(EditText) findViewById(R.id.add_dish_comment);
         //opens the methode to send Data to parse
@@ -170,6 +173,7 @@ public class add_dish_activity extends Activity {
     protected void onResume() {
         super.onResume();
         ImageView imageview = (ImageView) findViewById(R.id.add_dish_photoimage);
+        imageview.setVisibility(View.VISIBLE);
 
         if (fileUri != null) {
             //image(fileUri) zu bitmap umwandeln
@@ -192,6 +196,7 @@ public class add_dish_activity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            imageview.setVisibility(View.VISIBLE);
             imageview.setImageBitmap(bitmap);
          }
 
