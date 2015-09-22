@@ -58,6 +58,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private double lat;
     private double lng;
     private download data;
+    private CameraUpdate update;
     private ArrayList<restaurantitemstart> table = new ArrayList<>();
 
 
@@ -65,19 +66,27 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("start");
         Parse.enableLocalDatastore(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
-        setUpMapIfNeeded();
-        setUpMarker();
-        data = new download();
-        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
-        data.setRestaurantDataProviderListener(this);
-        updateButton();
+
 
         //set up parse
 
         Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
+
+    }
+
+   @Override
+   protected void onResume(){
+       super.onResume();
+       setUpMapIfNeeded();
+       setUpMarker();
+       data = new download();
+       data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+       data.setRestaurantDataProviderListener(this);
+       updateButton();
+       mMap.moveCamera(update);
+
 
     }
 
@@ -111,14 +120,16 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             lat = location.getLatitude();
             lng = location.getLongitude();
             Log.d(String.valueOf(postion));
-            mMap.addMarker(new MarkerOptions().position(postion).title("You are here!!!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-            CameraUpdate update = CameraUpdateFactory.newLatLng(postion);
-            mMap.moveCamera(update);
+            mMap.addMarker(new MarkerOptions().position(postion).title("Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+             update = CameraUpdateFactory.newLatLng(postion);
+
 
         } else {
             lat = 48.9984593454694;
             lng = 12.097473442554474;
-            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("You are here!!!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("Kein aktueller Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            LatLng latlng = new LatLng(lat, lng);
+            update = CameraUpdateFactory.newLatLng(latlng);
         }
 
     }
