@@ -41,8 +41,8 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
         getIntentData();
         setUpButtons();
         initAdapter();
-       // initDishList();
 
+       // initDishList();
      //   Parse.enableLocalDatastore(this);
      //   Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
     }
@@ -50,12 +50,18 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
     @Override
     protected void onResume(){
         super.onResume();
+
        // initAdapter();
+
+        adapter.clear();
+        initAdapter();
         initDishList();
 
 
 
     }
+
+
 
     private void initAdapter() {
         ListView list = (ListView) findViewById(R.id.restaurant_dishes_detail_list);
