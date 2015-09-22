@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/restaurant_dishes_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Restaurantname"
-        android:id="@+id/restaurant_dishes_detail_header"
-        android:textSize="25dp"
+        android:layout_margin="5dp"
+        android:background="@color/green"
+        android:gravity="center_horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:layout_margin="5dp"
-
-        android:gravity="center_horizontal"
-        android:background="@color/green"/>
+        android:text=""
+        android:textSize="25dp" />
 
     <Button
+        android:id="@+id/restaurant_dishes_detail_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/restaurant_dishes_detail_button"
-        android:text="Gericht hinzufügen"
-        android:textSize="15dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:text="@string/restaurant_dishes_detail_add_dish"
+        android:textSize="15dp" />
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
         android:id="@+id/restaurant_dishes_detail_list"
-        >
-    </ListView>
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"></ListView>
 
 </LinearLayout>

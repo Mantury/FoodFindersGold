@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
-import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 
 import java.util.List;
 
@@ -26,10 +25,11 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
     private OnDetailRequestedListener onDetailRequestedListener;
 
     public dish_item_ArrayAdapter(Context context, List<dish_item> dishes) {
-        super(context, R.layout.dish_item,dishes);
+        super(context, R.layout.dish_item, dishes);
         this.context = context;
-        this.dishes=dishes;
+        this.dishes = dishes;
     }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -40,17 +40,16 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         }
 
         // init Layout resourcen
-        TextView name=(TextView) v.findViewById(R.id.dish_name);
-        ImageView image=(ImageView) v.findViewById(R.id.dish_image);
-        RatingBar rating=(RatingBar) v.findViewById(R.id.dish_ratingbar);
-        TextView vegan=(TextView) v.findViewById(R.id.dish_vegan);
-        TextView gluten=(TextView) v.findViewById(R.id.dish_gluten);
-
+        TextView name = (TextView) v.findViewById(R.id.dish_name);
+        ImageView image = (ImageView) v.findViewById(R.id.dish_image);
+        RatingBar rating = (RatingBar) v.findViewById(R.id.dish_ratingbar);
+        TextView vegan = (TextView) v.findViewById(R.id.dish_vegan);
+        TextView gluten = (TextView) v.findViewById(R.id.dish_gluten);
 
 
         final dish_item dish = dishes.get(position);
         //Auf ganzes Layout on clickListener setzen!
-        RelativeLayout layout= (RelativeLayout) v.findViewById(R.id.dish_layout);
+        RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.dish_layout);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,5 +73,6 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
     }
 
     public interface OnDetailRequestedListener {
-        public void onDetailRequested(String parse_id);}
+        public void onDetailRequested(String parse_id);
+    }
 }

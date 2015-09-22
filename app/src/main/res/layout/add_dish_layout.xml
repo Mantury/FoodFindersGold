@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:text="Photo hinzufügen"
+            android:text="@string/add_dish_add_photo"
             android:textSize="20dp"
             android:visibility="visible" />
 
@@ -60,7 +60,7 @@
         android:id="@+id/add_dish_nameedit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name des Gerichts" />
+        android:hint="@string/add_dish_add_name" />
 
     <RatingBar
         android:id="@+id/add_dish_ratingbar"
@@ -141,6 +141,6 @@
         android:id="@+id/add_dish_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Kommentar" />
+        android:hint="@string/add_dish_layout_Gericht_zum_Kommentar" />
 
 </LinearLayout>

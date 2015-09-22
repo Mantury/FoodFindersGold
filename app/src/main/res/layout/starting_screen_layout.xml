@@ -2,32 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/updatebutton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Karte aktualisieren"
-        android:textSize="20dp"
-        android:inputType="text" />
+        android:inputType="text"
+        android:text="@string/starting_screen_update_map"
+        android:textSize="20dp" />
 
 
-    <fragment
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:ignore="MissingPrefix"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/map"
-    tools:context=".restaurantmaps"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    map:cameraTargetLng="12.097473442554474"
-    map:cameraTargetLat="48.9984593454694"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        map:cameraTargetLat="48.9984593454694"
+        map:cameraTargetLng="12.097473442554474"
         map:cameraZoom="14"
-    map:mapType="normal"
-    map:uiCompass="true" />
+        map:mapType="normal"
+        map:uiCompass="true"
+        tools:context=".restaurantmaps"
+        tools:ignore="MissingPrefix" />
 
 </LinearLayout>

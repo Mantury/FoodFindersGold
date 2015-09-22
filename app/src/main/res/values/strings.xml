@@ -1,12 +1,8 @@
 <resources>
     <string name="app_name">FoodFinders</string>
     <string name="title_activity_restaurantmaps">FoodFinders</string>
-    <string name="test">test</string>
-    <string name="tt">tt</string>
-    <string name="ichgehwasessen">Mhmlecker</string>
-    <string name="wassolldas">warummachtderdas</string>
     <string name="starting_screen_search_sample_text">Restaurant suchen</string>
-    <string name="restaurant_detail_layout_eingetragene_gerichte">(x)eingetragene Gerichte</string>
+    <string name="restaurant_detail_layout_eingetragene_gerichte">eingetragene Gerichte</string>
     <string name="add_dish_layout_cancelbutton_text">Abbrechen</string>
     <string name="add_dish_layout_addbutton_text">Hinzufügen</string>
     <string name="add_dish_layout_Gericht_zum_Kommentar">Kommentar zum Gericht</string>
@@ -14,4 +10,10 @@
     <string name="add_dish_layout_radio_yes">Ja</string>
     <string name="add_dish_layout_radio_no">Nein</string>
     <string name="waiting_string">Kurzen Moment ...</string>
+    <string name="add_dish_add_photo">Photo hinzufügen</string>
+    <string name="add_dish_add_name">Name des Gerichts</string>
+    <string name="starting_screen_update_map">Karte aktualisieren</string>
+    <string name="restaurant_dishes_detail_add_dish">Gericht hinzufügen</string>
+    <string name="restaurant_detail_rate_restaurant">Restaurant bewerten</string>
+    <string name="test">test</string>
 </resources>
