@@ -152,5 +152,6 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
         Intent in = new Intent(restaurant_dishes_detail_activity.this, dish_detail_activity.class);
         in.putExtra("parse_id", parse_id);
         startActivity(in);
+        Log.d(parse_id);
     }
 }
