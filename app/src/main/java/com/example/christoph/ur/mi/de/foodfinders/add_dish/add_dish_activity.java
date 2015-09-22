@@ -39,6 +39,7 @@ public class add_dish_activity extends Activity {
     private RatingBar rating;
     private EditText comment;
     private Uri fileUri;
+    private ParseFile file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,9 @@ public class add_dish_activity extends Activity {
     }
 
     private void SetUpUi() {
+
         name=(EditText) findViewById(R.id.add_dish_nameedit);
+        //neuer Button für Foto hinzufügen nötig; Layout!!!
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,14 +67,7 @@ public class add_dish_activity extends Activity {
         });
         rating=(RatingBar) findViewById(R.id.add_dish_ratingbar);
         comment=(EditText) findViewById(R.id.add_dish_comment);
-        comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              //  ImageView imageview=(ImageView) findViewById(R.id.add_dish_photoimage);
-               //imageview.setImageURI(fileUri);
-
-            }
-        });
+        //opens the methode to send Data to parse
         Button addDish=(Button) findViewById(R.id.add_dish_addbutton);
         addDish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,19 +90,15 @@ public class add_dish_activity extends Activity {
     }
 
     private void publishDish(){
-
-        //String restaurantId=place_id;
+        //gets Data form Layout
         String restaurantname= String.valueOf(name.getText());
         String gluten=getGlutenRadiodata();
         String vegan=getVeganRadiodata();
         float rank = rating.getRating();
         String com=String.valueOf(comment.getText());
-        //ParseFile file= sendImageToParse(fileUri);
-        //file.saveInBackground();
 
         ParseObject gericht = new ParseObject("gericht");
-
-      //  gericht.put("image",file);
+        gericht.put("image",file);
         gericht.put("restaurant_id",place_id);
         gericht.put("rating",rank);
         gericht.put("comment",com);
@@ -157,13 +149,12 @@ public class add_dish_activity extends Activity {
     }
 
     private ParseFile sendImageToParse(Bitmap bit) {
-       // Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(fileUri));
+       // send Bitmap image to parse and returns the file!
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bit.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] image = stream.toByteArray();
-
-        ParseFile file = new ParseFile("Foto.png", image);
+        file = new ParseFile("Foto.png", image);
         return file;
     }
 
@@ -172,25 +163,16 @@ public class add_dish_activity extends Activity {
         Intent takeFoodieImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takeFoodieImage.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
         takeFoodieImage.putExtra("filename", fileUri.toString());
-        //takeFoodieImage.putExtra("filename", String.valueOf(fileUri));
         startActivityForResult(takeFoodieImage, 0);
-
-      //  Bitmap image=FoodieImageFileHelper.getBitmap(fileUri.toString());
-      //  sendImageToParse(image);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("super    es wird resümiert!!!");
         ImageView imageview = (ImageView) findViewById(R.id.add_dish_photoimage);
-        //Bitmap bit =FoodFindersImageFileHelper.getScaledBitmap(String.valueOf(fileUri));
-        //ParseFile file= sendImageToParse(fileUri);
-        //file.saveInBackground();
 
         if (fileUri != null) {
-            //image zu bitmap umwandeln
+            //image(fileUri) zu bitmap umwandeln
             InputStream is = null;
             try {
                 is = getContentResolver().openInputStream(fileUri);
@@ -198,19 +180,11 @@ public class add_dish_activity extends Activity {
                 e.printStackTrace();
             }
             Bitmap bitmap = BitmapFactory.decodeStream(is);
-            ParseFile file =sendImageToParse(bitmap);
+            file =sendImageToParse(bitmap);
             file.saveInBackground();
-
-
-            ParseObject imgupload = new ParseObject("ImageUpload");
-            imgupload.put("ImageName", "AndroidBegin Logo");
-            imgupload.put("ImageFile", file);
-            imgupload.saveInBackground();
 
             Toast.makeText(add_dish_activity.this, "Image Uploaded",
                     Toast.LENGTH_SHORT).show();
-
-            Log.d("wo is des image???");
 
             try {
                 is.close();
@@ -219,8 +193,6 @@ public class add_dish_activity extends Activity {
                 e.printStackTrace();
             }
             imageview.setImageBitmap(bitmap);
-            Log.d("uri     !   " + fileUri.toString());
-      //  imageview.setImageURI(fileUri);
          }
 
 
