@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/dish_layout">
+
+ <TextView
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:id="@+id/dish_name"
+     android:text="Name des Gerichts"
+     android:layout_alignParentLeft="true"
+     />
+
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/dish_image"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/dish_name"
+    />
+
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dish_ratingbar"
+        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Small"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dish_vegan"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/dish_ratingbar"
+        android:text="Vegan: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dish_gluten"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/dish_vegan"
+        android:text="Gluten: "/>
+
+</RelativeLayout>
