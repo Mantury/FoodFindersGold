@@ -80,7 +80,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
        setUpMarker();
        data = new download();
        //&language=de/german???
-       data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&language=German&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+      // data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
        data.setRestaurantDataProviderListener(this);
        updateButton();
        mMap.moveCamera(update);
@@ -95,7 +95,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             public void onClick(View v) {
                 mMap.clear();
                 setUpMarker();
-                data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+                data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
 
             }
         });
@@ -117,15 +117,32 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             postion = new LatLng(location.getLatitude(), location.getLongitude());
             lat = location.getLatitude();
             lng = location.getLongitude();
-            Log.d(String.valueOf(postion));
-            mMap.addMarker(new MarkerOptions().position(postion).title("Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-             update = CameraUpdateFactory.newLatLng(postion);
+            mMap.addMarker(new MarkerOptions().position(postion).title("Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+            update = CameraUpdateFactory.newLatLng(postion);
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    LatLng position = marker.getPosition();
+                    mMap.clear();
+                    mMap.addMarker(new MarkerOptions().position(postion).title("gedraggde Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+                    data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + position.latitude + "," + position.longitude + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
+                }
+            });
+
 
 
         } else {
             lat = 48.9984593454694;
             lng = 12.097473442554474;
-            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("Kein aktueller Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("Kein aktueller Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
             LatLng latlng = new LatLng(lat, lng);
             update = CameraUpdateFactory.newLatLng(latlng);
         }

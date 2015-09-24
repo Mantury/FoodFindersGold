@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -149,15 +150,15 @@ public class add_dish_activity extends Activity {
     }
 
     //Asynctask!!???
-    private ParseFile sendImageToParse(Bitmap bit) {
-       // send Bitmap image to parse and returns the file!
+    private void sendImageToParse(Bitmap bit) {
+        // send Bitmap image to parse and returns the file!
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         //Qualität von 0-100!!!
-        bit.compress(Bitmap.CompressFormat.WEBP, 100, stream);
+        bit.compress(Bitmap.CompressFormat.PNG, 50, stream);
         Log.d("uplaod!!!!");
         byte[] image = stream.toByteArray();
-        file = new ParseFile("Foto.png", image);
-        return file;
+        file = new ParseFile("Foto.jpeg", image);
+        file.saveInBackground();
     }
 
 
@@ -182,12 +183,16 @@ public class add_dish_activity extends Activity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            Bitmap bitmap = BitmapFactory.decodeStream(is);
+            BitmapFactory.Options bitopt=new BitmapFactory.Options();
+            bitopt.inJustDecodeBounds=true;
+            bitopt.inSampleSize=5;
+            bitopt.inJustDecodeBounds=false;
+            Rect rect =new Rect(1,1,1,1);
+            Bitmap bit=BitmapFactory.decodeStream(is,rect, bitopt);
 
             //versuch bild zu kommprimieren
 
-            file =sendImageToParse(bitmap);
-            file.saveInBackground();
+            sendImageToParse(bit);
 
             Toast.makeText(add_dish_activity.this, "Image Uploaded",
                     Toast.LENGTH_SHORT).show();
@@ -197,9 +202,9 @@ public class add_dish_activity extends Activity {
 
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+           }
             imageview.setVisibility(View.VISIBLE);
-            imageview.setImageBitmap(bitmap);
+            imageview.setImageBitmap(bit);
          }
 
 
