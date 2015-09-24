@@ -7,11 +7,14 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/dish_detail_name"
         android:textSize="25dp"
+        android:layout_margin="15dp"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/green"
         android:text="@string/test"/>
 
     <ImageView
@@ -32,18 +35,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/dish_detail_vegan_info"
-        android:text="Vegan:"/>
+        android:text="Vegan:"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20dp"
+        />
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/dish_detail_glutenfree_info"
-        android:text="Glutenfrei:"/>
+        android:text="Glutenfrei:"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/dish_detail_comment"
-        android:text="@string/test"/>
+        android:text="@string/test"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20dp"/>
 
 </LinearLayout>

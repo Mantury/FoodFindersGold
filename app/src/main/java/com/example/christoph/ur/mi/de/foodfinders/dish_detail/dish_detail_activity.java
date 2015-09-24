@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -69,11 +70,30 @@ public class dish_detail_activity extends Activity{
         TextView vegan=(TextView) findViewById(R.id.dish_detail_vegan_info);
         TextView gluten=(TextView) findViewById(R.id.dish_detail_glutenfree_info);
         TextView comment=(TextView) findViewById(R.id.dish_detail_comment);
+
         ParseObject dish=list.get(0);
         name.setText(dish.getString("Name"));
         rating.setRating(dish.getInt("rating"));
-        vegan.setText(dish.getString("vegan"));
-        gluten.setText(dish.getString("gluten"));
+
+
+
+        vegan.setText("Vegan:" + dish.getString("vegan"));
+        if(dish.getString("vegan").equals("Ja")){
+            vegan.setBackgroundResource(R.color.green);
+        }
+        if(dish.getString("vegan").equals("Keine Info")){
+            vegan.setBackgroundResource(R.color.yellow);
+        }
+
+
+        gluten.setText("Glutenfrei:" + dish.getString("gluten"));
+        if(dish.getString("gluten").equals("Ja") ){
+            gluten.setBackgroundResource(R.color.green);
+        }
+        if(dish.getString("gluten").equals("Keine Info") ){
+            gluten.setBackgroundResource(R.color.yellow);
+        }
+
         comment.setText(dish.getString("comment"));
 
         Bitmap bitmap=null;

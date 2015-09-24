@@ -44,7 +44,7 @@ public class download {
         new RestaurantAsyncTask().execute(request);
     }
 
-    public void getRestaurantPicturefromURL(String URL){
+    public void getRestaurantPicturefromURL(String URL) {
         new RestaurantDetailPictureAsyncTask().execute(URL);
     }
 
@@ -151,17 +151,17 @@ public class download {
     }
 
 
-    private  class RestaurantDetailPictureAsyncTask extends AsyncTask<String, Integer, Bitmap> {
+    private class RestaurantDetailPictureAsyncTask extends AsyncTask<String, Integer, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
-            Bitmap picture=null;
+            Bitmap picture = null;
             try {
-                URL url=new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+params[0]+"&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
+                URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + params[0] + "&language=de&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoInput(true);
                 conn.connect();
-                InputStream is= conn.getInputStream();
-                picture= BitmapFactory.decodeStream(is);
+                InputStream is = conn.getInputStream();
+                picture = BitmapFactory.decodeStream(is);
 
 
             } catch (IOException e) {

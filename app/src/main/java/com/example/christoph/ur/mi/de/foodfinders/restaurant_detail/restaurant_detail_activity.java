@@ -93,10 +93,11 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         TextView name = (TextView) findViewById(R.id.restaurant_detail_textview_name);
         name.setText(item.getName());
         TextView öffnungzeiten = (TextView) findViewById(R.id.restaurant_detail_textview_openinghours);
-        if (item.getOpenweekday() == null) {
-            öffnungzeiten.setText("Keine Öffnungszeiten verfügbar!!!!!!");
+        Log.d("penislog" + item.getOpenweekday());
+        if (item.getOpenweekday() == "notfound") {
+            öffnungzeiten.setText("Keine Öffnungszeiten verfügbar!");
         } else {
-            öffnungzeiten.setText(item.getOpenweekday());
+            öffnungzeiten.setText(parseOpenninghours(item.getOpenweekday()));
         }
 
         TextView number = (TextView) findViewById(R.id.restaurant_detail_textview_telephonenumber);
@@ -113,6 +114,15 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     }
 
+    private String parseOpenninghours (String openWeekday){
+        String s = openWeekday;
+        s = s.substring(1,s.length()-1);
+        String delims = "[,]+";
+        String[] tokens = s.split(delims);
+        String parsedweekday = tokens[0] +"\n" + tokens[1] +"\n" + tokens[2] +"\n" + tokens[3] +"\n" + tokens[4] +"\n" + tokens[5] +"\n" + tokens[6];
+        return parsedweekday;
+    }
+
     @Override
     public void onRestaurantDetailPictureReceived(Bitmap result) {
         Log.d("versucht Bild");
@@ -122,19 +132,19 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     private void setDishesCounter() {
         final int[] number = {0};
-    ParseQuery<ParseObject> query = ParseQuery.getQuery("gericht");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("gericht");
         query.whereEqualTo("restaurant_id", place_id);
-    query.findInBackground(new FindCallback<ParseObject>() {
-                               @Override
-                               public void done(List<ParseObject> list, ParseException e) {
-                                   if (e == null) {
-                                       Log.d(list.size() + "number dishes :) ");
-                                       //changes Text:
-                                       TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
-                                       int dishes = list.size();
-                                       dishcounter.setText(dishes + " eingetragene Gerichte");
-                                   } else {
-                                       Log.d("Error: " + e.getMessage());
+        query.findInBackground(new FindCallback<ParseObject>() {
+                                   @Override
+                                   public void done(List<ParseObject> list, ParseException e) {
+                                       if (e == null) {
+                                           Log.d(list.size() + "number dishes :) ");
+                                           //changes Text:
+                                           TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
+                                           int dishes = list.size();
+                                           dishcounter.setText(dishes + " eingetragene Gerichte");
+                                       } else {
+                                           Log.d("Error: " + e.getMessage());
 
                                    }
                                }
