@@ -41,7 +41,9 @@ public class JSONtoObjectConverter {
             JSONObject jsonOb = new JSONObject(JSONResponse);
             Log.d(String.valueOf(jsonOb));
             JSONArray jsonArray =jsonOb.getJSONArray("results");
+            //results=20->kleinerer radius
 
+            //results<5 größerer radius
 
             Log.d("converter" + jsonArray.length());
 
@@ -113,6 +115,7 @@ public class JSONtoObjectConverter {
             if(openinghours!=null){
                 open=openinghours.getBoolean("open_now");
                 openweekday=openinghours.getString("weekday_text");
+
             }
 
             JSONArray comments= jsonrestaurant.getJSONArray("reviews");

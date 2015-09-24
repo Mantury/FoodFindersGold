@@ -91,18 +91,12 @@ public class download {
 
         @Override
         protected void onPostExecute(String result) {
+            //Erstellt die arraylist mit hilfe JSONtoObjectConverter
             super.onPostExecute(result);
-            Log.d("result   " + result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             restaurants = new ArrayList<restaurantitemstart>();
             restaurants = converter.convertJSONTorestaurantitemstart();
-
-            //Log.d(String.valueOf(restaurants.size()));
             onrestaurantDataProviderListener.onRestaurantDataReceived(restaurants);
-
-            Log.d("alle restaurantitemstartobjecte");
-            Log.d(String.valueOf(restaurants));
-
         }
     }
 
@@ -151,7 +145,6 @@ public class download {
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             restaurantdetailitem restaurant = converter.convertToRestaurantDetailItem();
-            Log.d("post execute" + restaurant.getName());
             onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
 
         }

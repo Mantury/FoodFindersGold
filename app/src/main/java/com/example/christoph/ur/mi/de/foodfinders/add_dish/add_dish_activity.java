@@ -24,6 +24,7 @@ import com.parse.Parse;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,9 +47,6 @@ public class add_dish_activity extends Activity {
         Log.d("start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_dish_layout);
-        //Set up parse nur einmal!!!!!---> hier nicht nötig????
-       // Parse.enableLocalDatastore(this);
-        //Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
         getIntentdata();
         SetUpUi();
 
@@ -70,13 +68,12 @@ public class add_dish_activity extends Activity {
 
         rating=(RatingBar) findViewById(R.id.add_dish_ratingbar);
         comment=(EditText) findViewById(R.id.add_dish_comment);
-        //opens the methode to send Data to parse
         Button addDish=(Button) findViewById(R.id.add_dish_addbutton);
+        //opens the methode to send Data to parse
         addDish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 publishDish();
-                finish();
             }
         });
         Button cancelDish=(Button) findViewById(R.id.add_dish_cancelbutton);
@@ -106,11 +103,11 @@ public class add_dish_activity extends Activity {
         gericht.put("rating",rank);
         gericht.put("comment",com);
         gericht.put("gluten",gluten);
-        gericht.put("vegan",vegan);
+        gericht.put("vegan", vegan);
         gericht.put("Name", restaurantname);
-
         gericht.saveInBackground();
-
+        Toast.makeText(add_dish_activity.this, "Dish Uploaded", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private String getGlutenRadiodata(){
@@ -151,11 +148,13 @@ public class add_dish_activity extends Activity {
 
     }
 
+    //Asynctask!!???
     private ParseFile sendImageToParse(Bitmap bit) {
        // send Bitmap image to parse and returns the file!
-
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bit.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        //Qualität von 0-100!!!
+        bit.compress(Bitmap.CompressFormat.WEBP, 100, stream);
+        Log.d("uplaod!!!!");
         byte[] image = stream.toByteArray();
         file = new ParseFile("Foto.png", image);
         return file;
@@ -184,6 +183,9 @@ public class add_dish_activity extends Activity {
                 e.printStackTrace();
             }
             Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+            //versuch bild zu kommprimieren
+
             file =sendImageToParse(bitmap);
             file.saveInBackground();
 

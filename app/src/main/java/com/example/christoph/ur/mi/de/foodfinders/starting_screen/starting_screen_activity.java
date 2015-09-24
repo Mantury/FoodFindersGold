@@ -59,21 +59,18 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private double lng;
     private download data;
     private CameraUpdate update;
-    private ArrayList<restaurantitemstart> table = new ArrayList<>();
+    private ArrayList<restaurantitemstart> restaurants = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("start");
         Parse.enableLocalDatastore(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
 
-
-        //set up parse
-
         Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
-
     }
 
    @Override
@@ -82,7 +79,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
        setUpMapIfNeeded();
        setUpMarker();
        data = new download();
-       data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+       //&language=de/german???
+       data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&language=German&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
        data.setRestaurantDataProviderListener(this);
        updateButton();
        mMap.moveCamera(update);
@@ -97,7 +95,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             public void onClick(View v) {
                 mMap.clear();
                 setUpMarker();
-                data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1000&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
+                data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA");
 
             }
         });
@@ -162,12 +160,11 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
-        //  Log.d("funktioniert" + restaurants.size());
-        table = restaurants;
+        //umliegende Restaurants werden in Marker mit verschiedenen Farben umgewandelt!
+        this.restaurants = restaurants;
 
         for (int i = 0; i < restaurants.size(); i++) {
             restaurantitemstart item = restaurants.get(i);
-
             postion = new LatLng(item.getLatitude(), item.getLongitude());
             String name = item.getName();
             String opennow;
@@ -187,20 +184,10 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
                 }
             }
-
-                //   mMap.setInfoWindowAdapter(new MarkerInfoWindowAdapter());
-
-                //    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                //        @Override
-                //        public boolean onMarkerClick(Marker marker) {
-                //            marker.showInfoWindow();
-                //            return true;
-                //        }
-                //    });
+                //setzt Onclicklistener
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        Log.d(String.valueOf(marker.getTitle()));
                         openRestaurantDetail(getPlaceId(marker.getTitle()));
                     }
                 });
@@ -210,20 +197,19 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
 
     public String getPlaceId(String title) {
+        //sucht mit Namen nach Restaurant und holt sich die place_id
         String place_id = "null";
-        for (int i = 0; i < table.size(); i++) {
-            if (table.get(i).getName().equals(title)) {
-                Log.d("treffer");
-                place_id = table.get(i).getPlace_id();
-
+        for (int i = 0; i < restaurants.size(); i++) {
+            if (restaurants.get(i).getName().equals(title)) {
+                place_id = restaurants.get(i).getPlace_id();
             }
-
         }
         return place_id;
     }
 
 
     private void openRestaurantDetail(String place_id) {
+        //startet Restaurantdetailactivity und übergibt die place_id;
         Intent i = new Intent(starting_screen_activity.this, restaurant_detail_activity.class);
         i.putExtra("name", place_id);
         startActivity(i);
