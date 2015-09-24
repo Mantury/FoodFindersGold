@@ -69,6 +69,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
+        setUpMapIfNeeded();
+        setUpMarker();
+        data = new download();
         data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
 
         Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
@@ -77,10 +80,10 @@ public class starting_screen_activity extends FragmentActivity implements downlo
    @Override
    protected void onResume(){
        super.onResume();
-       setUpMapIfNeeded();
-       setUpMarker();
-       data = new download();
-       //&language=de/german???
+    //   setUpMapIfNeeded();
+     //  setUpMarker();
+    //   data = new download();
+       //&language=de???
       // data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
        data.setRestaurantDataProviderListener(this);
        updateButton();
@@ -134,6 +137,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                     LatLng position = marker.getPosition();
                     mMap.clear();
                     mMap.addMarker(new MarkerOptions().position(marker.getPosition()).title("gedraggde Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+                    update = CameraUpdateFactory.newLatLng(marker.getPosition());
+
                     data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + position.latitude + "," + position.longitude + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
                 }
             });
