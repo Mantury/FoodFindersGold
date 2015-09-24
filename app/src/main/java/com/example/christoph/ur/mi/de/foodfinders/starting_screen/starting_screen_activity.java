@@ -69,6 +69,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
+        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
 
         Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
     }
@@ -132,7 +133,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 public void onMarkerDragEnd(Marker marker) {
                     LatLng position = marker.getPosition();
                     mMap.clear();
-                    mMap.addMarker(new MarkerOptions().position(postion).title("gedraggde Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+                    mMap.addMarker(new MarkerOptions().position(marker.getPosition()).title("gedraggde Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
                     data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + position.latitude + "," + position.longitude + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
                 }
             });
