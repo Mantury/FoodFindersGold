@@ -107,7 +107,8 @@ public class dish_detail_activity extends Activity {
             }
 
         }
-        image.setImageBitmap(bitmap);
 
+        image.setImageBitmap(bitmap);
+        image.setMaxHeight(100);
     }
 }

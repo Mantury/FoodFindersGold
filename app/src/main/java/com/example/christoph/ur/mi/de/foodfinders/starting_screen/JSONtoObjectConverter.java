@@ -86,14 +86,22 @@ public class JSONtoObjectConverter {
                 open = openinghours.getBoolean("open_now");
                 openweekday = openinghours.getString("weekday_text");
             }
-            JSONArray comments = jsonrestaurant.getJSONArray("reviews");
+
+            JSONArray comments = jsonrestaurant.optJSONArray("reviews");
             commentlist = new ArrayList<String>();
-            for (int i = 0; i < comments.length(); i++) {
-                JSONObject jsonObject = comments.getJSONObject(i);
-                String comment = jsonObject.getString("text");
-                commentlist.add(comment);
+            if(comments!=null) {
+              //  commentlist = new ArrayList<String>();
+                for (int i = 0; i < comments.length(); i++) {
+                    JSONObject jsonObject = comments.getJSONObject(i);
+                    String comment = jsonObject.getString("text");
+                    commentlist.add(comment);
+                }
+            }else{
+                commentlist.add("Sorry no comments!");
             }
-            String rating = jsonrestaurant.getString("user_ratings_total");
+
+            String rating = "no ratings";
+            rating = jsonrestaurant.optString("user_ratings_total");
             String image_ref = "no Image!!";
             JSONArray jsonImage = jsonrestaurant.optJSONArray("photos");
             if (jsonImage != null) {

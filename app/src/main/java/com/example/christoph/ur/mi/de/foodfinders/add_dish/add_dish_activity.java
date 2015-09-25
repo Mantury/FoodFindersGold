@@ -171,7 +171,7 @@ public class add_dish_activity extends Activity {
             }
             BitmapFactory.Options bitopt = new BitmapFactory.Options();
             bitopt.inJustDecodeBounds = true;
-            bitopt.inSampleSize = 5;
+            bitopt.inSampleSize = 10;
             bitopt.inJustDecodeBounds = false;
             Rect rect = new Rect(1, 1, 1, 1);
             Bitmap bit = BitmapFactory.decodeStream(is, rect, bitopt);

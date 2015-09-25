@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
@@ -34,9 +35,9 @@ import java.util.ArrayList;
 public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener {
 
     private GoogleMap mMap;
-    private LatLng postion;
-    private double lat;
-    private double lng;
+    private LatLng position;
+    private double latUr=48.9984593454694;
+    private double lngUr=12.097473442554474 ;
     private download data;
     private CameraUpdate update;
     private ArrayList<restaurantitemstart> restaurants = new ArrayList<>();
@@ -47,49 +48,88 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private String placesearchparameter2 = "&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
     private int placesearchparameterradius = 1500;
     private Circle myCircle;
+    private boolean drag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("start");
-        Parse.enableLocalDatastore(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
+        setUpParse();
         setUpMapIfNeeded();
         setUpMarker();
-        data = new download();
-        data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
+        draggablePosition();
+        sekker();
+        updateButton();
+        setUpData();
+    }
+
+
+    private void setUpParse() {
+        Parse.enableLocalDatastore(this);
         Parse.initialize(this, parseApplicationKey, parseClientKey);
     }
+
+    private void setUpData() {
+        data = new download();
+        getData();
+        data.setRestaurantDataProviderListener(this);
+    }
+
+    private void getData(){
+        data.getlocationdata(placesearchurl + position.latitude + "," + position.longitude + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
+        Toast.makeText(starting_screen_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        data.setRestaurantDataProviderListener(this);
         updateButton();
-        sekker();
-        mMap.moveCamera(update);
     }
 
+    private void draggablePosition() {
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                mMap.clear();
+                position = marker.getPosition();
+                drag = true;
+                setUpMarker();
+                getData();
+            }
+        });
+
+    }
     private void updateButton() {
         Button update = (Button) findViewById(R.id.updatebutton);
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMap.clear();
+                drag = false;
                 setUpMarker();
-                data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
-            }
+                getData();            }
         });
     }
 
     private void sekker(){
-        SeekBar seeker = (SeekBar) findViewById(R.id.starting_screen_seek_bar);
+        final SeekBar seeker = (SeekBar) findViewById(R.id.starting_screen_seek_bar);
         seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
-            public void onProgressChanged(SeekBar seeker, int progress, boolean fromUser){
+            public void onProgressChanged(SeekBar seeker, int progress, boolean fromUser) {
+
 
                 CircleOptions circleOptions = new CircleOptions()
-                        .center(new LatLng(lat, lng))   //set center
+                        .center(position)   //set center
                         .radius(placesearchparameterradius * 1.2)   //set radius in meters
                         .fillColor(Color.TRANSPARENT)  //default
                         .strokeColor(R.color.green)
@@ -108,51 +148,41 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mMap.clear();
                 setUpMarker();
-                data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
-            }
+                getData();            }
         });
 
 
     }
 
-    //Sets up a marker at the users current position or uses the UR as default location
+    //Sets up a marker at the users current position or uses the UR as default location or the dragged position
     private void setUpMarker() {
         String locService = Context.LOCATION_SERVICE;
         LocationManager locationManager = (LocationManager) getSystemService(locService);
         String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
-        Log.d(String.valueOf(location));
-        if (location != null) {
-            postion = new LatLng(location.getLatitude(), location.getLongitude());
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-            mMap.addMarker(new MarkerOptions().position(postion).title("Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-            update = CameraUpdateFactory.newLatLng(postion);
-            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                @Override
-                public void onMarkerDragStart(Marker marker) {
-                }
 
-                @Override
-                public void onMarkerDrag(Marker marker) {
-                }
+        if(drag){
 
-                @Override
-                public void onMarkerDragEnd(Marker marker) {
-                    LatLng position = marker.getPosition();
-                    mMap.clear();
-                    mMap.addMarker(new MarkerOptions().position(marker.getPosition()).title("gedraggde Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-                    update = CameraUpdateFactory.newLatLng(marker.getPosition());
+            mMap.addMarker(new MarkerOptions().position(position).title("gedragte Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+            update = CameraUpdateFactory.newLatLng(position);
+            mMap.moveCamera(update);
 
-                    data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + position.latitude + "," + position.longitude + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
-                }
-            });
-        } else {
-            lat = 48.9984593454694;
-            lng = 12.097473442554474;
-            mMap.addMarker(new MarkerOptions().position(new LatLng(48.9984593454694, 12.097473442554474)).title("Kein aktueller Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-            LatLng latlng = new LatLng(lat, lng);
-            update = CameraUpdateFactory.newLatLng(latlng);
+        }else {
+
+            if (location != null) {
+
+                position = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(position).title("Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+                update = CameraUpdateFactory.newLatLng(position);
+                mMap.moveCamera(update);
+
+            } else {
+                LatLng defaultUr = new LatLng(latUr, lngUr);
+                position=defaultUr;
+             mMap.addMarker(new MarkerOptions().position(defaultUr).title("Kein aktueller Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+                update = CameraUpdateFactory.newLatLng(defaultUr);
+                mMap.moveCamera(update);
+            }
         }
     }
 
@@ -184,20 +214,20 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         this.restaurants = restaurants;
         for (int i = 0; i < restaurants.size(); i++) {
             restaurantitemstart item = restaurants.get(i);
-            postion = new LatLng(item.getLatitude(), item.getLongitude());
+            LatLng positionitem = new LatLng(item.getLatitude(), item.getLongitude());
             String name = item.getName();
             String opennow;
             if (item.isOpenednow() == 0) {
                 opennow = "Öffnungszeiten n.a.";
-                mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
+                mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
             } else {
                 if (item.isOpenednow() == 1) {
                     opennow = "Offen";
-                    mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
+                    mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
                 }
                 if (item.isOpenednow() == 2) {
                     opennow = "Geschlossen";
-                    mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
+                    mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
                 }
             }
             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
