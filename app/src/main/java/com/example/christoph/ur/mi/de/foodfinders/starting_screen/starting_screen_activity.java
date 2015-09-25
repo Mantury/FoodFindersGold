@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
@@ -38,7 +40,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private String parseClientKey = "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7";
     private String parseApplicationKey = "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9";
     private String placesearchurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
-    private String placesearchparameter ="&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
+    private String placesearchparameter1 ="&radius=";
+    private String placesearchparameter2 = "&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
+    private int placesearchparameterradius = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         setUpMapIfNeeded();
         setUpMarker();
         data = new download();
-        data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter);
+        data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
         Parse.initialize(this, parseApplicationKey, parseClientKey);
     }
 
@@ -58,6 +62,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onResume();
         data.setRestaurantDataProviderListener(this);
         updateButton();
+        sekker();
         mMap.moveCamera(update);
     }
 
@@ -68,9 +73,33 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             public void onClick(View v) {
                 mMap.clear();
                 setUpMarker();
-                data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter);
+                data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
             }
         });
+    }
+
+    private void sekker(){
+        SeekBar seeker = (SeekBar) findViewById(R.id.starting_screen_seek_bar);
+        seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seeker, int progress, boolean fromUser){
+                placesearchparameterradius = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mMap.clear();
+                setUpMarker();
+                data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
+            }
+        });
+
+
     }
 
     //Sets up a marker at the users current position or uses the UR as default location

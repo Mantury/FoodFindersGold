@@ -4,6 +4,19 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="1500"
+        android:id="@+id/starting_screen_seek_bar"
+        android:progress="1000"
+        android:progressDrawable="@color/green"
+        android:layout_gravity="center"
+        android:thumb="@mipmap/prelogo"
+        android:hapticFeedbackEnabled="true"
+        />
+
     <Button
         android:id="@+id/updatebutton"
         android:layout_width="match_parent"
