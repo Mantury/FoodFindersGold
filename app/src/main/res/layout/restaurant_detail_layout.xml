@@ -83,14 +83,14 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/restaurant_comment_button"
+    <TextView
+        android:id="@+id/restaurant_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:background="@color/yellow"
         android:padding="5dp"
-        android:text="@string/restaurant_detail_rate_restaurant"
+        android:text="Google+ Bewertungen"
         android:textSize="20dp" />
 
 

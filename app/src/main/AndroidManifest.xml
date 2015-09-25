@@ -40,7 +40,8 @@
 
         <activity
             android:name=".starting_screen.starting_screen_activity"
-            android:label="@string/title_activity_restaurantmaps" >
+            android:label="@string/title_activity_restaurantmaps"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -51,23 +52,29 @@
 
         <activity
             android:name=".restaurant_detail.restaurant_detail_activity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+
 
         </activity>
 
         <activity android:name=".restaurant_dishes_detail.restaurant_dishes_detail_activity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
         </activity>
 
         <activity
             android:name=".add_dish.add_dish_activity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
 
         </activity>
 
         <activity
             android:name=".dish_detail.dish_detail_activity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
 
         </activity>
 
