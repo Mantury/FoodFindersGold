@@ -72,8 +72,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         if (ni == null) {
-            Log.d("no Internet!!!!");
             Toast.makeText(starting_screen_activity.this, "No Internet", Toast.LENGTH_SHORT).show();
+            finish();
            return false;
         }else {
             return true;
