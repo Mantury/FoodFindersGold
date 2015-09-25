@@ -1,5 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
+//This class saves the basic information of a restaurant from the Google API.
+//The markers for the map are created with this information.
 public class restaurantitemstart {
 
     private String name;

@@ -2,6 +2,9 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail;
 
 import android.graphics.Bitmap;
 
+//This class saves the data for a dish. This data gets also saved in a cloud storage and is then downloaded.
+//A "dish_item" saves all the information a user wants to know about a meal. Only Users of the app can create "dish_items"
+
 public class dish_item {
 
     String nameDish;

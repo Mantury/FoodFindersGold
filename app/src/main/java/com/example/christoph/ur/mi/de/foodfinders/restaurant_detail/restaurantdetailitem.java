@@ -3,6 +3,8 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 
 import java.util.ArrayList;
 
+//This class saves all the information for the detail view of a restaurant.
+//Since all the data is redownloaded the class was made independent from "restaurantitemstart".
 
 public class restaurantdetailitem {
 

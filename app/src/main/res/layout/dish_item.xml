@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/dish_layout"
-    android:padding="5dp"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
 
- <TextView
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:id="@+id/dish_name"
-     android:text="Name des Gerichts"
-     android:textSize="15dp"
-     android:layout_alignParentLeft="true"
-     />
+    <TextView
+        android:id="@+id/dish_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="Name des Gerichts"
+        android:textSize="15dp" />
 
-<ImageView
-    android:layout_width="50dp"
-    android:layout_height="50dp"
-    android:id="@+id/dish_image"
-    android:layout_alignParentLeft="true"
-    android:layout_below="@+id/dish_name"
-    />
+    <ImageView
+        android:id="@+id/dish_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dish_name" />
 
 
     <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/dish_ratingbar"
         style="@android:style/Widget.DeviceDefault.Light.RatingBar.Small"
-        android:layout_alignParentRight="true"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" />
+
+    <TextView
         android:id="@+id/dish_vegan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/dish_ratingbar"
-        android:text="Vegan: "/>
+        android:text="Vegan: " />
 
     <TextView
+        android:id="@+id/dish_gluten"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dish_gluten"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/dish_vegan"
-        android:text="Gluten: "/>
+        android:text="Gluten: " />
 
 </RelativeLayout>

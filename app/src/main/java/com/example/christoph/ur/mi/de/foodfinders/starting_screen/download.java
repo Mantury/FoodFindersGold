@@ -15,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+//this class download all informations needed from the Google-APIs.
+
 
 public class download {
 
@@ -25,18 +27,18 @@ public class download {
     private final String restaurantdetailphotourl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
     private final String restaurantsearchparametersurl = "&language=de&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA";
 
-    //for Starting_screen_activity
+    //For the starting_screen_activity.
     public void setRestaurantDataProviderListener(OnRestaurantDataProviderListener onrestaurantDataProviderListener) {
         this.onrestaurantDataProviderListener = onrestaurantDataProviderListener;
     }
 
-    //for restaurant_detail_activity
+    //For the restaurant_detail_activity.
     public void setOnRestaurantDetailDataProviderListener(OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener) {
         this.onRestaurantDetailDataProviderListener = onRestaurantDetailDataProviderListener;
     }
 
-    //for Starting_screen_activity
-    // gets the data in an Arraylist from converter.convertJSONToMensaDishList();
+    //For the starting_screen_activity.
+    //Gets the data in an Arraylist from converter.convertJSONToMensaDishList();.
     public void getlocationdata(String request) {
         new DataAsyncTask().execute(request);
 
@@ -50,7 +52,7 @@ public class download {
         new RestaurantDetailPictureAsyncTask().execute(URL);
     }
 
-    ////for Starting_screen_activity
+    //For the starting_screen_activity.
     private class DataAsyncTask extends AsyncTask<String, Integer, String> {
 
         @Override
@@ -90,7 +92,7 @@ public class download {
         }
     }
 
-    //for restaurant_detail_activity
+    //For the restaurant_detail_activity.
     private class RestaurantAsyncTask extends AsyncTask<String, Integer, String> {
 
         @Override

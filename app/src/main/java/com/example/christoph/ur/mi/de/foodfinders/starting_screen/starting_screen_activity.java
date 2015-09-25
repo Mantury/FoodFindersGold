@@ -1,53 +1,29 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
-import android.animation.AnimatorSet;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
-
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.Place;
-
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.Parse;
-import com.parse.ParseObject;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+
+//This activity is the starting screen of the app.
 
 
 public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener {
@@ -59,6 +35,10 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private download data;
     private CameraUpdate update;
     private ArrayList<restaurantitemstart> restaurants = new ArrayList<>();
+    private String parseClientKey = "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7";
+    private String parseApplicationKey = "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9";
+    private String placesearchurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
+    private String placesearchparameter ="&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,18 +49,13 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         setUpMapIfNeeded();
         setUpMarker();
         data = new download();
-        data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
-        Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
+        data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter);
+        Parse.initialize(this, parseApplicationKey, parseClientKey);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //   setUpMapIfNeeded();
-        //  setUpMarker();
-        //   data = new download();
-        //&language=de???
-        // data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
         data.setRestaurantDataProviderListener(this);
         updateButton();
         mMap.moveCamera(update);
@@ -93,7 +68,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             public void onClick(View v) {
                 mMap.clear();
                 setUpMarker();
-                data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
+                data.getlocationdata(placesearchurl + lat + "," + lng + placesearchparameter);
             }
         });
     }
@@ -171,7 +146,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             String name = item.getName();
             String opennow;
             if (item.isOpenednow() == 0) {
-                opennow = "Öffnungszeiten n.A.";
+                opennow = "Öffnungszeiten n.a.";
                 mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
             } else {
                 if (item.isOpenednow() == 1) {
@@ -203,7 +178,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     }
 
     private void openRestaurantDetail(String place_id) {
-        //startet Restaurantdetailactivity und übergibt die place_id;
         Intent i = new Intent(starting_screen_activity.this, restaurant_detail_activity.class);
         i.putExtra("name", place_id);
         startActivity(i);

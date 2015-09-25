@@ -1,62 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/restaurant_detail_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/restaurant_detail_layout"
     android:weightSum="1">
 
     <ImageView
-        android:padding="5dp"
         android:id="@+id/restaurant_detail_imageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.5"
-       />
+        android:padding="5dp" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="5dp"
-        android:padding="5dp"
         android:id="@+id/restaurant_detail_linearlayout_top"
-        android:background="@color/green">
-
-    <TextView
-        android:id="@+id/restaurant_detail_textview_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="25dp"
-        android:text="@string/waiting_string"/>
+        android:layout_margin="5dp"
+        android:background="@color/green"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-    <TextView
-        android:id="@+id/restaurant_detail_textview_openinghours"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/waiting_string"
-        />
+        <TextView
+            android:id="@+id/restaurant_detail_textview_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/waiting_string"
+            android:textSize="25dp" />
 
-
-    <TextView
-        android:id="@+id/restaurant_detail_textview_telephonenumber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/waiting_string"
-        android:textSize="15dp"
-        android:textColor="@color/blue"
-        android:autoLink="phone"
-        android:linksClickable="true"
-        />
+        <TextView
+            android:id="@+id/restaurant_detail_textview_openinghours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/waiting_string" />
 
 
-    <TextView
-        android:id="@+id/restaurant_detail_textview_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/waiting_string"/>
+        <TextView
+            android:id="@+id/restaurant_detail_textview_telephonenumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="phone"
+            android:linksClickable="true"
+            android:text="@string/waiting_string"
+            android:textColor="@color/blue"
+            android:textSize="15dp" />
+
+
+        <TextView
+            android:id="@+id/restaurant_detail_textview_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/waiting_string" />
 
     </LinearLayout>
 
@@ -64,44 +61,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:outlineProvider="bounds" >
+        android:outlineProvider="bounds">
 
         <TextView
             android:id="@+id/restaurant_detail_dishcounter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
+            android:gravity="center"
             android:text="@string/restaurant_detail_layout_eingetragene_gerichte"
-            android:textSize="20dp"
-            android:gravity="center"/>
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/restaurant_detail_dishaddbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="0.2"
             android:background="@color/yellow"
-            android:text="+"
-            android:layout_margin="5dp"/>
+            android:text="+" />
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/restaurant_comment_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/restaurant_detail_rate_restaurant"
-        android:textSize="20dp"
         android:layout_margin="5dp"
-        android:padding="5dp"
         android:background="@color/yellow"
-        android:id="@+id/restaurant_comment_button"/>
+        android:padding="5dp"
+        android:text="@string/restaurant_detail_rate_restaurant"
+        android:textSize="20dp" />
 
 
     <ListView
         android:id="@+id/restaurant_detail_commentlistview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+        android:layout_height="match_parent"></ListView>
 
 
 </LinearLayout>

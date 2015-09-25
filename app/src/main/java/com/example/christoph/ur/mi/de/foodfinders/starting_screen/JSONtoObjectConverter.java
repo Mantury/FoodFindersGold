@@ -67,7 +67,7 @@ public class JSONtoObjectConverter {
         return list;
     }
 
-    //creates a restaurantdetailitem by redownloading the data
+    //Creates a restaurantdetailitem by redownloading the data.
     public restaurantdetailitem convertToRestaurantDetailItem() {
         restaurantdetailitem restaurantdetail = null;
         try {

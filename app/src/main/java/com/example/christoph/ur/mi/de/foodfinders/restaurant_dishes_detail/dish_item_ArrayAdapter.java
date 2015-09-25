@@ -17,6 +17,8 @@ import com.example.christoph.ur.mi.de.foodfinders.R;
 
 import java.util.List;
 
+//This class lists all dishes from the cloud storage in a list.
+
 public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
 
     private List<dish_item> dishes;
@@ -29,6 +31,7 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         this.dishes = dishes;
     }
 
+    //Displaying the "dish_items" in the list
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;

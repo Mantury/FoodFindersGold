@@ -14,18 +14,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
-import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.restaurant_dishes_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.List;
+
+//This activity displays a selected restaurant from the "starting_screen_activity" with more details.
+//The screen provides openning hours, address, phone number, google comments, and  access to the app-only-dish data.
 
 public class restaurant_detail_activity extends Activity implements download.OnRestaurantDetailDataProviderListener {
 
@@ -57,6 +57,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         setDishesCounter();
     }
 
+    //Downloading all the data for the specific restaurant. THe data is downloaded again to keep it up-to-date.
     private void setUpDownload() {
         data = new download();
         data.getrestaurantdata(place_id);
@@ -68,6 +69,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         Log.d(place_id + " place_id");
     }
 
+    //Display all the data for the specific restaurant
     @Override
     public void onRestaurantDetailDataReceived(restaurantdetailitem item) {
         name = item.getName();
@@ -86,7 +88,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
             öffnungzeiten.setText(parseOpenninghours(item.getOpenweekday()));
         }
         TextView number = (TextView) findViewById(R.id.restaurant_detail_textview_telephonenumber);
-        number.setText(item.getNumber());
+        number.setText("Telefon: " + item.getNumber());
         TextView address = (TextView) findViewById(R.id.restaurant_detail_textview_address);
         address.setText(item.getAddress());
         ListView disheslist = (ListView) findViewById(R.id.restaurant_detail_commentlistview);//Kommentare??? arraylist(String) aus item!!!
@@ -103,13 +105,14 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         return parsedweekday;
     }
 
+    //Sets the header picture.
     @Override
     public void onRestaurantDetailPictureReceived(Bitmap result) {
-        Log.d("versucht Bild");
         ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
         image.setImageBitmap(result);
     }
 
+    //Adds up all in-app-dishes and displays it.
     private void setDishesCounter() {
         final int[] number = {0};
         ParseQuery<ParseObject> query = ParseQuery.getQuery("gericht");
