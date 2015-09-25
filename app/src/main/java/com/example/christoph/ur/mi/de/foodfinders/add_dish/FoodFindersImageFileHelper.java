@@ -14,28 +14,22 @@ import java.util.Date;
 public class FoodFindersImageFileHelper {
 
     public static String IMAGE_DIRECTORY = "FoodFindersApp";
-
     public static String LOG_MESSAGE = "FoodFinders";
 
     public static Uri getOutputImageFileURL() {
-
         Log.d(LOG_MESSAGE, "external dir:" + Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES).getAbsolutePath());
-
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), IMAGE_DIRECTORY);
-
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 Log.d(LOG_MESSAGE, "failed to create directory");
                 return null;
             }
         }
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());// Create a media file name
         File mediaFile = new File(mediaStorageDir.getAbsolutePath() + File.separator +
                 "IMG_" + timeStamp + ".png");
-
         return Uri.fromFile(mediaFile);
     }
 

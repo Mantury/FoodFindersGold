@@ -17,9 +17,6 @@ import com.example.christoph.ur.mi.de.foodfinders.R;
 
 import java.util.List;
 
-/**
- * Created by juli on 22.09.15.
- */
 public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
 
     private List<dish_item> dishes;
@@ -35,23 +32,17 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
-
         if (v == null) {
             LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.dish_item, null);
         }
-
-        // init Layout resourcen
         TextView name = (TextView) v.findViewById(R.id.dish_name);
         ImageView image = (ImageView) v.findViewById(R.id.dish_image);
         RatingBar rating = (RatingBar) v.findViewById(R.id.dish_ratingbar);
         TextView vegan = (TextView) v.findViewById(R.id.dish_vegan);
         TextView gluten = (TextView) v.findViewById(R.id.dish_gluten);
         RelativeLayout linlayout = (RelativeLayout) v.findViewById(R.id.dish_layout);
-
-
         final dish_item dish = dishes.get(position);
-        //Auf ganzes Layout on clickListener setzen!
         RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.dish_layout);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,18 +50,14 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
                 onDetailRequestedListener.onDetailRequested(dish.getParse_id());
             }
         });
-
-        //Layoutsachen mit Daten befüllen!!
         name.setText(dish.getNameDish());
         image.setImageBitmap(dish.getImage());
         rating.setRating(dish.getRating());
-        if(dish.getRating() >= 4 ){
+        if (dish.getRating() >= 4) {
             linlayout.setBackgroundResource(R.color.green);
         }
-        vegan.setText("Vegan: " +  dish.getVegan());
-        gluten.setText("Glutenfrei: " +dish.getGluten());
-
-
+        vegan.setText("Vegan: " + dish.getVegan());
+        gluten.setText("Glutenfrei: " + dish.getGluten());
         return v;
     }
 

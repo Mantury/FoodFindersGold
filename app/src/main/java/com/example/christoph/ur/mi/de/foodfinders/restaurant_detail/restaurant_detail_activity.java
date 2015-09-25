@@ -27,15 +27,11 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christoph on 30.08.15.
- */
 public class restaurant_detail_activity extends Activity implements download.OnRestaurantDetailDataProviderListener {
 
     private download data;
     private String place_id;
     private String name;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +47,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         Button newDish = (Button) findViewById(R.id.restaurant_detail_dishaddbutton);
         newDish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //starts restaurant_dishes_detail_activity
+            public void onClick(View v) {//starts restaurant_dishes_detail_activity
                 Intent in = new Intent(restaurant_detail_activity.this, restaurant_dishes_detail_activity.class);
                 in.putExtra("place_id", place_id);
                 in.putExtra("name", name);
@@ -62,64 +57,49 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         setDishesCounter();
     }
 
-
     private void setUpDownload() {
         data = new download();
         data.getrestaurantdata(place_id);
         data.setOnRestaurantDetailDataProviderListener(this);
-
     }
-
 
     private void getIntentdata() {
         place_id = getIntent().getStringExtra("name");
         Log.d(place_id + " place_id");
     }
 
-
     @Override
     public void onRestaurantDetailDataReceived(restaurantdetailitem item) {
-
-        Log.d("got item");
-        Log.d(item.getName() + item.getNumber() + item.getRating());
-
         name = item.getName();
         if ("no Image!!" != item.getImage()) {
             data.getRestaurantPicturefromURL(item.getImage());
-        }else {
+        } else {
             ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
             image.setVisibility(View.GONE);
         }
         TextView name = (TextView) findViewById(R.id.restaurant_detail_textview_name);
         name.setText(item.getName());
         TextView öffnungzeiten = (TextView) findViewById(R.id.restaurant_detail_textview_openinghours);
-        Log.d("penislog" + item.getOpenweekday());
-        if (item.getOpenweekday() == "notfound") {
+        if (item.getOpenweekday().equals("notfound")) {
             öffnungzeiten.setText("Keine Öffnungszeiten verfügbar!");
         } else {
             öffnungzeiten.setText(parseOpenninghours(item.getOpenweekday()));
         }
-
         TextView number = (TextView) findViewById(R.id.restaurant_detail_textview_telephonenumber);
         number.setText(item.getNumber());
-
         TextView address = (TextView) findViewById(R.id.restaurant_detail_textview_address);
         address.setText(item.getAddress());
-
-        //Kommentare??? arraylist(String) aus item!!!
-        ListView disheslist = (ListView) findViewById(R.id.restaurant_detail_commentlistview);
+        ListView disheslist = (ListView) findViewById(R.id.restaurant_detail_commentlistview);//Kommentare??? arraylist(String) aus item!!!
         Adapter aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, item.getComments());
         disheslist.setAdapter((ListAdapter) aa);
-
-
     }
 
-    private String parseOpenninghours (String openWeekday){
+    private String parseOpenninghours(String openWeekday) {
         String s = openWeekday;
-        s = s.substring(1,s.length()-1);
+        s = s.substring(1, s.length() - 1);
         String delims = "[,]+";
         String[] tokens = s.split(delims);
-        String parsedweekday = tokens[0] +"\n" + tokens[1] +"\n" + tokens[2] +"\n" + tokens[3] +"\n" + tokens[4] +"\n" + tokens[5] +"\n" + tokens[6];
+        String parsedweekday = tokens[0] + "\n" + tokens[1] + "\n" + tokens[2] + "\n" + tokens[3] + "\n" + tokens[4] + "\n" + tokens[5] + "\n" + tokens[6];
         return parsedweekday;
     }
 
@@ -139,19 +119,16 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                                    public void done(List<ParseObject> list, ParseException e) {
                                        if (e == null) {
                                            Log.d(list.size() + "number dishes :) ");
-                                           //changes Text:
                                            TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
                                            int dishes = list.size();
                                            dishcounter.setText(dishes + " eingetragene Gerichte");
                                        } else {
                                            Log.d("Error: " + e.getMessage());
 
+                                       }
                                    }
                                }
-                           }
 
-    );
-        Log.d("number dishes!!  "+String.valueOf(number[0]));
-
+        );
     }
 }

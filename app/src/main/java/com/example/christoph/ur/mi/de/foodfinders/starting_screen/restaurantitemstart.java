@@ -1,8 +1,5 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
-
-import java.util.ArrayList;
-
 public class restaurantitemstart {
 
     private String name;
@@ -12,8 +9,6 @@ public class restaurantitemstart {
     private int openednow;
     private String address;
 
-
-
     public restaurantitemstart(String name, double latitude, double longitude, String place_id, int openednow, String address) {
         this.name = name;
         this.latitude = latitude;
@@ -21,9 +16,7 @@ public class restaurantitemstart {
         this.place_id = place_id;
         this.openednow = openednow;
         this.address = address;
-
     }
-
 
     public int isOpenednow() {
         return openednow;
@@ -53,10 +46,6 @@ public class restaurantitemstart {
     public double getLatitude() {
         return latitude;
     }
-
-
-
-
 }
 
 

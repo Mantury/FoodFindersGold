@@ -31,7 +31,7 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
     private String place_id;
     private String name;
     private dish_item_ArrayAdapter adapter;
-    private ArrayList<dish_item> dishes=new ArrayList<dish_item>();
+    private ArrayList<dish_item> dishes = new ArrayList<dish_item>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +44,18 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         adapter.clear();
         initAdapter();
         initDishList();
-
-
-
     }
-
 
 
     private void initAdapter() {
         ListView list = (ListView) findViewById(R.id.restaurant_dishes_detail_list);
-        adapter=new dish_item_ArrayAdapter(restaurant_dishes_detail_activity.this, dishes);
-        adapter.setOnDetailRequestedListener((dish_item_ArrayAdapter.OnDetailRequestedListener) this);//???
+        adapter = new dish_item_ArrayAdapter(restaurant_dishes_detail_activity.this, dishes);
+        adapter.setOnDetailRequestedListener((dish_item_ArrayAdapter.OnDetailRequestedListener) this);
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -73,7 +69,6 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
             @Override
             public void done(List<ParseObject> list, com.parse.ParseException e) {
                 if (e == null) {
-                    Log.d("Restarrant:  "+place_id+"  gerichte: " + list.size() + "parsiert biatch :) ");
                     parseListToArraylist(list);
                 } else {
                     Log.d("Error: " + e.getMessage());
@@ -86,8 +81,7 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
     }
 
     private void parseListToArraylist(List<ParseObject> list) {
-
-        for(int i=0;i<list.size();i++) {
+        for (int i = 0; i < list.size(); i++) {
             ParseObject dish = list.get(i);
             String name = dish.getString("Name");
             String comment = dish.getString("comment");
@@ -97,32 +91,24 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
             int rating = dish.getInt("rating");
             ParseFile imagefile = dish.getParseFile("image");
             Bitmap bitmap = null;
-            if (imagefile !=null) {
-                //image Bytes to bitmap!!!!
-
-
-                    try {
-                        byte[] in = imagefile.getData();
-                        bitmap = BitmapFactory.decodeByteArray(in, 0, in.length);
-                        Log.d("bitmap ready");
-                    } catch (com.parse.ParseException e) {
-                        e.printStackTrace();
-                    }
-
+            if (imagefile != null) { //image Bytes to bitmap!!!!
+                try {
+                    byte[] in = imagefile.getData();
+                    bitmap = BitmapFactory.decodeByteArray(in, 0, in.length);
+                    Log.d("bitmap ready");
+                } catch (com.parse.ParseException e) {
+                    e.printStackTrace();
+                }
             }
-
-                    dish_item item = new dish_item(name, place_id, parse_id, rating, gluten, vegan, comment, bitmap);
-                    dishes.add(item);
-                    adapter.notifyDataSetChanged();
-
-
+            dish_item item = new dish_item(name, place_id, parse_id, rating, gluten, vegan, comment, bitmap);
+            dishes.add(item);
+            adapter.notifyDataSetChanged();
         }
-
     }
 
     private void setUpButtons() {
-        Button add_dish =(Button) findViewById(R.id.restaurant_dishes_detail_button);
-        TextView restaurant=(TextView) findViewById(R.id.restaurant_dishes_detail_header);
+        Button add_dish = (Button) findViewById(R.id.restaurant_dishes_detail_button);
+        TextView restaurant = (TextView) findViewById(R.id.restaurant_dishes_detail_header);
         restaurant.setText(name);
         add_dish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,10 +121,9 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
     }
 
     private void getIntentData() {
-        place_id=getIntent().getStringExtra("place_id");
-        name=getIntent().getStringExtra("name");
+        place_id = getIntent().getStringExtra("place_id");
+        name = getIntent().getStringExtra("name");
     }
-
 
     @Override
     public void onDetailRequested(String parse_id) {

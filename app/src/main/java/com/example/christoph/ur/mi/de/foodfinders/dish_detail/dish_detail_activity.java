@@ -19,10 +19,7 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
-/**
- * Created by Christoph on 30.08.15.
- */
-public class dish_detail_activity extends Activity{
+public class dish_detail_activity extends Activity {
 
     private String parse_id;
 
@@ -63,42 +60,41 @@ public class dish_detail_activity extends Activity{
 
     }
 
-    private void setUpUi(List<ParseObject> list){
-        TextView name=(TextView)findViewById(R.id.dish_detail_name);
-        ImageView image=(ImageView) findViewById(R.id.dish_detail_picture);
-        RatingBar rating=(RatingBar) findViewById(R.id.dish_detail_ratingbar);
-        TextView vegan=(TextView) findViewById(R.id.dish_detail_vegan_info);
-        TextView gluten=(TextView) findViewById(R.id.dish_detail_glutenfree_info);
-        TextView comment=(TextView) findViewById(R.id.dish_detail_comment);
+    private void setUpUi(List<ParseObject> list) {
+        TextView name = (TextView) findViewById(R.id.dish_detail_name);
+        ImageView image = (ImageView) findViewById(R.id.dish_detail_picture);
+        RatingBar rating = (RatingBar) findViewById(R.id.dish_detail_ratingbar);
+        TextView vegan = (TextView) findViewById(R.id.dish_detail_vegan_info);
+        TextView gluten = (TextView) findViewById(R.id.dish_detail_glutenfree_info);
+        TextView comment = (TextView) findViewById(R.id.dish_detail_comment);
 
-        ParseObject dish=list.get(0);
+        ParseObject dish = list.get(0);
         name.setText(dish.getString("Name"));
         rating.setRating(dish.getInt("rating"));
 
 
-
         vegan.setText("Vegan:" + dish.getString("vegan"));
-        if(dish.getString("vegan").equals("Ja")){
+        if (dish.getString("vegan").equals("Ja")) {
             vegan.setBackgroundResource(R.color.green);
         }
-        if(dish.getString("vegan").equals("Keine Info")){
+        if (dish.getString("vegan").equals("Keine Info")) {
             vegan.setBackgroundResource(R.color.yellow);
         }
 
 
         gluten.setText("Glutenfrei:" + dish.getString("gluten"));
-        if(dish.getString("gluten").equals("Ja") ){
+        if (dish.getString("gluten").equals("Ja")) {
             gluten.setBackgroundResource(R.color.green);
         }
-        if(dish.getString("gluten").equals("Keine Info") ){
+        if (dish.getString("gluten").equals("Keine Info")) {
             gluten.setBackgroundResource(R.color.yellow);
         }
 
         comment.setText(dish.getString("comment"));
 
-        Bitmap bitmap=null;
-        ParseFile imagefile=dish.getParseFile("image");
-        if (imagefile !=null) {
+        Bitmap bitmap = null;
+        ParseFile imagefile = dish.getParseFile("image");
+        if (imagefile != null) {
             //image Bytes to bitmap!!!!
 
 

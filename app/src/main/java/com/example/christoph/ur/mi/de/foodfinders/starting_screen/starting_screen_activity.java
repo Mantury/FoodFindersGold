@@ -52,8 +52,7 @@ import java.util.Locale;
 
 public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener {
 
-
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private GoogleMap mMap;
     private LatLng postion;
     private double lat;
     private double lng;
@@ -61,62 +60,51 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private CameraUpdate update;
     private ArrayList<restaurantitemstart> restaurants = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("start");
         Parse.enableLocalDatastore(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
         setUpMapIfNeeded();
         setUpMarker();
         data = new download();
         data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
-
         Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
     }
 
-   @Override
-   protected void onResume(){
-       super.onResume();
-    //   setUpMapIfNeeded();
-     //  setUpMarker();
-    //   data = new download();
-       //&language=de???
-      // data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
-       data.setRestaurantDataProviderListener(this);
-       updateButton();
-       mMap.moveCamera(update);
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //   setUpMapIfNeeded();
+        //  setUpMarker();
+        //   data = new download();
+        //&language=de???
+        // data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
+        data.setRestaurantDataProviderListener(this);
+        updateButton();
+        mMap.moveCamera(update);
     }
 
     private void updateButton() {
-        Button update=(Button) findViewById(R.id.updatebutton);
+        Button update = (Button) findViewById(R.id.updatebutton);
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMap.clear();
                 setUpMarker();
                 data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + lat + "," + lng + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
-
             }
         });
     }
 
-
+    //Sets up a marker at the users current position or uses the UR as default location
     private void setUpMarker() {
-        //Setzt den PersonenMarker
         String locService = Context.LOCATION_SERVICE;
         LocationManager locationManager = (LocationManager) getSystemService(locService);
         String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
-
         Log.d(String.valueOf(location));
-
-        String locationData;
-
         if (location != null) {
             postion = new LatLng(location.getLatitude(), location.getLongitude());
             lat = location.getLatitude();
@@ -142,9 +130,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                     data.getlocationdata("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + position.latitude + "," + position.longitude + "&radius=1500&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de");
                 }
             });
-
-
-
         } else {
             lat = 48.9984593454694;
             lng = 12.097473442554474;
@@ -152,9 +137,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             LatLng latlng = new LatLng(lat, lng);
             update = CameraUpdateFactory.newLatLng(latlng);
         }
-
     }
-
 
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
@@ -172,20 +155,16 @@ public class starting_screen_activity extends FragmentActivity implements downlo
      * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
         }
     }
 
-
+    //Sets up the markers for all found restaurants and colours them accordingly to their openninghours
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
-        //umliegende Restaurants werden in Marker mit verschiedenen Farben umgewandelt!
         this.restaurants = restaurants;
-
         for (int i = 0; i < restaurants.size(); i++) {
             restaurantitemstart item = restaurants.get(i);
             postion = new LatLng(item.getLatitude(), item.getLongitude());
@@ -194,33 +173,26 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             if (item.isOpenednow() == 0) {
                 opennow = "Öffnungszeiten n.A.";
                 mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
-
-            }else {
+            } else {
                 if (item.isOpenednow() == 1) {
                     opennow = "Offen";
                     mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
-
                 }
                 if (item.isOpenednow() == 2) {
                     opennow = "Geschlossen";
                     mMap.addMarker(new MarkerOptions().position(postion).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
-
                 }
             }
-                //setzt Onclicklistener
-                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        openRestaurantDetail(getPlaceId(marker.getTitle()));
-                    }
-                });
-
-            }
+            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    openRestaurantDetail(getPlaceId(marker.getTitle()));
+                }
+            });
         }
-
+    }
 
     public String getPlaceId(String title) {
-        //sucht mit Namen nach Restaurant und holt sich die place_id
         String place_id = "null";
         for (int i = 0; i < restaurants.size(); i++) {
             if (restaurants.get(i).getName().equals(title)) {
@@ -230,13 +202,10 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         return place_id;
     }
 
-
     private void openRestaurantDetail(String place_id) {
         //startet Restaurantdetailactivity und übergibt die place_id;
         Intent i = new Intent(starting_screen_activity.this, restaurant_detail_activity.class);
         i.putExtra("name", place_id);
         startActivity(i);
-
     }
-
 }

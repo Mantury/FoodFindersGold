@@ -22,6 +22,8 @@ public class download {
     private OnRestaurantDataProviderListener onrestaurantDataProviderListener;
     private OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener;
     private final String restaurantdetailurl = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
+    private final String restaurantdetailphotourl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
+    private final String restaurantsearchparametersurl = "&language=de&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA";
 
     //for Starting_screen_activity
     public void setRestaurantDataProviderListener(OnRestaurantDataProviderListener onrestaurantDataProviderListener) {
@@ -33,11 +35,11 @@ public class download {
         this.onRestaurantDetailDataProviderListener = onRestaurantDetailDataProviderListener;
     }
 
-
     //for Starting_screen_activity
+    // gets the data in an Arraylist from converter.convertJSONToMensaDishList();
     public void getlocationdata(String request) {
         new DataAsyncTask().execute(request);
-        // gets the data in an Arraylist from converter.convertJSONToMensaDishList();
+
     }
 
     public void getrestaurantdata(String request) {
@@ -51,34 +53,23 @@ public class download {
     ////for Starting_screen_activity
     private class DataAsyncTask extends AsyncTask<String, Integer, String> {
 
-
         @Override
         protected String doInBackground(String... params) {
             String jsonString = "";
-
             try {
-
                 URL url = new URL(params[0]);
-
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
                 int responseCode = conn.getResponseCode();
-
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-
                     InputStream is = conn.getInputStream();
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
                     String line;
-
                     while ((line = br.readLine()) != null) {
                         jsonString += line;
                     }
-
                     br.close();
                     is.close();
                     conn.disconnect();
-
                 } else {
                     throw new IllegalStateException("HTTP response: " + responseCode);
                 }
@@ -90,8 +81,7 @@ public class download {
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            //Erstellt die arraylist mit hilfe JSONtoObjectConverter
+        protected void onPostExecute(String result) {//Creates an ArrayList with JSONtoObjectConverter
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             restaurants = new ArrayList<restaurantitemstart>();
@@ -106,30 +96,20 @@ public class download {
         @Override
         protected String doInBackground(String... params) {
             String jsonString = "";
-
             try {
-
-                URL url = new URL(restaurantdetailurl + params[0] + "&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
-
+                URL url = new URL(restaurantdetailurl + params[0] + restaurantsearchparametersurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
                 int responseCode = conn.getResponseCode();
-
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-
                     InputStream is = conn.getInputStream();
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
                     String line;
-
                     while ((line = br.readLine()) != null) {
                         jsonString += line;
                     }
-
                     br.close();
                     is.close();
                     conn.disconnect();
-
                 } else {
                     throw new IllegalStateException("HTTP response: " + responseCode);
                 }
@@ -146,24 +126,20 @@ public class download {
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             restaurantdetailitem restaurant = converter.convertToRestaurantDetailItem();
             onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
-
         }
     }
-
 
     private class RestaurantDetailPictureAsyncTask extends AsyncTask<String, Integer, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
             Bitmap picture = null;
             try {
-                URL url = new URL("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + params[0] + "&language=de&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA");
+                URL url = new URL(restaurantdetailphotourl + params[0] + restaurantsearchparametersurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoInput(true);
                 conn.connect();
                 InputStream is = conn.getInputStream();
                 picture = BitmapFactory.decodeStream(is);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -174,14 +150,11 @@ public class download {
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
             onRestaurantDetailDataProviderListener.onRestaurantDetailPictureReceived(result);
-
         }
     }
 
     public interface OnRestaurantDataProviderListener {
-
         public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants);
-
     }
 
     public interface OnRestaurantDetailDataProviderListener {
@@ -189,6 +162,4 @@ public class download {
 
         public void onRestaurantDetailPictureReceived(Bitmap result);
     }
-
-
 }
