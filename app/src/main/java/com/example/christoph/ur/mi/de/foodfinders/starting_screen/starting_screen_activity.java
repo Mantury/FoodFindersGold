@@ -3,6 +3,7 @@ package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +20,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -43,6 +46,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private String placesearchparameter1 ="&radius=";
     private String placesearchparameter2 = "&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
     private int placesearchparameterradius = 1500;
+    private Circle myCircle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,15 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
             public void onProgressChanged(SeekBar seeker, int progress, boolean fromUser){
+
+                CircleOptions circleOptions = new CircleOptions()
+                        .center(new LatLng(lat, lng))   //set center
+                        .radius(placesearchparameterradius * 1.2)   //set radius in meters
+                        .fillColor(Color.TRANSPARENT)  //default
+                        .strokeColor(R.color.green)
+                        .strokeWidth(5);
+
+                myCircle = mMap.addCircle(circleOptions);
                 placesearchparameterradius = progress;
             }
 
