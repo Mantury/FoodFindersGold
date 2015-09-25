@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -55,13 +57,27 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
-        setUpParse();
-        setUpMapIfNeeded();
-        setUpMarker();
-        draggablePosition();
-        sekker();
-        updateButton();
-        setUpData();
+        if(checkInternetConn()) {
+            setUpParse();
+            setUpMapIfNeeded();
+            setUpMarker();
+            draggablePosition();
+            sekker();
+            updateButton();
+            setUpData();
+        }
+    }
+
+    private boolean checkInternetConn() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            Log.d("no Internet!!!!");
+            Toast.makeText(starting_screen_activity.this, "No Internet", Toast.LENGTH_SHORT).show();
+           return false;
+        }else {
+            return true;
+        }
     }
 
 
@@ -117,7 +133,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 mMap.clear();
                 drag = false;
                 setUpMarker();
-                getData();            }
+                getData();
+            }
         });
     }
 
@@ -212,30 +229,34 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
         this.restaurants = restaurants;
-        for (int i = 0; i < restaurants.size(); i++) {
-            restaurantitemstart item = restaurants.get(i);
-            LatLng positionitem = new LatLng(item.getLatitude(), item.getLongitude());
-            String name = item.getName();
-            String opennow;
-            if (item.isOpenednow() == 0) {
-                opennow = "Öffnungszeiten n.a.";
-                mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
-            } else {
-                if (item.isOpenednow() == 1) {
-                    opennow = "Offen";
-                    mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
+        if(restaurants==null){
+
+        }else {
+            for (int i = 0; i < restaurants.size(); i++) {
+                restaurantitemstart item = restaurants.get(i);
+                LatLng positionitem = new LatLng(item.getLatitude(), item.getLongitude());
+                String name = item.getName();
+                String opennow;
+                if (item.isOpenednow() == 0) {
+                    opennow = "Öffnungszeiten n.a.";
+                    mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
+                } else {
+                    if (item.isOpenednow() == 1) {
+                        opennow = "Offen";
+                        mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
+                    }
+                    if (item.isOpenednow() == 2) {
+                        opennow = "Geschlossen";
+                        mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
+                    }
                 }
-                if (item.isOpenednow() == 2) {
-                    opennow = "Geschlossen";
-                    mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
-                }
+                mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        openRestaurantDetail(getPlaceId(marker.getTitle()));
+                    }
+                });
             }
-            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    openRestaurantDetail(getPlaceId(marker.getTitle()));
-                }
-            });
         }
     }
 
