@@ -51,6 +51,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private int placesearchparameterradius = 1500;
     private Circle myCircle;
     private boolean drag=false;
+    private String yourLocation="Standort";
+    private String draggedLocation="Eigene Position";
+    private String defaultLocation="Kein aktueller Standort";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             setUpMapIfNeeded();
             setUpMarker();
             draggablePosition();
+            setOnlongPoschange();
             sekker();
             updateButton();
             setUpData();
@@ -123,8 +127,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 getData();
             }
         });
-
     }
+
     private void updateButton() {
         Button update = (Button) findViewById(R.id.updatebutton);
         update.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +136,19 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             public void onClick(View v) {
                 mMap.clear();
                 drag = false;
+                setUpMarker();
+                getData();
+            }
+        });
+    }
+
+    private void setOnlongPoschange(){
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mMap.clear();
+                position = (latLng);
+                drag = true;
                 setUpMarker();
                 getData();
             }
@@ -179,8 +196,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         Location location = locationManager.getLastKnownLocation(provider);
 
         if(drag){
-
-            mMap.addMarker(new MarkerOptions().position(position).title("gedragte Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+            mMap.addMarker(new MarkerOptions().position(position).title(draggedLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
             update = CameraUpdateFactory.newLatLng(position);
             mMap.moveCamera(update);
 
@@ -189,14 +205,14 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             if (location != null) {
 
                 position = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(position).title("Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+                mMap.addMarker(new MarkerOptions().position(position).title(yourLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
                 update = CameraUpdateFactory.newLatLng(position);
                 mMap.moveCamera(update);
 
             } else {
                 LatLng defaultUr = new LatLng(latUr, lngUr);
                 position=defaultUr;
-             mMap.addMarker(new MarkerOptions().position(defaultUr).title("Kein aktueller Standort").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+             mMap.addMarker(new MarkerOptions().position(defaultUr).title(defaultLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
                 update = CameraUpdateFactory.newLatLng(defaultUr);
                 mMap.moveCamera(update);
             }
@@ -253,7 +269,14 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        openRestaurantDetail(getPlaceId(marker.getTitle()));
+                        Log.d(yourLocation+marker.getTitle());
+
+                        if(yourLocation.equals(marker.getTitle())||draggedLocation.equals(marker.getTitle())||defaultLocation.equals(marker.getTitle())){
+
+                        }else{
+                            openRestaurantDetail(getPlaceId(marker.getTitle()));
+                        }
+
                     }
                 });
             }

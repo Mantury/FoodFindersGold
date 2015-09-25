@@ -27,6 +27,7 @@ import com.parse.ParseObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,7 @@ public class add_dish_activity extends Activity {
     private EditText comment;
     private Uri fileUri;
     private ParseFile file;
+    private Button addimage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class add_dish_activity extends Activity {
             @Override
             public void onClick(View v) {
                 takePicture();
-                addimage.setVisibility(View.GONE);
+                addimage.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -82,7 +84,8 @@ public class add_dish_activity extends Activity {
         place_id = getIntent().getStringExtra("place_id");
     }
 
-    private void publishDish() {//gets Data form Layout
+    //gets Data form Layout and saves on parse.com
+    private void publishDish() {
         String restaurantname = String.valueOf(name.getText());
         String gluten = getGlutenRadiodata();
         String vegan = getVeganRadiodata();
@@ -139,11 +142,12 @@ public class add_dish_activity extends Activity {
         grabImageFromCamera(fileUri);
     }
 
-    //Asynctask!!???
+
     private void sendImageToParse(Bitmap bit) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream(); // send Bitmap image to parse and returns the file!
-        bit.compress(Bitmap.CompressFormat.PNG, 50, stream);//Qualität von 0-100!!!
-        Log.d("uplaod!!!!");
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // send Bitmap image to parse and returns the file!
+        bit.compress(Bitmap.CompressFormat.PNG, 50, stream);
+        //uploads the image
         byte[] image = stream.toByteArray();
         file = new ParseFile("Foto.jpeg", image);
         file.saveInBackground();
@@ -156,9 +160,18 @@ public class add_dish_activity extends Activity {
         startActivityForResult(takeFoodieImage, 0);
     }
 
+    //tries to convert the image(fileUri) to Bitmap and upload it on parse.com
+    //and sets the Imageview
     @Override
     protected void onResume() {
         super.onResume();
+
+        File file = new File(String.valueOf(fileUri));
+        final Button addimage = (Button) findViewById(R.id.add_dish_add_picture_button); //neuer Button für Foto hinzufügen nötig; Layout!!!
+
+        if (file.exists()){
+
+
         ImageView imageview = (ImageView) findViewById(R.id.add_dish_photoimage);
         imageview.setVisibility(View.VISIBLE);
 
@@ -169,13 +182,14 @@ public class add_dish_activity extends Activity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+            //compress image
             BitmapFactory.Options bitopt = new BitmapFactory.Options();
             bitopt.inJustDecodeBounds = true;
             bitopt.inSampleSize = 10;
             bitopt.inJustDecodeBounds = false;
             Rect rect = new Rect(1, 1, 1, 1);
             Bitmap bit = BitmapFactory.decodeStream(is, rect, bitopt);
-            sendImageToParse(bit);  //versuch bild zu kommprimieren
+            sendImageToParse(bit);
             Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
 
             try {
@@ -185,6 +199,10 @@ public class add_dish_activity extends Activity {
             }
             imageview.setVisibility(View.VISIBLE);
             imageview.setImageBitmap(bit);
+        }
+    }
+        else{
+            addimage.setVisibility(View.VISIBLE);
         }
     }
 }

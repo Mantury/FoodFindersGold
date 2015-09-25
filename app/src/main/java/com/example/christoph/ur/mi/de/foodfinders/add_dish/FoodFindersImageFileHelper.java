@@ -33,14 +33,5 @@ public class FoodFindersImageFileHelper {
         return Uri.fromFile(mediaFile);
     }
 
-    public static Bitmap getScaledBitmap(String fileName) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
-        return BitmapFactory.decodeFile(fileName, options);
-    }
-
-    public static Bitmap getBitmap(String fileName) {
-        return BitmapFactory.decodeFile(fileName, null);
-    }
 }
 
