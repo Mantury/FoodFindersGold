@@ -99,9 +99,9 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     private String parseOpenninghours(String openWeekday) {
         String s = openWeekday;
         s = s.substring(1, s.length() - 1);
-        String delims = "[,]+";
+        String delims = "[\"]+";
         String[] tokens = s.split(delims);
-        String parsedweekday = tokens[0] + "\n" + tokens[1] + "\n" + tokens[2] + "\n" + tokens[3] + "\n" + tokens[4] + "\n" + tokens[5] + "\n" + tokens[6];
+        String parsedweekday = tokens[1] + "\n" + tokens[3] + "\n" + tokens[5] + "\n" + tokens[7] + "\n" + tokens[9] + "\n" + tokens[11] + "\n" + tokens[13];
         return parsedweekday;
     }
 

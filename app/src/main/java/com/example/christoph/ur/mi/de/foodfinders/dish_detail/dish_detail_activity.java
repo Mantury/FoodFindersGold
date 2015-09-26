@@ -28,9 +28,6 @@ public class dish_detail_activity extends Activity {
         Log.d("detailActivity+");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_detail_layout);
-        //Set up parse
-        //Parse.enableLocalDatastore(this);
-        //Parse.initialize(this, "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9", "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7");
         getIntentData();
         setUpData();
     }
@@ -105,10 +102,7 @@ public class dish_detail_activity extends Activity {
             } catch (com.parse.ParseException e) {
                 e.printStackTrace();
             }
-
         }
-
         image.setImageBitmap(bitmap);
-        image.setMaxHeight(100);
     }
 }

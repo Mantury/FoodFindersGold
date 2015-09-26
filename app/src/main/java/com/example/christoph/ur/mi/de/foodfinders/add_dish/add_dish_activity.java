@@ -40,7 +40,8 @@ public class add_dish_activity extends Activity {
     private EditText comment;
     private Uri fileUri;
     private ParseFile file;
-    private Button addimage;
+    private boolean saveimage=false;
+    //private Button addimage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,23 +87,41 @@ public class add_dish_activity extends Activity {
 
     //gets Data form Layout and saves on parse.com
     private void publishDish() {
-        String restaurantname = String.valueOf(name.getText());
+        boolean ready=true;
+        //muss vorhanden sein
+        String gerichtname = String.valueOf(name.getText());;
+        if(gerichtname.equals("")){
+            ready=false;
+            Toast.makeText(add_dish_activity.this, "Bitte geben Sie den Namen des Gerichts an", Toast.LENGTH_SHORT).show();
+        }
+
         String gluten = getGlutenRadiodata();
         String vegan = getVeganRadiodata();
-        float rank = rating.getRating();
-        String com = String.valueOf(comment.getText());
 
-        ParseObject gericht = new ParseObject("gericht");
-        gericht.put("image", file);
-        gericht.put("restaurant_id", place_id);
-        gericht.put("rating", rank);
-        gericht.put("comment", com);
-        gericht.put("gluten", gluten);
-        gericht.put("vegan", vegan);
-        gericht.put("Name", restaurantname);
-        gericht.saveInBackground();
-        Toast.makeText(add_dish_activity.this, "Dish Uploaded", Toast.LENGTH_SHORT).show();
-        finish();
+        float rank = rating.getRating();
+        if(0 == rank){
+            ready=false;
+            Toast.makeText(add_dish_activity.this, "Bitte bewerten sie das Gericht", Toast.LENGTH_SHORT).show();
+        }
+
+        if(ready) {
+            String com = String.valueOf(comment.getText());
+            ParseObject gericht = new ParseObject("gericht");
+
+            if(saveimage){
+                gericht.put("image", file);
+            }
+            gericht.put("restaurant_id", place_id);
+            gericht.put("rating", rank);
+            gericht.put("comment", com);
+            gericht.put("gluten", gluten);
+            gericht.put("vegan", vegan);
+            gericht.put("Name", gerichtname);
+            gericht.saveInBackground();
+            Toast.makeText(add_dish_activity.this, "Gericht hochgeladen", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
     }
 
     private String getGlutenRadiodata() {
@@ -150,6 +169,7 @@ public class add_dish_activity extends Activity {
         //uploads the image
         byte[] image = stream.toByteArray();
         file = new ParseFile("Foto.jpeg", image);
+        saveimage=true;
         file.saveInBackground();
     }
 
@@ -162,47 +182,50 @@ public class add_dish_activity extends Activity {
 
     //tries to convert the image(fileUri) to Bitmap and upload it on parse.com
     //and sets the Imageview
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+
+        if (resultCode == RESULT_OK) {
+            ImageView imageview = (ImageView) findViewById(R.id.add_dish_photoimage);
+            //imageview.setVisibility(View.VISIBLE);
+            Log.d("file exists");
+
+            if (fileUri != null) { //image(fileUri) zu bitmap umwandeln
+                InputStream is = null;
+                Log.d("file uri existe");
+                try {
+                    is = getContentResolver().openInputStream(fileUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                //compress image
+                BitmapFactory.Options bitopt = new BitmapFactory.Options();
+                bitopt.inJustDecodeBounds = true;
+                bitopt.inSampleSize = 10;
+                bitopt.inJustDecodeBounds = false;
+                Rect rect = new Rect(1, 1, 1, 1);
+                Bitmap bit = BitmapFactory.decodeStream(is, rect, bitopt);
+                sendImageToParse(bit);
+                Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+                Log.d("image upload!");
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Button addimage = (Button) findViewById(R.id.add_dish_add_picture_button);
+                addimage.setVisibility(View.GONE);
+                imageview.setVisibility(View.VISIBLE);
+                imageview.setImageBitmap(bit);
+            }
+            }
+        }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-
-        File file = new File(String.valueOf(fileUri));
-        final Button addimage = (Button) findViewById(R.id.add_dish_add_picture_button); //neuer Button für Foto hinzufügen nötig; Layout!!!
-
-        if (file.exists()){
-
-
-        ImageView imageview = (ImageView) findViewById(R.id.add_dish_photoimage);
-        imageview.setVisibility(View.VISIBLE);
-
-        if (fileUri != null) { //image(fileUri) zu bitmap umwandeln
-            InputStream is = null;
-            try {
-                is = getContentResolver().openInputStream(fileUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            //compress image
-            BitmapFactory.Options bitopt = new BitmapFactory.Options();
-            bitopt.inJustDecodeBounds = true;
-            bitopt.inSampleSize = 10;
-            bitopt.inJustDecodeBounds = false;
-            Rect rect = new Rect(1, 1, 1, 1);
-            Bitmap bit = BitmapFactory.decodeStream(is, rect, bitopt);
-            sendImageToParse(bit);
-            Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
-
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            imageview.setVisibility(View.VISIBLE);
-            imageview.setImageBitmap(bit);
-        }
-    }
-        else{
-            addimage.setVisibility(View.VISIBLE);
-        }
     }
 }
