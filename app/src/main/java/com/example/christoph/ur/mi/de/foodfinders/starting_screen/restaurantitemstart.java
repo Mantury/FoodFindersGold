@@ -37,10 +37,6 @@ public class restaurantitemstart {
         return name;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public double getLongitude() {
         return longitude;
     }

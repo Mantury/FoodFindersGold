@@ -43,9 +43,22 @@ public class add_dish_activity extends Activity {
     private boolean saveimage=false;
     //private Button addimage;
 
+    private String yes="YES";
+    private String no="NO";
+    private String noinfo="NOINFO";
+
+
+    //Strings for the parseobject and its attributes
+    private String nameodject_parse="gericht;";
+    private String placeid_parse="restaurant_id";
+    private String rating_parse="rating";
+    private String comment_parse="comment";
+    private String gluten_parse="gluten";
+    private String vegan_parse="vegan";
+    private String namedish_parse="Name";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_dish_layout);
         getIntentdata();
@@ -54,7 +67,7 @@ public class add_dish_activity extends Activity {
 
     private void SetUpUi() {
         name = (EditText) findViewById(R.id.add_dish_nameedit);
-        final Button addimage = (Button) findViewById(R.id.add_dish_add_picture_button); //neuer Button für Foto hinzufügen nötig; Layout!!!
+        final Button addimage = (Button) findViewById(R.id.add_dish_add_picture_button);
         addimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,13 +78,15 @@ public class add_dish_activity extends Activity {
 
         rating = (RatingBar) findViewById(R.id.add_dish_ratingbar);
         comment = (EditText) findViewById(R.id.add_dish_comment);
+        //addDish on click send data to parse
         Button addDish = (Button) findViewById(R.id.add_dish_addbutton);
         addDish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 publishDish();
             }
-        });//opens the methode to send Data to parse
+        });
+        //cancelDish finishes the Activity
         Button cancelDish = (Button) findViewById(R.id.add_dish_cancelbutton);
         cancelDish.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +103,7 @@ public class add_dish_activity extends Activity {
     //gets Data form Layout and saves on parse.com
     private void publishDish() {
         boolean ready=true;
-        //muss vorhanden sein
+        //dishname had to exist
         String gerichtname = String.valueOf(name.getText());;
         if(gerichtname.equals("")){
             ready=false;
@@ -97,26 +112,28 @@ public class add_dish_activity extends Activity {
 
         String gluten = getGlutenRadiodata();
         String vegan = getVeganRadiodata();
-
+        //rating had to exist
         float rank = rating.getRating();
         if(0 == rank){
             ready=false;
             Toast.makeText(add_dish_activity.this, "Bitte bewerten sie das Gericht", Toast.LENGTH_SHORT).show();
         }
 
+        //checks if every required value exists, if true--> sends the data to parse
         if(ready) {
             String com = String.valueOf(comment.getText());
-            ParseObject gericht = new ParseObject("gericht");
-
+            //creats an parseObject with the values from the user
+            ParseObject gericht = new ParseObject(nameodject_parse);
+            //if an image exists it will be uploaded
             if(saveimage){
                 gericht.put("image", file);
             }
-            gericht.put("restaurant_id", place_id);
-            gericht.put("rating", rank);
-            gericht.put("comment", com);
-            gericht.put("gluten", gluten);
-            gericht.put("vegan", vegan);
-            gericht.put("Name", gerichtname);
+            gericht.put(placeid_parse, place_id);
+            gericht.put(rating_parse, rank);
+            gericht.put(comment_parse, com);
+            gericht.put(gluten_parse, gluten);
+            gericht.put(vegan_parse, vegan);
+            gericht.put(namedish_parse, gerichtname);
             gericht.saveInBackground();
             Toast.makeText(add_dish_activity.this, "Gericht hochgeladen", Toast.LENGTH_SHORT).show();
             finish();
@@ -130,11 +147,11 @@ public class add_dish_activity extends Activity {
         RadioButton glutenNo = (RadioButton) findViewById(R.id.radio_glutenfree_no);
         String gluten;
         if (glutenYes.isChecked()) {
-            gluten = "YES";
+            gluten = yes;
         } else if (glutenNo.isChecked()) {
-            gluten = "NO";
+            gluten = no;
         } else {
-            gluten = "NOINFO";
+            gluten = noinfo;
             glutenNoInfo.toggle();
         }
         return gluten;
@@ -146,11 +163,11 @@ public class add_dish_activity extends Activity {
         RadioButton veganNo = (RadioButton) findViewById(R.id.radio_vegan_no);
         String vegan;
         if (veganYes.isChecked()) {
-            vegan = "YES";
+            vegan = yes;
         } else if (veganNo.isChecked()) {
-            vegan = "NO";
+            vegan = no;
         } else {
-            vegan = "NOINFO";
+            vegan = noinfo;
             veganNoInfo.toggle();
         }
         return vegan;
@@ -168,7 +185,7 @@ public class add_dish_activity extends Activity {
         bit.compress(Bitmap.CompressFormat.PNG, 50, stream);
         //uploads the image
         byte[] image = stream.toByteArray();
-        file = new ParseFile("Foto.jpeg", image);
+        file = new ParseFile("Foto.png", image);
         saveimage=true;
         file.saveInBackground();
     }
@@ -189,12 +206,10 @@ public class add_dish_activity extends Activity {
 
         if (resultCode == RESULT_OK) {
             ImageView imageview = (ImageView) findViewById(R.id.add_dish_photoimage);
-            //imageview.setVisibility(View.VISIBLE);
-            Log.d("file exists");
 
-            if (fileUri != null) { //image(fileUri) zu bitmap umwandeln
+            //image(fileUri) zu bitmap umwandeln
+            if (fileUri != null) {
                 InputStream is = null;
-                Log.d("file uri existe");
                 try {
                     is = getContentResolver().openInputStream(fileUri);
                 } catch (FileNotFoundException e) {
@@ -209,7 +224,6 @@ public class add_dish_activity extends Activity {
                 Bitmap bit = BitmapFactory.decodeStream(is, rect, bitopt);
                 sendImageToParse(bit);
                 Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
-                Log.d("image upload!");
                 try {
                     is.close();
                 } catch (IOException e) {

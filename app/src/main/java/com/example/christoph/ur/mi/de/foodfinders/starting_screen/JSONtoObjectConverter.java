@@ -79,13 +79,23 @@ public class JSONtoObjectConverter {
             String number = jsonrestaurant.getString("formatted_phone_number");
             String name = jsonrestaurant.getString(NAME);
             String id = jsonrestaurant.getString(ID);
+
             JSONObject openinghours = jsonrestaurant.optJSONObject("opening_hours");
-            boolean open = false;
-            String openweekday = "notfound";
+            int open;
+            String openweekday="keine Öffungszeiten verfügbar!";
+
             if (openinghours != null) {
-                open = openinghours.getBoolean("open_now");
                 openweekday = openinghours.getString("weekday_text");
+                if (openinghours.getBoolean("open_now")) {
+                    open = 1;
+                } else {
+                    open = 2;
+                }
+            } else {
+                open = 0;
             }
+
+
 
             JSONArray comments = jsonrestaurant.optJSONArray("reviews");
             commentlist = new ArrayList<String>();
@@ -108,7 +118,7 @@ public class JSONtoObjectConverter {
                 JSONObject image1 = jsonImage.getJSONObject(0);
                 image_ref = image1.getString("photo_reference");
             }
-            restaurantdetail = new restaurantdetailitem(name, image_ref, address, number, rating, id, open, openweekday, commentlist);
+            restaurantdetail = new restaurantdetailitem(name,0,0 ,id, open, address, image_ref, number, rating,   openweekday, commentlist);
         } catch (JSONException e) {
             e.printStackTrace();
         }

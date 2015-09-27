@@ -10,6 +10,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//Vorlage aus der 2.Studienleistung(Foodie) erstellt einen "eingigartigen filename"!!
 
 public class FoodFindersImageFileHelper {
 
@@ -21,13 +22,14 @@ public class FoodFindersImageFileHelper {
                 Environment.DIRECTORY_PICTURES).getAbsolutePath());
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), IMAGE_DIRECTORY);
+
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 Log.d(LOG_MESSAGE, "failed to create directory");
                 return null;
             }
         }
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());// Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile = new File(mediaStorageDir.getAbsolutePath() + File.separator +
                 "IMG_" + timeStamp + ".png");
         return Uri.fromFile(mediaFile);

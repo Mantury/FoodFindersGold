@@ -1,12 +1,14 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 
 
+import com.example.christoph.ur.mi.de.foodfinders.starting_screen.restaurantitemstart;
+
 import java.util.ArrayList;
 
 //This class saves all the information for the detail view of a restaurant.
 //Since all the data is redownloaded the class was made independent from "restaurantitemstart".
 
-public class restaurantdetailitem {
+public class restaurantdetailitem extends restaurantitemstart {
 
     private String image;
     private String name;
@@ -14,11 +16,12 @@ public class restaurantdetailitem {
     private String number;
     private String rating;
     private String place_id;
-    private boolean openednow;
+    private int openednow;
     private String openweekday;
     private ArrayList<String> comments;
 
-    public restaurantdetailitem(String name, String image, String address, String number, String rating, String place_id, boolean openednow, String openweekday, ArrayList comments) {
+    public restaurantdetailitem(String name, double latitude,double longitude,String place_id,int openednow,String address, String image, String number, String rating, String openweekday, ArrayList comments) {
+        super(name,latitude,longitude, place_id, openednow, address);
         this.name = name;
         this.image = image;
         this.address = address;
@@ -30,16 +33,8 @@ public class restaurantdetailitem {
         this.comments = comments;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getImage() {
         return image;
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     public String getNumber() {
@@ -48,14 +43,6 @@ public class restaurantdetailitem {
 
     public String getRating() {
         return rating;
-    }
-
-    public String getPlace_id() {
-        return place_id;
-    }
-
-    public boolean getOpennow() {
-        return openednow;
     }
 
     public String getOpenweekday() {

@@ -72,7 +72,9 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     //Display all the data for the specific restaurant
     @Override
     public void onRestaurantDetailDataReceived(restaurantdetailitem item) {
+        Log.d(String.valueOf(item));
         name = item.getName();
+
         if ("no Image!!" != item.getImage()) {
             data.getRestaurantPicturefromURL(item.getImage());
         } else {

@@ -126,7 +126,9 @@ public class download {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
+            Log.d("opens converter"+result);
             restaurantdetailitem restaurant = converter.convertToRestaurantDetailItem();
+
             onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
         }
     }
