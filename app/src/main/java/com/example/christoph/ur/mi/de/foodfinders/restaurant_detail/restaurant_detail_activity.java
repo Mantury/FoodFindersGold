@@ -9,6 +9,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,7 +44,17 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     }
 
     private void setUpUi() {
-        Button newDish = (Button) findViewById(R.id.restaurant_detail_dishaddbutton);
+        LinearLayout newDish = (LinearLayout) findViewById(R.id.restaurant_detail_dishlayout);
+        Button addButton =(Button) findViewById(R.id.restaurant_detail_dishaddbutton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(restaurant_detail_activity.this, restaurant_dishes_detail_activity.class);
+                in.putExtra("place_id", place_id);
+                in.putExtra("name", name);
+                startActivity(in);
+            }
+        });
         newDish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//starts restaurant_dishes_detail_activity
