@@ -43,9 +43,9 @@ public class add_dish_activity extends Activity {
     private boolean saveimage=false;
     private Button addimage;
 
-    private String yes="YES";
-    private String no="NO";
-    private String noinfo="NOINFO";
+    private String yes="Ja";
+    private String no="Nein";
+    private String noinfo="Nicht angegeben";
 
 
     //Strings for the parseobject and its attributes
