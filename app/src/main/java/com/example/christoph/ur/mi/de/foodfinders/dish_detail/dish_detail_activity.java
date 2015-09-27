@@ -44,7 +44,6 @@ public class dish_detail_activity extends Activity {
     //searches the dish by using the objectId from parse!
     private void setUpData() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery(parseobject);
-        Log.d(parse_id);
         query.whereEqualTo(objectId, parse_id);
         query.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override

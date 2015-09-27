@@ -41,7 +41,7 @@ public class add_dish_activity extends Activity {
     private Uri fileUri;
     private ParseFile file;
     private boolean saveimage=false;
-    //private Button addimage;
+    private Button addimage;
 
     private String yes="YES";
     private String no="NO";
@@ -63,16 +63,16 @@ public class add_dish_activity extends Activity {
         setContentView(R.layout.add_dish_layout);
         getIntentdata();
         SetUpUi();
+
     }
 
     private void SetUpUi() {
         name = (EditText) findViewById(R.id.add_dish_nameedit);
-        final Button addimage = (Button) findViewById(R.id.add_dish_add_picture_button);
+        addimage = (Button) findViewById(R.id.add_dish_add_picture_button);
         addimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePicture();
-                addimage.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -100,7 +100,7 @@ public class add_dish_activity extends Activity {
         place_id = getIntent().getStringExtra("place_id");
     }
 
-    //gets Data form Layout and saves on parse.com
+    //gets data from Layout and saves on parse.com
     private void publishDish() {
         boolean ready=true;
         //dishname had to exist
@@ -118,16 +118,20 @@ public class add_dish_activity extends Activity {
             ready=false;
             Toast.makeText(add_dish_activity.this, "Bitte bewerten sie das Gericht", Toast.LENGTH_SHORT).show();
         }
+        if(!saveimage){
+            ready=false;
+            Toast.makeText(add_dish_activity.this, "Bitte fügen Sie ein Bild hinzu", Toast.LENGTH_SHORT).show();
+
+        }
+
 
         //checks if every required value exists, if true--> sends the data to parse
         if(ready) {
             String com = String.valueOf(comment.getText());
             //creats an parseObject with the values from the user
             ParseObject gericht = new ParseObject(nameodject_parse);
-            //if an image exists it will be uploaded
-            if(saveimage){
                 gericht.put("image", file);
-            }
+
             gericht.put(placeid_parse, place_id);
             gericht.put(rating_parse, rank);
             gericht.put(comment_parse, com);
@@ -174,22 +178,25 @@ public class add_dish_activity extends Activity {
     }
 
     private void takePicture() {
-        fileUri = FoodFindersImageFileHelper.getOutputImageFileURL(); // create a file to save the image
+        // creates the file for the image
+        fileUri = FoodFindersImageFileHelper.getOutputImageFileURL();
         grabImageFromCamera(fileUri);
     }
 
 
-    private void sendImageToParse(Bitmap bit) {
+    private void  sendImageToParse(Bitmap bit) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // send Bitmap image to parse and returns the file!
-        bit.compress(Bitmap.CompressFormat.PNG, 50, stream);
+         bit.compress(Bitmap.CompressFormat.PNG, 50, stream);
         //uploads the image
         byte[] image = stream.toByteArray();
         file = new ParseFile("Foto.png", image);
         saveimage=true;
         file.saveInBackground();
+        Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
     }
 
+    //starts intent to capture a image
     private void grabImageFromCamera(Uri fileUri) {
         Intent takeFoodieImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takeFoodieImage.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
@@ -197,9 +204,8 @@ public class add_dish_activity extends Activity {
         startActivityForResult(takeFoodieImage, 0);
     }
 
-    //tries to convert the image(fileUri) to Bitmap and upload it on parse.com
+    // converts the image(fileUri) to Bitmap
     //and sets the Imageview
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -221,18 +227,18 @@ public class add_dish_activity extends Activity {
                 bitopt.inSampleSize = 10;
                 bitopt.inJustDecodeBounds = false;
                 Rect rect = new Rect(1, 1, 1, 1);
-                Bitmap bit = BitmapFactory.decodeStream(is, rect, bitopt);
+              Bitmap  bit = BitmapFactory.decodeStream(is, rect, bitopt);
                 sendImageToParse(bit);
-                Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
                 try {
                     is.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Button addimage = (Button) findViewById(R.id.add_dish_add_picture_button);
                 addimage.setVisibility(View.GONE);
                 imageview.setVisibility(View.VISIBLE);
                 imageview.setImageBitmap(bit);
+                saveimage=true;
+
             }
             }
         }

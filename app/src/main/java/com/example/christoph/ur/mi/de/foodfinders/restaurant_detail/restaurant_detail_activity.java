@@ -35,7 +35,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.restaurant_detail_layout);
         getIntentdata();
@@ -66,7 +65,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     private void getIntentdata() {
         place_id = getIntent().getStringExtra("name");
-        Log.d(place_id + " place_id");
     }
 
     //Display all the data for the specific restaurant
@@ -123,7 +121,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                                    @Override
                                    public void done(List<ParseObject> list, ParseException e) {
                                        if (e == null) {
-                                           Log.d(list.size() + "number dishes :) ");
                                            TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
                                            int dishes = list.size();
                                            dishcounter.setText(dishes + " eingetragene Gerichte");

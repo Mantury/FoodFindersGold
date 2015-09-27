@@ -1,7 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.log;
 
 public class Log {
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	public static final String TAG = "FoodFinders";
 	
 	public static void d(String tag, String msg) {
