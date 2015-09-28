@@ -49,7 +49,7 @@ public class add_dish_activity extends Activity {
 
 
     //Strings for the parseobject and its attributes
-    private String nameodject_parse="gericht;";
+    private String nameodject_parse="gericht";
     private String placeid_parse="restaurant_id";
     private String rating_parse="rating";
     private String comment_parse="comment";
@@ -63,7 +63,6 @@ public class add_dish_activity extends Activity {
         setContentView(R.layout.add_dish_layout);
         getIntentdata();
         SetUpUi();
-
     }
 
     private void SetUpUi() {
@@ -121,8 +120,7 @@ public class add_dish_activity extends Activity {
         if(!saveimage){
             ready=false;
             Toast.makeText(add_dish_activity.this, "Bitte fügen Sie ein Bild hinzu", Toast.LENGTH_SHORT).show();
-
-        }
+       }
 
 
         //checks if every required value exists, if true--> sends the data to parse
