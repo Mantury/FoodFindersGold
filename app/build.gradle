@@ -18,6 +18,11 @@ android {
     }
     productFlavors {
     }
+    //packagingOptions {
+     //       exclude 'META-INF/LICENSE'
+     //       exclude 'META-INF/LICENSE-FIREBASE.txt'
+     //       exclude 'META-INF/NOTICE'
+     //   }
 }
 
 dependencies {
@@ -25,7 +30,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.google.android.gms:play-services:7.0.0'
     //for parse.com
+    //TODO löschen?
     compile 'com.parse.bolts:bolts-android:1.+'
     compile fileTree(dir: 'libs', include: 'Parse-*.jar')
-
+    //firebase
+   // compile 'com.google.firebase:firebase-core:9.4.0'
+    compile 'com.firebase:firebase-client-android:2.5.2+'
+   // compile fileTree(dir: 'libs', include: 'firebase-client-android-*.jar')
 }
+//apply plugin: 'com.google.gms.google-services'

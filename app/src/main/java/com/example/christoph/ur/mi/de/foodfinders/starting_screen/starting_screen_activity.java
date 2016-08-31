@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
+import com.firebase.client.Firebase;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -75,7 +76,17 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             updateButton();
             setupDrawer();
             setUpData();
+            //Firebase test
+            setUpFirebase();
         }
+    }
+
+    private void setUpFirebase() {
+        Log.d("Starting setup firebase");
+        Firebase.setAndroidContext(this);
+        Firebase rootRef = new Firebase("https://foodfindersgold.firebaseio.com");
+        rootRef.child("testig").setValue("999");
+        Log.d("Ending firebase");
     }
 
     private boolean checkInternetConn() {
