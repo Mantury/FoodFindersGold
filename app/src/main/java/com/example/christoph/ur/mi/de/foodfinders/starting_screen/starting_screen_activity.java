@@ -10,8 +10,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -68,6 +73,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             setOnlongPoschange();
             sekker();
             updateButton();
+            setupDrawer();
             setUpData();
         }
     }
@@ -82,6 +88,29 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         }else {
             return true;
         }
+    }
+
+    private void setupDrawer(){
+        final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        String[] TestArray = {"hallo", "test", "test2"};
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawerlist_item, TestArray));
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO lade detail screen it Restaurant
+                mDrawerList.setItemChecked(position, true);
+                mDrawerLayout.closeDrawer(mDrawerList);
+
+                Context context = getApplicationContext();
+                CharSequence text = "Hello toast!";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
+
     }
 
 
@@ -156,6 +185,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     }
 
     private void sekker(){
+
         final SeekBar seeker = (SeekBar) findViewById(R.id.starting_screen_seek_bar);
         seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
