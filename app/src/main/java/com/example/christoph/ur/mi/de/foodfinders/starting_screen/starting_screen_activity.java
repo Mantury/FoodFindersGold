@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
+import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.firebase.client.Firebase;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,7 +49,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private double lngUr=12.097473442554474 ;
     private download data;
     private CameraUpdate update;
-    private ArrayList<restaurantitemstart> restaurants = new ArrayList<>();
+    private ArrayList<restaurant> restaurants = new ArrayList<>();
     private String parseClientKey = "PbusOboa70OtcFcYG72ILR7Xrxh86IZ5SDLOXdu7";
     private String parseApplicationKey = "qn09yetmFcN4h8TctK2xZhjrgzwXc1r5BC0QYgv9";
     private String placesearchurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
@@ -284,25 +285,25 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     //Sets up the markers for all found restaurants and colours them accordingly to their openninghours
     @Override
-    public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants) {
+    public void onRestaurantDataReceived(ArrayList<restaurant> restaurants) {
         this.restaurants = restaurants;
         if(restaurants==null){
 
         }else {
             for (int i = 0; i < restaurants.size(); i++) {
-                restaurantitemstart item = restaurants.get(i);
-                LatLng positionitem = new LatLng(item.getLatitude(), item.getLongitude());
-                String name = item.getName();
+                restaurant res = restaurants.get(i);
+                LatLng positionitem = new LatLng(res.getLatitude(), res.getLongitude());
+                String name = res.getName();
                 String opennow;
-                if (item.isOpenednow() == 0) {
+                if (res.getOpen() == 0) {
                     opennow = "Öffnungszeiten n.a.";
                     mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
                 } else {
-                    if (item.isOpenednow() == 1) {
+                    if (res.getOpen() == 1) {
                         opennow = "Offen";
                         mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
                     }
-                    if (item.isOpenednow() == 2) {
+                    if (res.getOpen() == 2) {
                         opennow = "Geschlossen";
                         mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
                     }

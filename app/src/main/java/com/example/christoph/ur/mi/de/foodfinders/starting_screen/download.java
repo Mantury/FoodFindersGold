@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurantdetailitem;
+import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,12 +15,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-//this class download all informations needed from the Google-APIs.
-
+//this class downloads all information needed from the Google-APIs.
 
 public class download {
 
-    private ArrayList<restaurantitemstart> restaurants;
+    private ArrayList<restaurant> restaurants;
     private OnRestaurantDataProviderListener onrestaurantDataProviderListener;
     private OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener;
     private final String restaurantdetailurl = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
@@ -40,12 +39,12 @@ public class download {
     //For the starting_screen_activity.
     //Gets the data in an Arraylist from converter.convertJSONToMensaDishList();.
     public void getlocationdata(String request) {
-        new DataAsyncTask().execute(request);
+        new RestaurantAsyncTask().execute(request);
 
     }
 
     public void getrestaurantdata(String request) {
-        new RestaurantAsyncTask().execute(request);
+        new RestaurantDetailsAsyncTask().execute(request);
     }
 
     public void getRestaurantPicturefromURL(String URL) {
@@ -53,7 +52,7 @@ public class download {
     }
 
     //For the starting_screen_activity.
-    private class DataAsyncTask extends AsyncTask<String, Integer, String> {
+    private class RestaurantAsyncTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -86,14 +85,14 @@ public class download {
         protected void onPostExecute(String result) {//Creates an ArrayList with JSONtoObjectConverter
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
-            restaurants = new ArrayList<restaurantitemstart>();
-            restaurants = converter.convertJSONTorestaurantitemstart();
+            restaurants = new ArrayList<restaurant>();
+            restaurants = converter.convertJSONTorestaurant();
             onrestaurantDataProviderListener.onRestaurantDataReceived(restaurants);
         }
     }
 
     //For the restaurant_detail_activity.
-    private class RestaurantAsyncTask extends AsyncTask<String, Integer, String> {
+    private class RestaurantDetailsAsyncTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -127,8 +126,7 @@ public class download {
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             Log.d("opens converter"+result);
-            restaurantdetailitem restaurant = converter.convertToRestaurantDetailItem();
-
+            restaurant restaurant = converter.convertToDetailedRestaurant();
             onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
         }
     }
@@ -158,11 +156,12 @@ public class download {
     }
 
     public interface OnRestaurantDataProviderListener {
-        public void onRestaurantDataReceived(ArrayList<restaurantitemstart> restaurants);
+        public void onRestaurantDataReceived(ArrayList<restaurant> restaurants);
     }
 
     public interface OnRestaurantDetailDataProviderListener {
-        public void onRestaurantDetailDataReceived(restaurantdetailitem item);
+
+        public void onRestaurantDetailDataReceived(restaurant item);
 
         public void onRestaurantDetailPictureReceived(Bitmap result);
     }

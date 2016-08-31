@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.restaurant_dishes_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
 import com.parse.FindCallback;
@@ -80,30 +81,30 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     //Display all the data for the specific restaurant
     @Override
-    public void onRestaurantDetailDataReceived(restaurantdetailitem item) {
-        Log.d(String.valueOf(item));
-        name = item.getName();
+    public void onRestaurantDetailDataReceived(restaurant res) {
+        Log.d(String.valueOf(res));
+        name = res.getName();
 
-        if ("no Image!!" != item.getImage()) {
-            data.getRestaurantPicturefromURL(item.getImage());
+        if ("no Image!!" != res.getImage()) {
+            data.getRestaurantPicturefromURL(res.getImage());
         } else {
             ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
             image.setVisibility(View.GONE);
         }
         TextView name = (TextView) findViewById(R.id.restaurant_detail_textview_name);
-        name.setText(item.getName());
+        name.setText(res.getName());
         TextView öffnungzeiten = (TextView) findViewById(R.id.restaurant_detail_textview_openinghours);
-        if (item.getOpenweekday().equals("notfound")) {
+        if (res.getOpenweekday().equals("notfound")) {
             öffnungzeiten.setText("Keine Öffnungszeiten verfügbar!");
         } else {
-            öffnungzeiten.setText(parseOpenninghours(item.getOpenweekday()));
+            öffnungzeiten.setText(parseOpenninghours(res.getOpenweekday()));
         }
         TextView number = (TextView) findViewById(R.id.restaurant_detail_textview_telephonenumber);
-        number.setText("Telefon: " + item.getNumber());
+        number.setText("Telefon: " + res.getNumber());
         TextView address = (TextView) findViewById(R.id.restaurant_detail_textview_address);
-        address.setText(item.getAddress());
+        address.setText(res.getAddress());
         ListView disheslist = (ListView) findViewById(R.id.restaurant_detail_commentlistview);//Kommentare??? arraylist(String) aus item!!!
-        Adapter aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, item.getComments());
+        Adapter aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, res.getComments());
         disheslist.setAdapter((ListAdapter) aa);
     }
 

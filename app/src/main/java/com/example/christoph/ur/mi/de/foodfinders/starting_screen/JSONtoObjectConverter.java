@@ -1,7 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurantdetailitem;
+import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +36,7 @@ public class JSONtoObjectConverter {
     private static final String USERRATINGSTOTAL="user_ratings_total";
     private static final String PHOTOS="photos";
     private static final String PHOTOREFERENCE="photo_reference";
-    private ArrayList<restaurantitemstart> list;
+    private ArrayList<restaurant> list;
     private ArrayList<String> commentlist;
     public int open;
 
@@ -45,12 +45,12 @@ public class JSONtoObjectConverter {
         this.JSONResponse = JSONResponse;
     }
 
-    public ArrayList<restaurantitemstart> convertJSONTorestaurantitemstart() {
+    public ArrayList<restaurant> convertJSONTorestaurant() {
         try {
             JSONObject jsonOb = new JSONObject(JSONResponse);
             Log.d(String.valueOf(jsonOb));
             JSONArray jsonArray = jsonOb.getJSONArray(RESULTS);
-            list = new ArrayList<restaurantitemstart>();
+            list = new ArrayList<restaurant>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 JSONObject locationobject = jsonObject.getJSONObject(GEOMETRY);
@@ -71,8 +71,8 @@ public class JSONtoObjectConverter {
                 }
                 String id = jsonObject.getString(ID);
                 String address = jsonObject.getString(ADDRESS);
-                restaurantitemstart item = new restaurantitemstart(name, lat, lng, id, open, address);
-                list.add(item);
+                restaurant res = new restaurant(name, lat, lng, id, open, address);
+                list.add(res);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -80,9 +80,9 @@ public class JSONtoObjectConverter {
         return list;
     }
 
-    //Creates a restaurantdetailitem by redownloading the data.
-    public restaurantdetailitem convertToRestaurantDetailItem() {
-        restaurantdetailitem restaurantdetail = null;
+    //Creates a Detailed Restaurant by redownloading the data.
+    public restaurant convertToDetailedRestaurant() {
+        restaurant detailedRest = null;
         try {
             JSONObject jsonOb = new JSONObject(JSONResponse);
             JSONObject jsonrestaurant = jsonOb.getJSONObject(RESULT);
@@ -110,7 +110,7 @@ public class JSONtoObjectConverter {
             JSONArray comments = jsonrestaurant.optJSONArray(REVIEWS);
             commentlist = new ArrayList<String>();
             if(comments!=null) {
-              //  commentlist = new ArrayList<String>();
+                //  commentlist = new ArrayList<String>();
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
                     String comment = jsonObject.getString(TEXT);
@@ -127,10 +127,11 @@ public class JSONtoObjectConverter {
                 JSONObject image1 = jsonImage.getJSONObject(0);
                 image_ref = image1.getString(PHOTOREFERENCE);
             }
-            restaurantdetail = new restaurantdetailitem(name,0,0 ,id, open, address, image_ref, number, rating,   openweekday, commentlist);
+            detailedRest = new restaurant(name,0,0 ,id, open, address);
+            detailedRest.setDetails(image_ref, number, rating, openweekday, commentlist);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return restaurantdetail;
+        return detailedRest;
     }
 }
