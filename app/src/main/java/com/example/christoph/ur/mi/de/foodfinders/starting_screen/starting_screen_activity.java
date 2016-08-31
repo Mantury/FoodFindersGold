@@ -77,7 +77,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             updateButton();
             setupDrawer();
             setUpData();
-            //Firebase test
             setUpFirebase();
         }
     }
