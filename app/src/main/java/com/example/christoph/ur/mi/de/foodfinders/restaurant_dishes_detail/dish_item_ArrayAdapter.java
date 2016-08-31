@@ -50,7 +50,8 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onDetailRequestedListener.onDetailRequested(dish.getParse_id());
+            //    onDetailRequestedListener.onDetailRequested(dish.getParse_id());
+                onDetailRequestedListener.onDetailRequested(dish.getDishId());
             }
         });
         name.setText(dish.getNameDish());

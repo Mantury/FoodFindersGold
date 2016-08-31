@@ -103,7 +103,9 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
                     e.printStackTrace();
                 }
             }
-            dish_item item = new dish_item(name, place_id, parse_id, rating, gluten, vegan, comment, bitmap);
+            //dish_item item = new dish_item(name, place_id, parse_id, rating, gluten, vegan, comment, bitmap);
+            dish_item item = new dish_item(name, place_id, rating, gluten, vegan, comment, bitmap);
+
             dishes.add(item);
         }
         adapter.notifyDataSetChanged();
