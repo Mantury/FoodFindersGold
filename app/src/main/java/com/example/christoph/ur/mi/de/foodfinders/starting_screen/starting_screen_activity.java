@@ -77,17 +77,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             updateButton();
             setupDrawer();
             setUpData();
-            setUpFirebase();
         }
     }
 
-    private void setUpFirebase() {
-        Log.d("Starting setup firebase");
-        Firebase.setAndroidContext(this);
-        Firebase rootRef = new Firebase("https://foodfindersgold.firebaseio.com");
-        rootRef.child("testig").setValue("999");
-        Log.d("Ending firebase");
-    }
 
     private boolean checkInternetConn() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
