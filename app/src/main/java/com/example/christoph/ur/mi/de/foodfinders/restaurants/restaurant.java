@@ -2,9 +2,7 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurants;
 
 import java.util.ArrayList;
 
-/**
- * Created by Andi on 30.08.2016.
- */
+
 public class restaurant {
 
     private String name;

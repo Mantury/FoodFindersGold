@@ -11,10 +11,8 @@ import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -60,6 +58,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private String draggedLocation="Eigene Position";
     private String defaultLocation="Kein aktueller Standort";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -72,7 +71,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             setOnlongPoschange();
             sekker();
             updateButton();
-            setupDrawer();
+
             setUpData();
         }
     }
@@ -90,26 +89,30 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         }
     }
 
-    private void setupDrawer(){
-        final DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ListView mDrawerList = (ListView) findViewById(R.id.left_drawer);
+    private void setupDrawer(ArrayList<restaurant> rests){
+        final DrawerLayout FavDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final ListView FavList = (ListView) findViewById(R.id.left_drawer);
 
-        String[] TestArray = {"hallo", "test", "test2"};
-        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawerlist_item, TestArray));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        Favourites_ArrayAdapter aa = new Favourites_ArrayAdapter(rests,this);
+        FavList.setAdapter(aa);
+        FavList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO lade detail screen it Restaurant
-                mDrawerList.setItemChecked(position, true);
-                mDrawerLayout.closeDrawer(mDrawerList);
-
-                Context context = getApplicationContext();
-                CharSequence text = "Hello toast!";
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                restaurant clickedRest = (restaurant) FavList.getItemAtPosition(position);
+                FavDrawer.closeDrawer(FavList);
+                openRestaurantDetail(clickedRest.getPlace_id());
             }
         });
+
+     //   mDrawerList.setItemChecked(position, true);
+     //   mDrawerLayout.closeDrawer(mDrawerList);
+
+     //   Context context = getApplicationContext();
+     //   CharSequence text = "Hello toast!";
+     //   int duration = Toast.LENGTH_SHORT;
+     //   Toast toast = Toast.makeText(context, text, duration);
+     //   toast.show();
 
     }
 
@@ -254,6 +257,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurant> restaurants) {
         this.restaurants = restaurants;
+        setupDrawer(restaurants);
+
         if(restaurants==null){
 
         }else {
