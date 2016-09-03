@@ -71,7 +71,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             setOnlongPoschange();
             sekker();
             updateButton();
-
             setUpData();
         }
     }
