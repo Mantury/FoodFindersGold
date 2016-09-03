@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +23,6 @@ import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.parse.ParseFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -35,16 +36,12 @@ public class add_dish_activity extends Activity {
     private RatingBar rating;
     private EditText comment;
     private Uri fileUri;
-
-    private ParseFile file;//
-
+    private String firepicture;
     private boolean saveimage=false;
     private Button addimage;
     private String yes="Ja";
     private String no="Nein";
     private String noinfo="Nicht angegeben";
-
-    private Bitmap picture=null;
 
 
     @Override
@@ -112,12 +109,10 @@ public class add_dish_activity extends Activity {
             Toast.makeText(add_dish_activity.this, "Bitte fügen Sie ein Bild hinzu", Toast.LENGTH_SHORT).show();
        }
         //TODO extra Firebase-Klasse?!
-        //TODO picture muss noch gemacht bzw. überarbeitet werden
         //checks if every required value exists, if true--> sends the data to parse
         if(ready) {
             String com = String.valueOf(comment.getText());
-            //firebase Foto fehllt noch!
-            dish_item dish= new dish_item(gerichtname, place_id , (int)rank ,gluten, vegan, com, picture);
+            dish_item dish= new dish_item(gerichtname, place_id , (int)rank ,gluten, vegan, com, firepicture);
             Firebase.setAndroidContext(this);
             Firebase rootRef = new Firebase("https://foodfindersgold.firebaseio.com");
             Firebase postDish = rootRef.child("reviews");
@@ -134,9 +129,7 @@ public class add_dish_activity extends Activity {
             });
             String id = dishID.getKey();
             dish.setDishId(id);
-            Log.d(id);
-            Log.d("Ending firebase");
-            //firebase end
+            //upload picture to parse
             finish();
         }
 
@@ -181,16 +174,15 @@ public class add_dish_activity extends Activity {
     }
 
 
-    private void  sendImageToParse(Bitmap bit) {
+    private void  sendImageFirebase(Bitmap bit) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        // send Bitmap image to parse and returns the file!
-         bit.compress(Bitmap.CompressFormat.PNG, 50, stream);
-        //uploads the image
+        bit.compress(Bitmap.CompressFormat.PNG, 50, stream);
         byte[] image = stream.toByteArray();
-
-      // file = new ParseFile("Foto.png", image);
+        //Test firebase picture upload
+        firepicture = Base64.encodeToString(image, Base64.DEFAULT);
         saveimage=true;
-        //file.saveInBackground();
+
+
         Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
     }
 
@@ -207,7 +199,6 @@ public class add_dish_activity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-
         if (resultCode == RESULT_OK) {
             ImageView imageview = (ImageView) findViewById(R.id.add_dish_photoimage);
 
@@ -225,8 +216,9 @@ public class add_dish_activity extends Activity {
                 bitopt.inSampleSize = 10;
                 bitopt.inJustDecodeBounds = false;
                 Rect rect = new Rect(1, 1, 1, 1);
-               picture = BitmapFactory.decodeStream(is, rect, bitopt);
-                sendImageToParse(picture);
+                Bitmap bit = BitmapFactory.decodeStream(is, rect, bitopt);
+
+                sendImageFirebase(bit);
 
                 try {
                     is.close();
@@ -235,7 +227,7 @@ public class add_dish_activity extends Activity {
                 }
                 addimage.setVisibility(View.GONE);
                 imageview.setVisibility(View.VISIBLE);
-                imageview.setImageBitmap(picture);
+                imageview.setImageBitmap(bit);
                 saveimage=true;
             }
             }

@@ -8,6 +8,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.example.christoph.ur.mi.de.foodfinders.R;
+import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -19,9 +27,7 @@ import com.parse.ParseQuery;
 
 public class dish_detail_activity extends Activity {
 
-    private String parse_id;
-    private String objectId="objectId";
-    private String parseobject="gericht";
+    private String reviewId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,27 +38,32 @@ public class dish_detail_activity extends Activity {
     }
 
     public void getIntentData() {
-        parse_id = getIntent().getStringExtra("parse_id");
+        reviewId = getIntent().getStringExtra("reviewId");
+        Log.d("reviewId"," "+reviewId);
     }
 
-    //searches the dish by using the objectId from parse!
+    //searches the dish by using the id from Firebase!
     private void setUpData() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery(parseobject);
-        query.whereEqualTo(objectId, parse_id);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
+        Firebase.setAndroidContext(this);
+        final Firebase dish = new Firebase("https://foodfindersgold.firebaseio.com/reviews");
+
+        dish.child(reviewId).addValueEventListener(new ValueEventListener() {
             @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                if(parseObject!=null){
-                    setUpUi(parseObject);
-                }
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.d("firebasedish",snapshot.toString());
+                dish_item dishItem=new dish_item(snapshot);
+                setUpUi(dishItem);
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-
 
     }
 
     //gets the Layoutreference and sets up the data
-    private void setUpUi(ParseObject dish) {
+    private void setUpUi(dish_item dish) {
         TextView name = (TextView) findViewById(R.id.dish_detail_name);
         ImageView image = (ImageView) findViewById(R.id.dish_detail_picture);
         RatingBar rating = (RatingBar) findViewById(R.id.dish_detail_ratingbar);
@@ -61,40 +72,28 @@ public class dish_detail_activity extends Activity {
         TextView comment = (TextView) findViewById(R.id.dish_detail_comment);
 
         //sets the data
-        name.setText(dish.getString("Name"));
-        rating.setRating(dish.getInt("rating"));
+        name.setText(dish.getNameDish());
+        rating.setRating(dish.getRating());
 
-        vegan.setText("Vegan:" + dish.getString("vegan"));
-        if (dish.getString("vegan").equals("Ja")) {
+        vegan.setText("Vegan:" + dish.getVegan());
+        if (dish.getVegan().equals("Ja")) {
             vegan.setBackgroundResource(R.color.green);
         }
-        if (dish.getString("vegan").equals("Keine Info")) {
+        if (dish.getVegan().equals("Keine Info")) {
             vegan.setBackgroundResource(R.color.yellow);
         }
 
-        gluten.setText("Glutenfrei:" + dish.getString("gluten"));
-        if (dish.getString("gluten").equals("Ja")) {
+        gluten.setText("Glutenfrei:" + dish.getGluten());
+        if (dish.getGluten().equals("Ja")) {
             gluten.setBackgroundResource(R.color.green);
         }
-        if (dish.getString("gluten").equals("Keine Info")) {
+        if (dish.getGluten().equals("Keine Info")) {
             gluten.setBackgroundResource(R.color.yellow);
         }
 
-        comment.setText(dish.getString("comment"));
+        comment.setText(dish.getComment());
 
-        //gets the image from parse
-        Bitmap bitmap = null;
-        ParseFile imagefile = dish.getParseFile("image");
-        if (imagefile != null) {
-            //kein foto wurde hochgeladen!!
-            try {
-                //
-                byte[] picture = imagefile.getData();
-                bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
-            } catch (com.parse.ParseException e) {
-                e.printStackTrace();
-            }
-        }
+        Bitmap bitmap = dish.getImageBitmap();
         //Bild wird immer angezeigt auch wenn null??
         image.setImageBitmap(bitmap);
     }

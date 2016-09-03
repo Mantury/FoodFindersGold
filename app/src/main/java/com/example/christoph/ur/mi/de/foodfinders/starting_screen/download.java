@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 
 import java.io.BufferedReader;

@@ -1,6 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,13 @@ import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
 import com.example.christoph.ur.mi.de.foodfinders.dish_detail.dish_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseFile;
@@ -32,6 +40,7 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
     private dish_item_ArrayAdapter adapter;
     private ArrayList<dish_item> dishes = new ArrayList<dish_item>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("start");
@@ -47,7 +56,6 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
         super.onResume();
         initDishList();
         adapter.notifyDataSetChanged();
-
     }
 
 
@@ -62,52 +70,42 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
     private void initDishList() {
         dishes.clear();
         Toast.makeText(restaurant_dishes_detail_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
-        //searches parseObject "gericht" where place_id=restaurant
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("gericht");
-        query.whereEqualTo("restaurant_id", place_id);
-        //neueste zuerst
-        query.addDescendingOrder("createdAt");
-        query.findInBackground(new FindCallback<ParseObject>() {
+
+        //start firebase
+        Firebase.setAndroidContext(this);
+        final Firebase dish = new Firebase("https://foodfindersgold.firebaseio.com/reviews");
+        Query queryRef= dish.orderByChild("place_id").equalTo(place_id);
+        queryRef.addChildEventListener(new ChildEventListener() {
+            // Retrieve new posts as they are added to Firebase
+            //TODO neuerste zuerst?default?
             @Override
-            public void done(List<ParseObject> list, com.parse.ParseException e) {
-                if (e == null) {
-                    parseListToArraylist(list);
-                } else {
-                    Log.d("Error: " + e.getMessage());
-                }
+            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
+                dish_item dish = new dish_item(snapshot);
+                dishes.add(dish);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
 
         });
-        adapter.notifyDataSetChanged();
-
-    }
-
-    //converts date from parseObject to dish_item arraylist
-    private void parseListToArraylist(List<ParseObject> list) {
-        for (int i = 0; i < list.size(); i++) {
-            ParseObject dish = list.get(i);
-            String name = dish.getString("Name");
-            String comment = dish.getString("comment");
-            String parse_id = dish.getObjectId();
-            String vegan = dish.getString("vegan");
-            String gluten = dish.getString("gluten");
-            int rating = dish.getInt("rating");
-            ParseFile imagefile = dish.getParseFile("image");
-            Bitmap bitmap = null;
-            //parse imageBytes to bitmap
-            if (imagefile != null) {
-                try {
-                    byte[] in = imagefile.getData();
-                    bitmap = BitmapFactory.decodeByteArray(in, 0, in.length);
-                } catch (com.parse.ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-            //dish_item item = new dish_item(name, place_id, parse_id, rating, gluten, vegan, comment, bitmap);
-            dish_item item = new dish_item(name, place_id, rating, gluten, vegan, comment, bitmap);
-
-            dishes.add(item);
-        }
         adapter.notifyDataSetChanged();
     }
 
@@ -137,9 +135,10 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
 
     //starts dish_detail_activity if a dish_item is selected
     @Override
-    public void onDetailRequested(String parse_id) {
+    public void onDetailRequested(String reviewId) {
         Intent in = new Intent(restaurant_dishes_detail_activity.this, dish_detail_activity.class);
-        in.putExtra("parse_id", parse_id);
+        in.putExtra("reviewId", reviewId);
         startActivity(in);
     }
+
 }

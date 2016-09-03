@@ -1,8 +1,10 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.text.Layout;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,15 +52,19 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //    onDetailRequestedListener.onDetailRequested(dish.getParse_id());
                 onDetailRequestedListener.onDetailRequested(dish.getDishId());
             }
         });
         name.setText(dish.getNameDish());
-        image.setImageBitmap(dish.getImage());
+        String firepicture=dish.getImage();
+        byte[] imageAsBytes = Base64.decode(firepicture.getBytes(), Base64.DEFAULT);
+        image.setImageBitmap(
+                BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
+        );
         rating.setRating(dish.getRating());
         if (dish.getRating() >= 4) {
             linlayout.setBackgroundResource(R.color.green);
+
         }
         vegan.setText("Vegan: " + dish.getVegan());
         gluten.setText("Glutenfrei: " + dish.getGluten());
@@ -70,6 +76,6 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
     }
 
     public interface OnDetailRequestedListener {
-        public void onDetailRequested(String parse_id);
+        public void onDetailRequested(String reviewid);
     }
 }

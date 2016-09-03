@@ -1,10 +1,17 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
+import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
 
 //This class saves the data for a dish. This data gets also saved in a cloud storage and is then downloaded.
 //A "dish_item" saves all the information a user wants to know about a meal. Only Users of the app can create "dish_items"
 
+//TODO picture überarbeiten nur bitmap?!
 public class dish_item {
 
     String nameDish;
@@ -14,9 +21,9 @@ public class dish_item {
     String gluten;
     String vegan;
     String comment;
-    Bitmap image;
+    String image; //http://pmarshall.me/2016/02/20/image-storage-with-firebase.html
 
-    public dish_item(String nameDish, String place_id, int rating, String gluten, String vegan, String comment, Bitmap image) {
+    public dish_item(String nameDish, String place_id, int rating, String gluten, String vegan, String comment, String image) {
         this.nameDish = nameDish;
         this.place_id = place_id;
         this.rating = rating;
@@ -26,12 +33,26 @@ public class dish_item {
         this.image = image;
     }
 
+    public dish_item(DataSnapshot fireData){
+        Log.d("data",fireData.toString());
+        this.nameDish = (String) fireData.child("nameDish").getValue();
+        this.place_id = (String) fireData.child("place_id").getValue();
+        String rating= Long.toString((Long) fireData.child("rating").getValue());
+        this.rating = Integer.parseInt(rating);
+        this.gluten = (String) fireData.child("gluten").getValue();
+        this.vegan = (String) fireData.child("vegan").getValue();
+        this.comment= (String) fireData.child("comment").getValue();
+        this.image= (String) fireData.child("image").getValue();
+        this.dishId= fireData.getKey();
+
+    }
+
     public String getDishId() {
         return dishId;
     }
 
-    public void setDishId(String dishId) {
-        this.dishId = dishId;
+    public void setDishId(String dishIdd) {
+       dishId = dishIdd;
     }
     public String getNameDish() {
         return nameDish;
@@ -57,7 +78,13 @@ public class dish_item {
         return comment;
     }
 
-    public Bitmap getImage() {
+    public String getImage() {
         return image;
+    }
+
+    public Bitmap getImageBitmap() {
+        byte[] imageAsBytes = Base64.decode(image.getBytes(), Base64.DEFAULT);
+        Bitmap bit =  BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+        return bit;
     }
 }

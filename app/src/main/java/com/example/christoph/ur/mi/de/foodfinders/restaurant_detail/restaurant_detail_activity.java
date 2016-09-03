@@ -16,9 +16,15 @@ import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.restaurant_dishes_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -125,24 +131,21 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     }
 
     //Adds up all in-app-dishes and displays it.
+    //TODO dish Counter überarbeiten dauert noch zu lange
     private void setDishesCounter() {
-        final int[] number = {0};
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("gericht");
-        query.whereEqualTo("restaurant_id", place_id);
-        query.findInBackground(new FindCallback<ParseObject>() {
-                                   @Override
-                                   public void done(List<ParseObject> list, ParseException e) {
-                                       if (e == null) {
-                                           TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
-                                           int dishes = list.size();
-                                           dishcounter.setText(dishes + " eingetragene Gerichte");
-                                       } else {
-                                           Log.d("Error: " + e.getMessage());
-
-                                       }
-                                   }
-                               }
-
-        );
+        Firebase.setAndroidContext(this);
+        final Firebase dish = new Firebase("https://foodfindersgold.firebaseio.com/reviews");
+        Query queryRef= dish.orderByChild("place_id").equalTo(place_id);
+        queryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
+                dishcounter.setText(snapshot.getChildrenCount() + " eingetragene Gerichte");
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
     }
 }
