@@ -23,6 +23,7 @@ import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.Parse;
 import java.util.ArrayList;
+import java.util.Map;
 
 //This activity is the starting screen of the app.
 
@@ -65,6 +67,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
         if(checkInternetConn()) {
+            LogInFirebase(); // test für den login
             setUpMapIfNeeded();
             setUpMarker();
             draggablePosition();
@@ -73,6 +76,23 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             updateButton();
             setUpData();
         }
+    }
+    private void LogInFirebase() {
+        Log.d("firebaselogin","start login");
+        Firebase.setAndroidContext(this);
+        Firebase ref = new Firebase("https://foodfindersgold.firebaseio.com");
+        ref.createUser("bobtony@firebase.com", "correcthorsebatterystaple", new Firebase.ValueResultHandler<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> result) {
+                Log.d("firebaslogin", "success"+result.get("uid"));
+                System.out.println("Successfully created user account with uid: " + result.get("uid"));
+            }
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                Log.d("firebaslogin", "fehler"+firebaseError.toString());
+                // there was an error
+            }
+        });
     }
 
 

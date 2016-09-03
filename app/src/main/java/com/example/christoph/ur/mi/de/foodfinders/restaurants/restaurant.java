@@ -17,6 +17,7 @@ public class restaurant {
     private String openweekday;
     private ArrayList<String> comments;
 
+
     public restaurant (String name, double latitude, double longitude, String place_id, int open, String address) {
         this.name = name;
         this.latitude = latitude;

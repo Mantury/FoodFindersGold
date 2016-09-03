@@ -22,6 +22,7 @@ public class dish_item {
     String vegan;
     String comment;
     String image; //http://pmarshall.me/2016/02/20/image-storage-with-firebase.html
+    //TODO Autor mit id (vor-und nachname)
 
     public dish_item(String nameDish, String place_id, int rating, String gluten, String vegan, String comment, String image) {
         this.nameDish = nameDish;

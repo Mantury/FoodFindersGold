@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "289003501124",
+    "firebase_url": "https://foodfindersgold.firebaseio.com",
+    "project_id": "foodfindersgold",
+    "storage_bucket": "foodfindersgold.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289003501124:android:5e7117b8be85f678",
+        "android_client_info": {
+          "package_name": "com.example.christoph.ur.mi.de.foodfinders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289003501124-9o9l6pmqlja4okkr43dod5hln4ddqk33.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.christoph.ur.mi.de.foodfinders",
+            "certificate_hash": "7EBB9B933380F0919EC7350CF38E39488AE4CE54"
+          }
+        },
+        {
+          "client_id": "289003501124-rj1310k9ntfgvcsfs6j7kcge50587jgm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-I0DJnv3o3a5cirCRNRZwspqP_PO31gg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289003501124-rj1310k9ntfgvcsfs6j7kcge50587jgm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
