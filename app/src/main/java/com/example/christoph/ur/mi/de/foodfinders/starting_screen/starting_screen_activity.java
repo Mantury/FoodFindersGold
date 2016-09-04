@@ -27,6 +27,7 @@ import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
@@ -34,19 +35,20 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.Parse;
 import java.util.ArrayList;
 import java.util.Map;
 
 //This activity is the starting screen of the app.
 
 
-public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener {
+public class starting_screen_activity extends FragmentActivity implements download.OnRestaurantDataProviderListener, OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LatLng position;
-    private double latUr=48.9984593454694;
-    private double lngUr=12.097473442554474 ;
+   // private double latUr=48.9984593454694;
+   // private double lngUr=12.097473442554474 ;
+   private double lngUr=13.409779;
+    private double latUr=	52.520645;
     private download data;
     private CameraUpdate update;
     private ArrayList<restaurant> restaurants = new ArrayList<>();
@@ -60,6 +62,18 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private String draggedLocation="Eigene Position";
     private String defaultLocation="Kein aktueller Standort";
 
+    @Override
+    public void onMapReady(GoogleMap map) {
+        //TODO höhe einstellen?
+        mMap = map;
+        setUpMarker();
+        draggablePosition();
+        setOnlongPoschange();
+        sekker();
+        updateButton();
+        setUpData();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +83,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         if(checkInternetConn()) {
             LogInFirebase(); // test für den login
             setUpMapIfNeeded();
-            setUpMarker();
-            draggablePosition();
-            setOnlongPoschange();
-            sekker();
-            updateButton();
-            setUpData();
         }
     }
     private void LogInFirebase() {
@@ -109,6 +117,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     }
 
     private void setupDrawer(ArrayList<restaurant> rests){
+        //TODO favoriten speichern und die liste nehmen!
         final DrawerLayout FavDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ListView FavList = (ListView) findViewById(R.id.left_drawer);
 
@@ -252,13 +261,13 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
                 position = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(position).title(yourLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-                update = CameraUpdateFactory.newLatLng(position);
+                update = CameraUpdateFactory.newLatLng(position);;
                 mMap.moveCamera(update);
 
             } else {
                 LatLng defaultUr = new LatLng(latUr, lngUr);
                 position=defaultUr;
-             mMap.addMarker(new MarkerOptions().position(defaultUr).title(defaultLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
+                mMap.addMarker(new MarkerOptions().position(defaultUr).title(defaultLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
                 update = CameraUpdateFactory.newLatLng(defaultUr);
                 mMap.moveCamera(update);
             }
@@ -267,8 +276,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     private void setUpMapIfNeeded() {
         if (mMap == null) {
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
+            SupportMapFragment supMapFrag = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+            supMapFrag.getMapAsync(this);
         }
     }
 

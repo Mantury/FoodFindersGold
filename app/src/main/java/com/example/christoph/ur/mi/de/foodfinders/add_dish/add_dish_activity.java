@@ -24,6 +24,7 @@ import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
