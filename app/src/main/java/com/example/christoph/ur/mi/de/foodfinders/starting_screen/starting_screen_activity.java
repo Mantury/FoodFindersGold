@@ -22,8 +22,6 @@ import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,6 +33,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -79,26 +79,14 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
         if(checkInternetConn()) {
-           // LogInFirebase(); // test für den login
+            LogInFirebase(); // test für den login
             setUpMapIfNeeded();
         }
     }
     private void LogInFirebase() {
         Log.d("firebaselogin","start login");
-        Firebase.setAndroidContext(this);
-        Firebase ref = new Firebase("https://foodfindersgold.firebaseio.com");
-        ref.createUser("bobtony@firebase.com", "correcthorsebatterystaple", new Firebase.ValueResultHandler<Map<String, Object>>() {
-            @Override
-            public void onSuccess(Map<String, Object> result) {
-                Log.d("firebaslogin", "success"+result.get("uid"));
-                System.out.println("Successfully created user account with uid: " + result.get("uid"));
-            }
-            @Override
-            public void onError(FirebaseError firebaseError) {
-                Log.d("firebaslogin", "fehler"+firebaseError.toString());
-                // there was an error
-            }
-        });
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.createUserWithEmailAndPassword("bobtony@firebase.com","testtest");//benutzer erstellt
     }
 
 
@@ -259,14 +247,14 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
                 position = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(position).title(yourLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-                update = CameraUpdateFactory.newLatLng(position);;
+                update = CameraUpdateFactory.newLatLngZoom(position, 13.0f);
                 mMap.moveCamera(update);
 
             } else {
                 LatLng defaultUr = new LatLng(latUr, lngUr);
                 position=defaultUr;
                 mMap.addMarker(new MarkerOptions().position(defaultUr).title(defaultLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-                update = CameraUpdateFactory.newLatLng(defaultUr);
+                update = CameraUpdateFactory.newLatLngZoom(position, 13.0f);
                 mMap.moveCamera(update);
             }
         }

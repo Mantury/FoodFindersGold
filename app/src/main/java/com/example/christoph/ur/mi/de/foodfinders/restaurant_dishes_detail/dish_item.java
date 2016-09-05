@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
+import com.google.firebase.database.DataSnapshot;
+
 
 //This class saves the data for a dish. This data gets also saved in a cloud storage and is then downloaded.
 //A "dish_item" saves all the information a user wants to know about a meal. Only Users of the app can create "dish_items"
@@ -21,7 +21,7 @@ public class dish_item {
     String gluten;
     String vegan;
     String comment;
-    String image; //http://pmarshall.me/2016/02/20/image-storage-with-firebase.html
+    String image; //http://pmarshall.me/2016/02/20/image-storage-with-firebase.html //TODO string to Bitmap? möglich?
     //TODO Autor mit id (vor-und nachname)
 
     public dish_item(String nameDish, String place_id, int rating, String gluten, String vegan, String comment, String image) {
@@ -34,6 +34,7 @@ public class dish_item {
         this.image = image;
     }
 
+    //TODO firebase umschreiben
     public dish_item(DataSnapshot fireData){
         Log.d("data",fireData.toString());
         this.nameDish = (String) fireData.child("nameDish").getValue();
@@ -83,9 +84,10 @@ public class dish_item {
         return image;
     }
 
-    public Bitmap getImageBitmap() {
-        byte[] imageAsBytes = Base64.decode(image.getBytes(), Base64.DEFAULT);
-        Bitmap bit =  BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
-        return bit;
-    }
+
+ //   public Bitmap getImageBitmap() {
+ //       byte[] imageAsBytes = Base64.decode(image.getBytes(), Base64.DEFAULT);
+ //       Bitmap bit =  BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+ //      return bit;
+ //   }
 }

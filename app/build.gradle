@@ -31,7 +31,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.4.0'
     //firebase
     compile 'com.google.firebase:firebase-core:9.4.0'
-    compile 'com.firebase:firebase-client-android:2.5.2+' //so funktionierts
+    //compile 'com.firebase:firebase-client-android:2.5.2+' //so funktionierts
     compile 'com.google.firebase:firebase-auth:9.4.0'
     // compile fileTree(dir: 'libs', include: 'firebase-client-android-*.jar')
 }

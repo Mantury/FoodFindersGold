@@ -21,8 +21,9 @@ import android.widget.Toast;
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.io.ByteArrayOutputStream;
@@ -109,28 +110,26 @@ public class add_dish_activity extends Activity {
      //       ready=false;
             Toast.makeText(add_dish_activity.this, "Bitte fügen Sie ein Bild hinzu", Toast.LENGTH_SHORT).show();
        }
-        //TODO extra Firebase-Klasse?!
+
         //checks if every required value exists, if true--> sends the data to parse
+        //funktionierts
         if(ready) {
             String com = String.valueOf(comment.getText());
             dish_item dish= new dish_item(gerichtname, place_id , (int)rank ,gluten, vegan, com, firepicture);
-            Firebase.setAndroidContext(this);
-            Firebase rootRef = new Firebase("https://foodfindersgold.firebaseio.com");
-            Firebase postDish = rootRef.child("reviews");
-            Firebase dishID =postDish.push();
-            dishID.setValue(dish, new Firebase.CompletionListener() {
+
+            DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews").push();
+            refReview.setValue(dish, new DatabaseReference.CompletionListener() {
                 @Override
-                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                    if (firebaseError != null) {
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
                         Toast.makeText(add_dish_activity.this, "Fehler beim hochloden der Daten", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(add_dish_activity.this, "Ihre Daten wurden erfolgreich hochgeladen", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-            String id = dishID.getKey();
+            String id = refReview.getKey();
             dish.setDishId(id);
-            //upload picture to parse
             finish();
         }
 

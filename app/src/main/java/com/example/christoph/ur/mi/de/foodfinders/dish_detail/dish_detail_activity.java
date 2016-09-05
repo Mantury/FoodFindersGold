@@ -4,25 +4,18 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 //bild noch zu klein!!!
 
 public class dish_detail_activity extends Activity {
@@ -44,22 +37,22 @@ public class dish_detail_activity extends Activity {
 
     //searches the dish by using the id from Firebase!
     private void setUpData() {
-        Firebase.setAndroidContext(this);
-        final Firebase dish = new Firebase("https://foodfindersgold.firebaseio.com/reviews");
 
-        dish.child(reviewId).addValueEventListener(new ValueEventListener() {
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews");
+        refReview.child(reviewId).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Log.d("firebasedish",snapshot.toString());
-                dish_item dishItem=new dish_item(snapshot);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("firebaseReview", dataSnapshot.toString());
+                dish_item dishItem = new dish_item(dataSnapshot);
                 setUpUi(dishItem);
             }
+
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("firebaseReview", "The read failed" + databaseError.toString());
+
             }
         });
-
     }
 
     //gets the Layoutreference and sets up the data
@@ -93,8 +86,10 @@ public class dish_detail_activity extends Activity {
 
         comment.setText(dish.getComment());
 
-        Bitmap bitmap = dish.getImageBitmap();
+            byte[] imageAsBytes = Base64.decode(dish.getImage().getBytes(), Base64.DEFAULT);
+            Bitmap bit =  BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+       // Bitmap bitmap = dish.getImageBitmap();
         //Bild wird immer angezeigt auch wenn null??
-        image.setImageBitmap(bitmap);
+       image.setImageBitmap(bit);
     }
 }
