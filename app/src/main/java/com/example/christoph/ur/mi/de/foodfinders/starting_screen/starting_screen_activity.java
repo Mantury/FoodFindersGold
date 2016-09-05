@@ -45,10 +45,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     private GoogleMap mMap;
     private LatLng position;
-   // private double latUr=48.9984593454694;
-   // private double lngUr=12.097473442554474 ;
-   private double lngUr=13.409779;
-    private double latUr=	52.520645;
+    private double latUr=48.9984593454694;
+    private double lngUr=12.097473442554474 ;
     private download data;
     private CameraUpdate update;
     private ArrayList<restaurant> restaurants = new ArrayList<>();
@@ -81,7 +79,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
         if(checkInternetConn()) {
-            LogInFirebase(); // test für den login
+           // LogInFirebase(); // test für den login
             setUpMapIfNeeded();
         }
     }
