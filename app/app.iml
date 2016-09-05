@@ -158,18 +158,16 @@
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 23 Platform (1)" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="play-services-base-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-clearcut-9.4.0" level="project" />
-    <orderEntry type="library" exported="" name="firebase-client-jvm-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-database-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wearable-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="Parse-1.10.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-drive-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-common-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-storage-9.4.0" level="project" />
-    <orderEntry type="library" exported="" name="jackson-annotations-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-iid-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-vision-9.4.0" level="project" />
@@ -195,7 +193,6 @@
     <orderEntry type="library" exported="" name="play-services-nearby-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-plus-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-contextmanager-9.4.0" level="project" />
-    <orderEntry type="library" exported="" name="firebase-client-android-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-impl-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-auth-module-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-auth-common-9.4.0" level="project" />
@@ -212,12 +209,9 @@
     <orderEntry type="library" exported="" name="play-services-auth-base-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-9.4.0" level="project" />
-    <orderEntry type="library" exported="" name="jackson-core-2.2.2" level="project" />
-    <orderEntry type="library" exported="" name="jackson-databind-2.2.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-crash-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-safetynet-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="mediarouter-v7-23.0.0" level="project" />
-    <orderEntry type="library" exported="" name="tubesock-0.0.12" level="project" />
     <orderEntry type="library" exported="" name="play-services-places-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-analytics-9.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-tagmanager-9.4.0" level="project" />

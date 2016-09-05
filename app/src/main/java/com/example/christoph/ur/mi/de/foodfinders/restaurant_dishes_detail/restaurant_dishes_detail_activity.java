@@ -17,17 +17,12 @@ import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
 import com.example.christoph.ur.mi.de.foodfinders.dish_detail.dish_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
-import com.parse.FindCallback;
-import com.parse.Parse;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,16 +66,12 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
         dishes.clear();
         Toast.makeText(restaurant_dishes_detail_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
 
-        //start firebase
-        Firebase.setAndroidContext(this);
-        final Firebase dish = new Firebase("https://foodfindersgold.firebaseio.com/reviews");
-        Query queryRef= dish.orderByChild("place_id").equalTo(place_id);
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews");
+        Query queryRef= refReview.orderByChild("place_id").equalTo(place_id);
         queryRef.addChildEventListener(new ChildEventListener() {
-            // Retrieve new posts as they are added to Firebase
-            //TODO neuerste zuerst?default?
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildKey) {
-                dish_item dish = new dish_item(snapshot);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                dish_item dish = new dish_item(dataSnapshot);
                 dishes.add(dish);
                 adapter.notifyDataSetChanged();
             }
@@ -101,10 +92,9 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
-
         });
         adapter.notifyDataSetChanged();
     }

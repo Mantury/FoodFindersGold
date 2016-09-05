@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -23,11 +22,6 @@ import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +33,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -49,25 +45,20 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     private GoogleMap mMap;
     private LatLng position;
-    private double latUr = 48.9984593454694;
-    private double lngUr = 12.097473442554474;
+    private double latUr=48.9984593454694;
+    private double lngUr=12.097473442554474 ;
     private download data;
     private CameraUpdate update;
     private ArrayList<restaurant> restaurants = new ArrayList<>();
     private String placesearchurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
-    private String placesearchparameter1 = "&radius=";
+    private String placesearchparameter1 ="&radius=";
     private String placesearchparameter2 = "&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
     private int placesearchparameterradius = 1500;
     private Circle myCircle;
-    private boolean drag = false;
-    private String yourLocation = "Standort";
-    private String draggedLocation = "Eigene Position";
-    private String defaultLocation = "Kein aktueller Standort";
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private boolean drag=false;
+    private String yourLocation="Standort";
+    private String draggedLocation="Eigene Position";
+    private String defaultLocation="Kein aktueller Standort";
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -79,7 +70,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         sekker();
         updateButton();
         setUpData();
-        map.animateCamera(CameraUpdateFactory.zoomTo(7.0f));
 
     }
 
@@ -88,32 +78,15 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
-        if (checkInternetConn()) {
-            // LogInFirebase(); // test für den login
+        if(checkInternetConn()) {
+            LogInFirebase(); // test für den login
             setUpMapIfNeeded();
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
     private void LogInFirebase() {
-        Log.d("firebaselogin", "start login");
-        Firebase.setAndroidContext(this);
-        Firebase ref = new Firebase("https://foodfindersgold.firebaseio.com");
-        ref.createUser("bobtony@firebase.com", "correcthorsebatterystaple", new Firebase.ValueResultHandler<Map<String, Object>>() {
-            @Override
-            public void onSuccess(Map<String, Object> result) {
-                Log.d("firebaslogin", "success" + result.get("uid"));
-                System.out.println("Successfully created user account with uid: " + result.get("uid"));
-            }
-
-            @Override
-            public void onError(FirebaseError firebaseError) {
-                Log.d("firebaslogin", "fehler" + firebaseError.toString());
-                // there was an error
-            }
-        });
+        Log.d("firebaselogin","start login");
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.createUserWithEmailAndPassword("bobtony@firebase.com","testtest");//benutzer erstellt
     }
 
 
@@ -123,20 +96,20 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         if (ni == null) {
             Toast.makeText(starting_screen_activity.this, "No Internet", Toast.LENGTH_SHORT).show();
             finish();
-            return false;
-        } else {
+           return false;
+        }else {
             return true;
         }
     }
 
-    private void setupDrawer(ArrayList<restaurant> rests) {
+    private void setupDrawer(ArrayList<restaurant> rests){
         //TODO favoriten speichern und die liste nehmen!
         final DrawerLayout FavDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ListView FavList = (ListView) findViewById(R.id.left_drawer);
 
-        Favourites_ArrayAdapter aa = new Favourites_ArrayAdapter(rests, this);
+        Favourites_ArrayAdapter aa = new Favourites_ArrayAdapter(rests,this);
         FavList.setAdapter(aa);
-        FavList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        FavList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO lade detail screen it Restaurant
@@ -146,14 +119,14 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             }
         });
 
-        //   mDrawerList.setItemChecked(position, true);
-        //   mDrawerLayout.closeDrawer(mDrawerList);
+     //   mDrawerList.setItemChecked(position, true);
+     //   mDrawerLayout.closeDrawer(mDrawerList);
 
-        //   Context context = getApplicationContext();
-        //   CharSequence text = "Hello toast!";
-        //   int duration = Toast.LENGTH_SHORT;
-        //   Toast toast = Toast.makeText(context, text, duration);
-        //   toast.show();
+     //   Context context = getApplicationContext();
+     //   CharSequence text = "Hello toast!";
+     //   int duration = Toast.LENGTH_SHORT;
+     //   Toast toast = Toast.makeText(context, text, duration);
+     //   toast.show();
 
     }
 
@@ -163,7 +136,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         data.setRestaurantDataProviderListener(this);
     }
 
-    private void getData() {
+    private void getData(){
         data.getlocationdata(placesearchurl + position.latitude + "," + position.longitude + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
         Toast.makeText(starting_screen_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
     }
@@ -209,7 +182,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         });
     }
 
-    private void setOnlongPoschange() {
+    private void setOnlongPoschange(){
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -222,10 +195,10 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         });
     }
 
-    private void sekker() {
+    private void sekker(){
 
         final SeekBar seeker = (SeekBar) findViewById(R.id.starting_screen_seek_bar);
-        seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
             @Override
             public void onProgressChanged(SeekBar seeker, int progress, boolean fromUser) {
 
@@ -250,8 +223,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mMap.clear();
                 setUpMarker();
-                getData();
-            }
+                getData();            }
         });
 
 
@@ -264,26 +236,25 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
 
-        if (drag) {
+        if(drag){
             mMap.addMarker(new MarkerOptions().position(position).title(draggedLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
             update = CameraUpdateFactory.newLatLng(position);
             mMap.moveCamera(update);
 
-        } else {
+        }else {
 
             if (location != null) {
 
                 position = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(position).title(yourLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-                update = CameraUpdateFactory.newLatLng(position);
-                ;
+                update = CameraUpdateFactory.newLatLngZoom(position, 13.0f);
                 mMap.moveCamera(update);
 
             } else {
                 LatLng defaultUr = new LatLng(latUr, lngUr);
-                position = defaultUr;
+                position=defaultUr;
                 mMap.addMarker(new MarkerOptions().position(defaultUr).title(defaultLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
-                update = CameraUpdateFactory.newLatLng(defaultUr);
+                update = CameraUpdateFactory.newLatLngZoom(position, 13.0f);
                 mMap.moveCamera(update);
             }
         }
@@ -302,9 +273,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         this.restaurants = restaurants;
         setupDrawer(restaurants);
 
-        if (restaurants == null) {
+        if(restaurants==null){
 
-        } else {
+        }else {
             for (int i = 0; i < restaurants.size(); i++) {
                 restaurant res = restaurants.get(i);
                 LatLng positionitem = new LatLng(res.getLatitude(), res.getLongitude());
@@ -326,11 +297,11 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        Log.d(yourLocation + marker.getTitle());
+                        Log.d(yourLocation+marker.getTitle());
 
-                        if (yourLocation.equals(marker.getTitle()) || draggedLocation.equals(marker.getTitle()) || defaultLocation.equals(marker.getTitle())) {
+                        if(yourLocation.equals(marker.getTitle())||draggedLocation.equals(marker.getTitle())||defaultLocation.equals(marker.getTitle())){
 
-                        } else {
+                        }else{
                             openRestaurantDetail(getPlaceId(marker.getTitle()));
                         }
 
@@ -354,15 +325,5 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         Intent i = new Intent(starting_screen_activity.this, restaurant_detail_activity.class);
         i.putExtra("name", place_id);
         startActivity(i);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 }

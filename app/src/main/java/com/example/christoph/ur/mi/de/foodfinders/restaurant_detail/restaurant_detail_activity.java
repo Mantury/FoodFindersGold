@@ -20,15 +20,12 @@ import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.restaurant_dishes_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -133,18 +130,18 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     //Adds up all in-app-dishes and displays it.
     //TODO dish Counter überarbeiten dauert noch zu lange
     private void setDishesCounter() {
-        Firebase.setAndroidContext(this);
-        final Firebase dish = new Firebase("https://foodfindersgold.firebaseio.com/reviews");
-        Query queryRef= dish.orderByChild("place_id").equalTo(place_id);
-        queryRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews");
+        Query queryReviewRestaurant= refReview.orderByChild("place_id").equalTo(place_id);
+        queryReviewRestaurant.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
-                dishcounter.setText(snapshot.getChildrenCount() + " eingetragene Gerichte");
+                dishcounter.setText(dataSnapshot.getChildrenCount() + " eingetragene Gerichte");
             }
+
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getMessage());
             }
         });
     }
