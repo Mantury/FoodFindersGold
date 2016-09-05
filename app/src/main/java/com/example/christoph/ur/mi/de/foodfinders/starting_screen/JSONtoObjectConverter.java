@@ -96,6 +96,7 @@ public class JSONtoObjectConverter {
             int open;
             String openweekday="notfound";
 
+
             if (openinghours != null) {
                 openweekday = openinghours.getString(WEEKDAYTEXT);
                 if (openinghours.getBoolean(OPENNOW)) {

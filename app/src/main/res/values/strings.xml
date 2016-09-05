@@ -14,6 +14,15 @@
     <string name="starting_screen_update_map">Standort zurücksetzen</string>
     <string name="restaurant_dishes_detail_add_dish">Gericht hinzufügen</string>
     <string name="restaurant_detail_rate_restaurant">Restaurant bewerten</string>
+    <string name="noInternetCon_ger">Keine Verbindung</string>
     <string name="test">test</string>
 
+    <string name="name_ger">Name</string>
+    <string name="email_ger">Em@il</string>
+    <string name="password_ger">Passwort</string>
+    <string name="alreadyAccLink_ger">Bereits einen Account?</string>
+    <string name="createAcc_ger">Account erstellen</string>
+    <string name="createAccLink_ger">Noch keinen Account?</string>
+    <string name="logout_ger">Logout</string>
+    <string name="loggedInAs_ger">Angemeldet als:</string>
 </resources>
