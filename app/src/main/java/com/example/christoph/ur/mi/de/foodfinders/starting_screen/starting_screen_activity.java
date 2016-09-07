@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Toast;
-
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
@@ -34,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -85,7 +85,14 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     }
     private void SetUpUser() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        Log.d("firebaselogin:","user:"+auth.getCurrentUser().getUid());
+        FirebaseUser user=auth.getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            Log.d("firebaselogin:","user:"+auth.getCurrentUser().getUid());
+        } else {
+            // User is signed out
+        }
+
     }
 
 

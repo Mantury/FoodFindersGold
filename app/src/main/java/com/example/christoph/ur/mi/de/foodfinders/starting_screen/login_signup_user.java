@@ -33,7 +33,6 @@ public class login_signup_user extends Activity {
         super.onCreate(savedInstanceState);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signOut();
-
         getIntentdata();
 
     }
