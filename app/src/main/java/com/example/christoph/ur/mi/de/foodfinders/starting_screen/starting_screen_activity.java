@@ -11,7 +11,9 @@ import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -112,6 +114,12 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         //TODO favoriten speichern und die liste nehmen!
         final DrawerLayout FavDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ListView FavList = (ListView) findViewById(R.id.left_drawer);
+
+        LayoutInflater inflater = getLayoutInflater();
+        final ViewGroup footer = (ViewGroup)inflater.inflate(R.layout.drawer_footer, FavList, false);
+        final ViewGroup header = (ViewGroup)inflater.inflate(R.layout.drawer_header, FavList, false);
+        FavList.addHeaderView(header, null, false);
+        FavList.addFooterView(footer,null, false);
 
         Favourites_ArrayAdapter aa = new Favourites_ArrayAdapter(rests,this);
         FavList.setAdapter(aa);
