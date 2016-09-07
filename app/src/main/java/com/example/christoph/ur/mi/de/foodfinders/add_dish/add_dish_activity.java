@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -115,7 +116,11 @@ public class add_dish_activity extends Activity {
         //funktionierts
         if(ready) {
             String com = String.valueOf(comment.getText());
-            dish_item dish= new dish_item(gerichtname, place_id , (int)rank ,gluten, vegan, com, firepicture);
+            //TODO in extra Methode auslagern?
+            FirebaseAuth auth= FirebaseAuth.getInstance();
+            String username=auth.getCurrentUser().getDisplayName();
+            String uID=auth.getCurrentUser().getUid();
+            dish_item dish= new dish_item(gerichtname, place_id , (int)rank ,gluten, vegan, com, firepicture,username,uID);
 
             DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews").push();
             refReview.setValue(dish, new DatabaseReference.CompletionListener() {

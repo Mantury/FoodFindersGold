@@ -63,9 +63,10 @@ public class dish_detail_activity extends Activity {
         TextView vegan = (TextView) findViewById(R.id.dish_detail_vegan_info);
         TextView gluten = (TextView) findViewById(R.id.dish_detail_glutenfree_info);
         TextView comment = (TextView) findViewById(R.id.dish_detail_comment);
-
+        TextView author = (TextView) findViewById(R.id.dish_detail_author);
         //sets the data
         name.setText(dish.getNameDish());
+        author.setText("von: "+dish.getAuthor());
         rating.setRating(dish.getRating());
 
         vegan.setText("Vegan:" + dish.getVegan());

@@ -23,6 +23,8 @@
     <string name="alreadyAccLink_ger">Bereits einen Account?</string>
     <string name="createAcc_ger">Account erstellen</string>
     <string name="createAccLink_ger">Noch keinen Account?</string>
+    <string name="wrongDataLogin_ger">Anmeldung fehlgeschlagen. Bitte Versuchen Se es erneut</string>
+    <string name="wrongDataSignup_ger">Anmeldung fehlgeschlagen. Bitte Versuchen Se es erneut</string>
     <string name="logout_ger">Logout</string>
     <string name="loggedInAs_ger">Angemeldet als:</string>
 </resources>

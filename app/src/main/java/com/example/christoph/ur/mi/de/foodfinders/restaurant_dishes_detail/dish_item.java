@@ -22,9 +22,10 @@ public class dish_item {
     String vegan;
     String comment;
     String image; //http://pmarshall.me/2016/02/20/image-storage-with-firebase.html //TODO string to Bitmap? möglich?
-    //TODO Autor mit id (vor-und nachname)
+    String author;
+    String authorID;
 
-    public dish_item(String nameDish, String place_id, int rating, String gluten, String vegan, String comment, String image) {
+    public dish_item(String nameDish, String place_id, int rating, String gluten, String vegan, String comment, String image,String author,String authorID) {
         this.nameDish = nameDish;
         this.place_id = place_id;
         this.rating = rating;
@@ -32,9 +33,10 @@ public class dish_item {
         this.vegan = vegan;
         this.comment = comment;
         this.image = image;
+        this.author= author;
+        this.authorID=authorID;
     }
 
-    //TODO firebase umschreiben
     public dish_item(DataSnapshot fireData){
         Log.d("data",fireData.toString());
         this.nameDish = (String) fireData.child("nameDish").getValue();
@@ -45,6 +47,8 @@ public class dish_item {
         this.vegan = (String) fireData.child("vegan").getValue();
         this.comment= (String) fireData.child("comment").getValue();
         this.image= (String) fireData.child("image").getValue();
+        this.author= (String) fireData.child("author").getValue();
+        this.authorID= (String) fireData.child("authorID").getValue();
         this.dishId= fireData.getKey();
 
     }
@@ -84,6 +88,13 @@ public class dish_item {
         return image;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getAuthorID() {
+        return authorID;
+    }
 
  //   public Bitmap getImageBitmap() {
  //       byte[] imageAsBytes = Base64.decode(image.getBytes(), Base64.DEFAULT);

@@ -17,6 +17,8 @@ import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
 import com.example.christoph.ur.mi.de.foodfinders.dish_detail.dish_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -105,9 +107,19 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
         add_dish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(restaurant_dishes_detail_activity.this, add_dish_activity.class);
-                i.putExtra("place_id", place_id);
-                startActivity(i);
+                //
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser user=auth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Intent i = new Intent(restaurant_dishes_detail_activity.this, add_dish_activity.class);
+                    i.putExtra("place_id", place_id);
+                    startActivity(i);
+                } else {
+                    // User is signed out
+                    //TODO Toast bitte anmelden oder Intent zum LoginScreen
+                }
+
             }
         });
     }

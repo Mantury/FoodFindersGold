@@ -20,6 +20,14 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/dish_name" />
 
+    <TextView
+        android:id="@+id/dish_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/dish_image"
+        android:text="Autor des Gerichts"
+        android:textSize="10dp" />
 
     <RatingBar
         android:id="@+id/dish_ratingbar"

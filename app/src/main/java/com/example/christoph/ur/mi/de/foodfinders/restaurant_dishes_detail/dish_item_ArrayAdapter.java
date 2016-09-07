@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         }
         TextView name = (TextView) v.findViewById(R.id.dish_name);
         ImageView image = (ImageView) v.findViewById(R.id.dish_image);
+        TextView author = (TextView) v.findViewById(R.id.dish_author);
         RatingBar rating = (RatingBar) v.findViewById(R.id.dish_ratingbar);
         TextView vegan = (TextView) v.findViewById(R.id.dish_vegan);
         TextView gluten = (TextView) v.findViewById(R.id.dish_gluten);
@@ -61,6 +63,7 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         image.setImageBitmap(
                 BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
         );
+        author.setText(dish.getAuthor());
         rating.setRating(dish.getRating());
         if (dish.getRating() >= 4) {
             linlayout.setBackgroundResource(R.color.green);

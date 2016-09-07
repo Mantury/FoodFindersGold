@@ -79,14 +79,13 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
         if(checkInternetConn()) {
-            LogInFirebase(); // test für den login
+            SetUpUser(); // test für den login
             setUpMapIfNeeded();
         }
     }
-    private void LogInFirebase() {
-        Log.d("firebaselogin","start login");
+    private void SetUpUser() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.createUserWithEmailAndPassword("bobtony@firebase.com","testtest");//benutzer erstellt
+        Log.d("firebaselogin:","user:"+auth.getCurrentUser().getUid());
     }
 
 
@@ -178,6 +177,16 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 drag = false;
                 setUpMarker();
                 getData();
+            }
+        });
+        //Test für Login/Signup
+        update.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent i = new Intent(starting_screen_activity.this, login_signup_user.class);
+                i.putExtra("intentData", "login");
+                startActivity(i);
+                return false;
             }
         });
     }

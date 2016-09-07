@@ -14,6 +14,18 @@
         android:layout_marginBottom="24dp"
         android:padding="15dp"
         android:layout_gravity="center_horizontal" />
+
+
+    <TextView
+        android:id="@+id/login_wrongData"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="@string/wrongDataLogin_ger"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:visibility="invisible"/>
+
     <!-- Email Label -->
 
     <EditText
