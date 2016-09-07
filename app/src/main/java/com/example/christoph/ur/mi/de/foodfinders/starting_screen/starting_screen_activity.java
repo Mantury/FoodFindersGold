@@ -144,7 +144,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     private void getData(){
         data.getlocationdata(placesearchurl + position.latitude + "," + position.longitude + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
-        Toast.makeText(starting_screen_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(starting_screen_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -320,7 +320,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                         }else{
                             openRestaurantDetail(getPlaceId(marker.getTitle()));
                         }
-
                     }
                 });
             }

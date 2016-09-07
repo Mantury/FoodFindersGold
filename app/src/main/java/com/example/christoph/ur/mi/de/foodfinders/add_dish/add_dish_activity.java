@@ -186,9 +186,6 @@ public class add_dish_activity extends Activity {
         //Test firebase picture upload
         firepicture = Base64.encodeToString(image, Base64.DEFAULT);
         saveimage=true;
-
-
-        Toast.makeText(add_dish_activity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
     }
 
     //starts intent to capture a image

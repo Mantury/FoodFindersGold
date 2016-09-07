@@ -2,6 +2,7 @@ package com.example.christoph.ur.mi.de.foodfinders.starting_screen;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -45,7 +46,6 @@ public class login_signup_user extends Activity {
             }else{
              if(intentData.equals("signup")){
                  setupSignupUI();
-
              }
             }
     }
@@ -93,7 +93,9 @@ public class login_signup_user extends Activity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Log.d("FirebaseSignup",task.isSuccessful()+"user login");
-                            if(task.isSuccessful()){finish();
+                            if(task.isSuccessful()){
+                                showToastlogin(auth.getCurrentUser().getDisplayName());
+                                finish();
                                 Log.d("firebaselogin","Anzeigename des Users"+auth.getCurrentUser().getDisplayName()+"  UserUID"+auth.getCurrentUser().getUid());
                             }
                             if (!task.isSuccessful()) {
@@ -140,9 +142,9 @@ public class login_signup_user extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("firebaselogin", "signInWithEmail:onComplete:" + task.isSuccessful());
-                        //TODO loading screen anzeigen
                         if(task.isSuccessful()){
                             Log.d("firebaselogin","Anzeigename des Users"+auth.getCurrentUser().getDisplayName()+"  UserUID"+auth.getCurrentUser().getUid());
+                            showToastlogin(auth.getCurrentUser().getDisplayName());
                             finish();
                         }
 
@@ -155,6 +157,14 @@ public class login_signup_user extends Activity {
                         }
                     }
                 });
+    }
+
+    private void showToastlogin(String user) {
+        Context context = getApplicationContext();
+        CharSequence text = "Hallo "+user+" !";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     private void startProgress() {
