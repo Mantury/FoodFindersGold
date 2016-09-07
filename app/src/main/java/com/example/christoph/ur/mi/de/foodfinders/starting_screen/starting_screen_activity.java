@@ -81,18 +81,18 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
         if(checkInternetConn()) {
-            SetUpUser(); // test für den login
+            userSignedIn(); // test für den login
             setUpMapIfNeeded();
         }
     }
-    private void SetUpUser() {
+    private boolean userSignedIn() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user=auth.getCurrentUser();
         if (user != null) {
-            // User is signed in
             Log.d("firebaselogin:","user:"+auth.getCurrentUser().getUid());
+            return true;
         } else {
-            // User is signed out
+            return false;
         }
 
     }
@@ -115,11 +115,22 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         final DrawerLayout FavDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ListView FavList = (ListView) findViewById(R.id.left_drawer);
 
-        LayoutInflater inflater = getLayoutInflater();
-        final ViewGroup footer = (ViewGroup)inflater.inflate(R.layout.drawer_footer, FavList, false);
-        final ViewGroup header = (ViewGroup)inflater.inflate(R.layout.drawer_header, FavList, false);
-        FavList.addHeaderView(header, null, false);
-        FavList.addFooterView(footer,null, false);
+       //TODO mit "richtigen" Favoriten testen!
+        if(userSignedIn()) {
+            LayoutInflater inflater = getLayoutInflater();
+            final ViewGroup footer = (ViewGroup)inflater.inflate(R.layout.drawer_footer, FavList, false);
+            final ViewGroup header = (ViewGroup)inflater.inflate(R.layout.drawer_header, FavList, false);
+            FavList.addHeaderView(header, null, false);
+            FavList.addFooterView(footer,null, false);
+        }
+        else {
+            LayoutInflater inflater = getLayoutInflater();
+            final ViewGroup header = (ViewGroup)inflater.inflate(R.layout.drawer_footer, FavList, false);
+            FavList.addHeaderView(header, null, false);
+            Button login = (Button) findViewById(R.id.logButton);
+            login.setText("Login");
+        }
+
 
         Favourites_ArrayAdapter aa = new Favourites_ArrayAdapter(rests,this);
         FavList.setAdapter(aa);
@@ -133,14 +144,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
             }
         });
 
-     //   mDrawerList.setItemChecked(position, true);
-     //   mDrawerLayout.closeDrawer(mDrawerList);
 
-     //   Context context = getApplicationContext();
-     //   CharSequence text = "Hello toast!";
-     //   int duration = Toast.LENGTH_SHORT;
-     //   Toast toast = Toast.makeText(context, text, duration);
-     //   toast.show();
 
     }
 
@@ -160,6 +164,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     protected void onResume() {
         super.onResume();
         updateButton();
+       //TODO rchtig einstellen
+        setupDrawer(restaurants);
     }
 
     private void draggablePosition() {
@@ -294,6 +300,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     //Sets up the markers for all found restaurants and colours them accordingly to their openninghours
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurant> restaurants) {
+        //TODO drawer raus!
         this.restaurants = restaurants;
         setupDrawer(restaurants);
 
