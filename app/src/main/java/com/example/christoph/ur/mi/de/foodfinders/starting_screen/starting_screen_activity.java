@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
@@ -52,6 +53,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private download data;
     private CameraUpdate update;
     private ArrayList<restaurant> restaurants = new ArrayList<>();
+    private ArrayList<restaurant> favoriteRestaurants = new ArrayList<>();
     private String placesearchurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
     private String placesearchparameter1 ="&radius=";
     private String placesearchparameter2 = "&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
@@ -61,6 +63,13 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private String yourLocation="Standort";
     private String draggedLocation="Eigene Position";
     private String defaultLocation="Kein aktueller Standort";
+
+    public DrawerLayout FavDrawer;
+    public ListView FavList;
+    public ViewGroup header;
+    public ViewGroup footer;
+    public ViewGroup footerOutlogged;
+
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -72,7 +81,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         sekker();
         updateButton();
         setUpData();
-
     }
 
     @Override
@@ -81,7 +89,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.starting_screen_layout);
         if(checkInternetConn()) {
-            userSignedIn(); // test für den login
+            setupDrawer();
+            ArrangeDrawer();
             setUpMapIfNeeded();
         }
     }
@@ -110,29 +119,29 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         }
     }
 
-    private void setupDrawer(ArrayList<restaurant> rests){
+    private void setupDrawer(){
         //TODO favoriten speichern und die liste nehmen!
-        final DrawerLayout FavDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final ListView FavList = (ListView) findViewById(R.id.left_drawer);
+        FavDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        FavList = (ListView) findViewById(R.id.left_drawer);
+        if(header!=null) {FavList.removeHeaderView(header);}
+        if(footer!=null) {FavList.removeFooterView(footer);}
+        if(footerOutlogged!=null) {FavList.removeFooterView(footerOutlogged);}
 
-       //TODO mit "richtigen" Favoriten testen!
+        LayoutInflater inflater = getLayoutInflater();
+        footer = (ViewGroup)inflater.inflate(R.layout.drawer_footer, FavList, false);
+        header = (ViewGroup)inflater.inflate(R.layout.drawer_header, FavList, false);
+        footerOutlogged = (ViewGroup)inflater.inflate(R.layout.drawer_footer_outlogged, FavList, false);
+
         if(userSignedIn()) {
-            LayoutInflater inflater = getLayoutInflater();
-            final ViewGroup footer = (ViewGroup)inflater.inflate(R.layout.drawer_footer, FavList, false);
-            final ViewGroup header = (ViewGroup)inflater.inflate(R.layout.drawer_header, FavList, false);
-            FavList.addHeaderView(header, null, false);
-            FavList.addFooterView(footer,null, false);
-        }
-        else {
-            LayoutInflater inflater = getLayoutInflater();
-            final ViewGroup header = (ViewGroup)inflater.inflate(R.layout.drawer_footer, FavList, false);
-            FavList.addHeaderView(header, null, false);
-            Button login = (Button) findViewById(R.id.logButton);
-            login.setText("Login");
+
+            TextView userName = (TextView) header.findViewById(R.id.drawerUser);
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser user=auth.getCurrentUser();
+            userName.setText(user.getDisplayName());
+
         }
 
-
-        Favourites_ArrayAdapter aa = new Favourites_ArrayAdapter(rests,this);
+        Favourites_ArrayAdapter aa = new Favourites_ArrayAdapter(favoriteRestaurants,this);
         FavList.setAdapter(aa);
         FavList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -143,9 +152,56 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 openRestaurantDetail(clickedRest.getPlace_id());
             }
         });
+    }
 
+    private void ArrangeDrawer() {
+        if(header!=null) {FavList.removeHeaderView(header);}
+        if(footer!=null) {FavList.removeFooterView(footer);}
+        if(footerOutlogged!=null) {FavList.removeFooterView(footerOutlogged);}
+        if(userSignedIn()) {
 
+            FavList.addHeaderView(header, null, false);
+            FavList.addFooterView(footer,null, false);
 
+            TextView userName = (TextView) header.findViewById(R.id.drawerUser);
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser user=auth.getCurrentUser();
+            userName.setText(user.getDisplayName());
+
+            Button drawerLogout = (Button) findViewById(R.id.drawerLogoutButton);
+            drawerLogout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    auth.signOut();
+                    makeLogoutToast().show();
+                    FavDrawer.closeDrawer(FavList);
+                    ArrangeDrawer();
+                }
+            });
+        }
+        else{
+            FavList.addFooterView(footerOutlogged, null, false);
+            Button drawerLogin = (Button) findViewById(R.id.drawerLoginButton);
+            drawerLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(starting_screen_activity.this, login_signup_user.class);
+                    i.putExtra("intentData", "login");;
+                    startActivity(i);
+                    FavDrawer.closeDrawer(FavList);
+                    ArrangeDrawer();
+                }
+            });
+        }
+    }
+
+    private Toast makeLogoutToast(){
+        Context context = getApplicationContext();
+        CharSequence text = "Sie haben sich ausgeloggt";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        return toast;
     }
 
     private void setUpData() {
@@ -163,9 +219,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     @Override
     protected void onResume() {
         super.onResume();
+        ArrangeDrawer();
         updateButton();
        //TODO rchtig einstellen
-        setupDrawer(restaurants);
     }
 
     private void draggablePosition() {
@@ -198,16 +254,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 drag = false;
                 setUpMarker();
                 getData();
-            }
-        });
-        //Test für Login/Signup
-        update.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Intent i = new Intent(starting_screen_activity.this, login_signup_user.class);
-                i.putExtra("intentData", "login");
-                startActivity(i);
-                return false;
             }
         });
     }
@@ -300,9 +346,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     //Sets up the markers for all found restaurants and colours them accordingly to their openninghours
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurant> restaurants) {
-        //TODO drawer raus!
+
         this.restaurants = restaurants;
-        setupDrawer(restaurants);
 
         if(restaurants==null){
 

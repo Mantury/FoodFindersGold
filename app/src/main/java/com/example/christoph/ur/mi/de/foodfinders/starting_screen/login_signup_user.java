@@ -32,8 +32,6 @@ public class login_signup_user extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signOut();
         getIntentdata();
 
     }

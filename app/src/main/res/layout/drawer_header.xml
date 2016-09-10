@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Username"
-        android:id="@+id/textView3" />
+        android:id="@+id/drawerUser" />
 
     <TextView
         android:layout_width="wrap_content"

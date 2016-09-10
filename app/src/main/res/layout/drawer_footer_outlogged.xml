@@ -5,14 +5,21 @@
     android:weightSum="1">
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bitte melden sie sich an"
+        android:id="@+id/drawerLoginText"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logout"
-        android:id="@+id/drawerLogoutButton"
-        android:layout_alignParentTop="true"
+        android:text="Login"
+        android:id="@+id/drawerLoginButton"
+        android:layout_below="@+id/drawerLoginText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
 </RelativeLayout>
