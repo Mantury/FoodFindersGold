@@ -132,6 +132,7 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
 
     private void setUpName() {
         TextView restaurant = (TextView) findViewById(R.id.restaurant_dishes_detail_header);
+        restaurant.setSelected(true);
         restaurant.setText(name);
     }
 

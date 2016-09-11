@@ -63,7 +63,7 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         image.setImageBitmap(
                 BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
         );
-        author.setText(dish.getAuthor());
+        author.setText("Von: " + dish.getAuthor());
         rating.setRating(dish.getRating());
         if (dish.getRating() >= 4) {
             linlayout.setBackgroundResource(R.color.green);

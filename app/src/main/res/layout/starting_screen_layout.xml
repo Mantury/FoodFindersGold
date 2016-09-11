@@ -21,7 +21,7 @@
                 android:id="@+id/starting_screen_seek_bar"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.1"
+                android:layout_weight="0.075"
                 android:max="1500"
                 android:gravity="center_horizontal"
                 android:progress="1000"
@@ -30,7 +30,9 @@
                 android:hapticFeedbackEnabled="true"
                 android:layout_gravity="bottom"
                 android:foregroundGravity="top"
-                 />
+                android:splitTrack="false"
+                android:alpha="50"
+                />
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:map="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
@@ -38,7 +40,7 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.8"
+                android:layout_weight="0.825"
                 map:cameraTargetLat="48.9984593454694"
                 map:cameraTargetLng="12.097473442554474"
                 map:cameraZoom="14"
@@ -52,10 +54,9 @@
                     android:layout_width="match_parent"
                     android:layout_weight="0.1"
                     android:layout_height="0dp"
-                    android:gravity="center_horizontal"
-                    android:inputType="text"
+                    android:gravity="center"
                     android:text="@string/starting_screen_update_map"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:layout_gravity="top"/>
 
             </LinearLayout>

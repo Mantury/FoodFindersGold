@@ -27,5 +27,9 @@
     <string name="wrongDataLogin_ger">Anmeldung fehlgeschlagen. Bitte Versuchen Se es erneut</string>
     <string name="wrongDataSignup_ger">Anmeldung fehlgeschlagen. Bitte Versuchen Se es erneut</string>
     <string name="logout_ger">Logout</string>
+    <string name="login_ger">Login</string>
     <string name="loggedInAs_ger">Angemeldet als:</string>
+
+    <string name="pleaseLogIn_ger">Bitte melden Sie sich an</string>
+    <string name="switchText_ger">Restaurant merken:</string>
 </resources>

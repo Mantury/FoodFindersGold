@@ -3,19 +3,25 @@
     android:id="@+id/restaurant_dishes_detail_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/green"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/restaurant_dishes_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@color/green"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
         android:gravity="center_horizontal"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
         android:text=""
-        android:textSize="25dp" />
+        android:lines="1"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:textSize="30sp" />
 
     <Button
         android:id="@+id/restaurant_dishes_detail_button"
@@ -23,11 +29,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/restaurant_dishes_detail_add_dish"
-        android:textSize="15dp" />
+        android:layout_margin="15dp"
+        android:textSize="15dp"
+        />
+    
+    <View style="@style/Divider"/>
+
 
     <ListView
         android:id="@+id/restaurant_dishes_detail_list"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"></ListView>
+        android:layout_height="fill_parent"
+
+        android:background="@color/white"></ListView>
 
 </LinearLayout>

@@ -3,14 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    >
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+    <!--Controlls layout  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="0.1">
 
         <Button
             android:id="@+id/add_dish_cancelbutton"
@@ -30,23 +40,22 @@
             android:background="@color/green"
             android:text="@string/add_dish_layout_addbutton_text" />
 
+
     </LinearLayout>
 
+        <View style="@style/Divider"/>
 
-
+    <!--Photo layout  -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.6"
         android:orientation="vertical">
-
-
-
         <Button
             android:id="@+id/add_dish_add_picture_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:layout_margin="15dp"
             android:text="@string/add_dish_add_photo"
             android:textSize="20dp"
             android:visibility="visible" />
@@ -55,20 +64,23 @@
             android:id="@+id/add_dish_photoimage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:visibility="invisible" />
-
-
 
     </LinearLayout>
 
-
+    <!--Input layout  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="0.3">
 
     <EditText
         android:id="@+id/add_dish_nameedit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/add_dish_add_name" />
+        android:hint="@string/add_dish_add_name"
+        android:layout_margin="15dp"/>
 
     <RatingBar
         android:id="@+id/add_dish_ratingbar"
@@ -78,13 +90,13 @@
         android:numStars="5"
         android:stepSize="1" />
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="Vegan?"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        />
 
 
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
@@ -151,8 +163,12 @@
         android:id="@+id/add_dish_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/add_dish_layout_Gericht_zum_Kommentar" />
+        android:hint="@string/add_dish_layout_Gericht_zum_Kommentar"
+        android:layout_margin="15dp"
+        />
 
-
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

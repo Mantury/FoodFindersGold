@@ -3,7 +3,7 @@
     android:id="@+id/dish_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/dish_name"
@@ -11,21 +11,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:text="Name des Gerichts"
-        android:textSize="15dp" />
+        android:textSize="18dp" />
 
     <ImageView
         android:id="@+id/dish_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
+
         android:layout_below="@+id/dish_name" />
 
     <TextView
         android:id="@+id/dish_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/dish_image"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:text="Autor des Gerichts"
         android:textSize="10dp" />
 
@@ -42,7 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/dish_ratingbar"
-        android:text="Vegan: " />
+        android:text="Vegan: "
+        android:textSize="15dp"/>
 
     <TextView
         android:id="@+id/dish_gluten"
@@ -50,6 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/dish_vegan"
-        android:text="Gluten: " />
-
+        android:text="Gluten: "
+        android:textSize="15dp"/>
 </RelativeLayout>
