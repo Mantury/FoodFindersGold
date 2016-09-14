@@ -10,13 +10,16 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
@@ -26,6 +29,9 @@ import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.resta
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
 import com.google.android.gms.ads.mediation.customevent.CustomEvent;
 import com.google.android.gms.vision.text.Line;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +54,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     private adaper_viewpager adapter;
     private ViewPager viewpager;
     private int numberimages;
+    private boolean isFavored;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +86,93 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                 startActivity(in);
             }
         });
+
         setDishesCounter();
+
+        final Switch favorit = (Switch) findViewById(R.id.restaurant_detail_favswitch);
+        if(isFavored==true) {
+            favorit.setChecked(true);
+        }
+        favorit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    if(userSignedIn()) {
+                        addToFavList();
+                    }
+                    else {
+                        Toast.makeText(restaurant_detail_activity.this, "Bitte melden sie sich zuerst an", Toast.LENGTH_SHORT).show();
+                        favorit.setChecked(false);
+                    }
+
+                }
+                if(!isChecked) {
+                    deleteFromFavList();
+                }
+            }
+        });
+
+
+    }
+
+    private void deleteFromFavList() {
+
+        Toast.makeText(restaurant_detail_activity.this, "Aus Favoriten entfernt", Toast.LENGTH_SHORT).show();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        String userID = user.getUid();
+
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites");
+        final Query refQuery = refReview;
+        refReview.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String place = (String) dataSnapshot.getValue();
+                if(place.equals(place_id)) {
+                    dataSnapshot.getRef().removeValue();
+                    refQuery.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void addToFavList() {
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        String userID = user.getUid();
+
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/"+userID+"/Favourites").push();
+        refReview.setValue(place_id, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    Toast.makeText(restaurant_detail_activity.this, "Fehler beim speichern als Favorit", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(restaurant_detail_activity.this, "Zu Favoriten hinzugefügt", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     //Downloading all the data for the specific restaurant. THe data is downloaded again to keep it up-to-date.
@@ -89,8 +182,12 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         data.setOnRestaurantDetailDataProviderListener(this);
     }
 
-    private void getIntentdata() {
+    private void getIntentdata()
+    {
         place_id = getIntent().getStringExtra("name");
+        String fav = getIntent().getStringExtra("favored");
+        if(fav.equals("yes")) {isFavored=true;}
+        else {isFavored=false;}
     }
 
     //Display all the data for the specific restaurant
@@ -194,5 +291,17 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                 System.out.println("The read failed: " + databaseError.getMessage());
             }
         });
+    }
+
+    private boolean userSignedIn() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            Log.d("firebaselogin:", "user:" + auth.getCurrentUser().getUid());
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }
