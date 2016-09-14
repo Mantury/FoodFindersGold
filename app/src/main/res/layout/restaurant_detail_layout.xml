@@ -6,14 +6,52 @@
     android:orientation="vertical"
     android:weightSum="1">
 
+    <!--Info layout  -->
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+    <!--
     <ImageView
         android:id="@+id/restaurant_detail_imageview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="200dp"
         android:layout_weight="0.7"
-        android:padding="5dp" />
+        android:padding="5dp"
+        android:visibility="invisible"
+        />
+        -->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/restaurant_detail_slideshow"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            >
 
-    <!--Info layout  -->
+        </android.support.v4.view.ViewPager>
+
+    <ProgressBar
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/restaurant_detail_progressBarImage"
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        />
+        </RelativeLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="89dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/restaurant_detail_progressBarScreen"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="false" />
+
+
+
     <LinearLayout
         android:id="@+id/restaurant_detail_linearlayout_top"
         android:layout_width="match_parent"
@@ -22,7 +60,8 @@
         android:background="@color/dark_green"
         android:orientation="vertical"
         android:layout_weight="0.2"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:visibility="invisible">
 
 
         <TextView
@@ -33,14 +72,16 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:text="@string/waiting_string"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            />
 
         <TextView
             android:id="@+id/restaurant_detail_textview_openinghours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="@string/waiting_string" />
+            android:text="@string/waiting_string"
+            />
 
         <View style="@style/Divider"/>
 
@@ -85,7 +126,8 @@
         android:orientation="horizontal"
         android:layout_weight="0.1"
         android:layout_margin="15dp"
-        android:outlineProvider="bounds">
+        android:outlineProvider="bounds"
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/restaurant_detail_dishcounter"

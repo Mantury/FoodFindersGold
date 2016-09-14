@@ -122,14 +122,25 @@ public class JSONtoObjectConverter {
             }
             String rating = "no ratings";
             rating = jsonrestaurant.optString(USERRATINGSTOTAL);
-            String image_ref = "no Image!!";
+            //Arraylist sollte leer sein
+            ArrayList<String>images = new ArrayList<>();
             JSONArray jsonImage = jsonrestaurant.optJSONArray(PHOTOS);
             if (jsonImage != null) {
-                JSONObject image1 = jsonImage.getJSONObject(0);
-                image_ref = image1.getString(PHOTOREFERENCE);
+                //TODO für alle Images machen
+               // images=new ArrayList<>();
+                Log.d("imageanzahl",String.valueOf(jsonImage.length()));
+                for(int i =0;i<jsonImage.length();i++){
+
+                    JSONObject image1 = jsonImage.getJSONObject(i);
+                    String image_ref = image1.getString(PHOTOREFERENCE);
+                    images.add(image_ref);
+                }
+                Log.d("images", images.toString());
+                //JSONObject image1 = jsonImage.getJSONObject(0);
+                //image_ref = image1.getString(PHOTOREFERENCE);
             }
             detailedRest = new restaurant(name,0,0 ,id, open, address);
-            detailedRest.setDetails(image_ref, number, rating, openweekday, commentlist);
+            detailedRest.setDetails(images, number, rating, openweekday, commentlist);
         } catch (JSONException e) {
             e.printStackTrace();
         }

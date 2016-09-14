@@ -100,6 +100,9 @@ public class download {
             String jsonString = "";
             try {
                 URL url = new URL(restaurantdetailurl + params[0] + restaurantsearchparametersurl);
+                Log.d("restaruantdetailurl",restaurantdetailurl + params[0] + restaurantsearchparametersurl);
+
+
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 int responseCode = conn.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -138,6 +141,9 @@ public class download {
             Bitmap picture = null;
             try {
                 URL url = new URL(restaurantdetailphotourl + params[0] + restaurantsearchparametersurl);
+
+                Log.d("imagelink",restaurantdetailphotourl + params[0] + restaurantsearchparametersurl);
+
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoInput(true);
                 conn.connect();

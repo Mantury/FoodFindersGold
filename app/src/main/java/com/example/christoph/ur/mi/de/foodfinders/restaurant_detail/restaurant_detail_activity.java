@@ -3,15 +3,19 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.opengl.Visibility;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
@@ -20,6 +24,8 @@ import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.restaurant_dishes_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
+import com.google.android.gms.ads.mediation.customevent.CustomEvent;
+import com.google.android.gms.vision.text.Line;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //This activity displays a selected restaurant from the "starting_screen_activity" with more details.
@@ -37,6 +44,10 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     private download data;
     private String place_id;
     private String name;
+    private ArrayList<Bitmap> images= new ArrayList<>();
+    private adaper_viewpager adapter;
+    private ViewPager viewpager;
+    private int numberimages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +96,24 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     //Display all the data for the specific restaurant
     @Override
     public void onRestaurantDetailDataReceived(restaurant res) {
+        showUi();
         Log.d(String.valueOf(res));
         name = res.getName();
+        if (!res.getImages().isEmpty()) {
+            numberimages=res.getImages().size();
+            Log.d("imagesArrayanzahl1", String.valueOf(numberimages));
+            Log.d("imagesArrayanzahl2", String.valueOf(res.getImages().size()));
+            for(int i=0;i<res.getImages().size()-1;i++){
+                data.getRestaurantPicturefromURL(res.getImages().get(i));
+            }
+            data.getRestaurantPicturefromURL(res.getImages().get(0));
 
-        if ("no Image!!" != res.getImage()) {
-            data.getRestaurantPicturefromURL(res.getImage());
-        } else {
-            ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
-            image.setVisibility(View.GONE);
+        }else {
+            ViewPager slideshow = (ViewPager) findViewById(R.id.restaurant_detail_slideshow);
+             slideshow.setVisibility(View.GONE);
         }
+
+
         TextView name = (TextView) findViewById(R.id.restaurant_detail_textview_name);
         name.setText(res.getName());
         TextView öffnungzeiten = (TextView) findViewById(R.id.restaurant_detail_textview_openinghours);
@@ -111,6 +131,19 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         disheslist.setAdapter((ListAdapter) aa);
     }
 
+    private void showUi() {
+        ProgressBar spinner = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarScreen);
+        spinner.setVisibility(View.GONE);
+        LinearLayout layout_top = (LinearLayout) findViewById(R.id.restaurant_detail_linearlayout_top);
+        layout_top.setVisibility(View.VISIBLE);
+        LinearLayout layout_dish = (LinearLayout) findViewById(R.id.restaurant_detail_dishlayout);
+        layout_dish.setVisibility(View.VISIBLE);
+        ProgressBar spinnerImage = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
+        spinnerImage.setVisibility(View.VISIBLE);
+
+
+    }
+
     private String parseOpenninghours(String openWeekday) {
         String s = openWeekday;
         s = s.substring(1, s.length() - 1);
@@ -123,8 +156,25 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     //Sets the header picture.
     @Override
     public void onRestaurantDetailPictureReceived(Bitmap result) {
-        ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
-        image.setImageBitmap(result);
+        //nur fürs ErsteBild Imageview bis alle anderen geladen sind?
+        //ProgressBar spinner = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
+        //spinner.setVisibility(View.GONE);
+       // ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
+       // image.setVisibility(View.VISIBLE);
+       // image.setImageBitmap(result);
+
+        images.add(result);
+        Log.d("images", String.valueOf(images.size()));
+
+        if(numberimages==images.size()){
+        ProgressBar spinner = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
+        spinner.setVisibility(View.GONE);
+            viewpager=(ViewPager) findViewById(R.id.restaurant_detail_slideshow);
+            adapter = new adaper_viewpager(this,images);
+            viewpager.setAdapter(adapter);
+        }
+
+
     }
 
     //Adds up all in-app-dishes and displays it.

@@ -11,7 +11,7 @@ public class restaurant {
     private String place_id;
     private int open;
     private String address;
-    private String image;
+    private ArrayList<String> images;
     private String number;
     private String rating;
     private String openweekday;
@@ -27,8 +27,8 @@ public class restaurant {
         this.address = address;
     }
 
-    public void setDetails(String image, String number, String rating, String openweekday, ArrayList<String> comments) {
-        this.image = image;
+    public void setDetails(ArrayList<String> images, String number, String rating, String openweekday, ArrayList<String> comments) {
+        this.images = images;
         this.number = number;
         this.rating = rating;
         this.openweekday = openweekday;
@@ -56,8 +56,8 @@ public class restaurant {
         return longitude;
     }
 
-    public String getImage() {
-        return image;
+    public ArrayList<String> getImages() {
+        return images;
     }
 
     public String getOpenweekday() {
