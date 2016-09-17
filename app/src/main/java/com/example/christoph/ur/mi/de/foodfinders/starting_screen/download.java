@@ -60,6 +60,7 @@ public class download {
             String jsonString = "";
             try {
                 URL url = new URL(params[0]);
+                Log.d("restaruantall",params[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 int responseCode = conn.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {

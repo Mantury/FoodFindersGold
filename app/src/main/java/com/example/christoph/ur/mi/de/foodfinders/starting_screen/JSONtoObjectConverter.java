@@ -58,6 +58,7 @@ public class JSONtoObjectConverter {
                 double lng = latlngobject.getDouble(LNG);
                 double lat = latlngobject.getDouble(LAT);
                 String name = jsonObject.getString(NAME);
+                Log.d("name",name);
                 JSONObject openobject = jsonObject.optJSONObject(OPENINGHOURS);
                 if (openobject != null) {
                     if (openobject.getBoolean(OPENNOW)) {
@@ -88,7 +89,7 @@ public class JSONtoObjectConverter {
             JSONObject jsonrestaurant = jsonOb.getJSONObject(RESULT);
             String address = "nicht in google vorhanden";
             address = jsonrestaurant.optString(FORMATTEDADDRESS);
-            String number = jsonrestaurant.getString(FORMATTEDPHONENUMBER);
+            String number = jsonrestaurant.optString(FORMATTEDPHONENUMBER);
             String name = jsonrestaurant.getString(NAME);
             String id = jsonrestaurant.getString(ID);
 

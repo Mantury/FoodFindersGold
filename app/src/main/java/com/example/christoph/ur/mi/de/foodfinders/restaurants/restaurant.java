@@ -1,5 +1,7 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurants;
 
+import com.example.christoph.ur.mi.de.foodfinders.log.Log;
+
 import java.util.ArrayList;
 
 
@@ -20,6 +22,7 @@ public class restaurant {
 
     public restaurant (String name, double latitude, double longitude, String place_id, int open, String address) {
         this.name = name;
+        Log.d("name",name);
         this.latitude = latitude;
         this.longitude = longitude;
         this.place_id = place_id;
