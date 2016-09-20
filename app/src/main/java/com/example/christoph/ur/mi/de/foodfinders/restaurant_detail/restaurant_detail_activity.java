@@ -1,10 +1,14 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.opengl.Visibility;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Adapter;
@@ -27,6 +31,7 @@ import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.restaurant_dishes_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
+import com.example.christoph.ur.mi.de.foodfinders.starting_screen.login_signup_user;
 import com.google.android.gms.ads.mediation.customevent.CustomEvent;
 import com.google.android.gms.vision.text.Line;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,7 +45,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
 
 //This activity displays a selected restaurant from the "starting_screen_activity" with more details.
 //The screen provides openning hours, address, phone number, google comments, and  access to the app-only-dish data.
@@ -50,11 +57,14 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     private download data;
     private String place_id;
     private String name;
-    private ArrayList<Bitmap> images= new ArrayList<>();
+    private ArrayList<Bitmap> images = new ArrayList<>();
     private adaper_viewpager adapter;
     private ViewPager viewpager;
     private int numberimages;
-    private boolean isFavored;
+
+
+    private Switch favorit;
+    private CompoundButton.OnCheckedChangeListener changeLis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +77,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
     private void setUpUi() {
         LinearLayout newDish = (LinearLayout) findViewById(R.id.restaurant_detail_dishlayout);
-        Button addButton =(Button) findViewById(R.id.restaurant_detail_dishaddbutton);
+        Button addButton = (Button) findViewById(R.id.restaurant_detail_dishaddbutton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,31 +99,49 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
         setDishesCounter();
 
-        final Switch favorit = (Switch) findViewById(R.id.restaurant_detail_favswitch);
-        if(isFavored==true) {
-            favorit.setChecked(true);
-        }
-        favorit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        favorit = (Switch) findViewById(R.id.restaurant_detail_favswitch);
+
+        changeLis = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    if(userSignedIn()) {
+
+                if (!userSignedIn()) {
+                    if (isChecked) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(restaurant_detail_activity.this);
+
+
+                        builder.setPositiveButton("Anmelden", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent i = new Intent(restaurant_detail_activity.this, login_signup_user.class);
+                                i.putExtra("intentData", "login");
+                                startActivity(i);
+
+                            }
+                        });
+                        builder.setNeutralButton("Zurück", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                favorit.setChecked(false);
+                            }
+                        });
+
+                        builder.setMessage("Bitte melden sie sich zuerst an");
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                } else {
+                    if (isChecked) {
                         addToFavList();
                     }
-                    else {
-                        Toast.makeText(restaurant_detail_activity.this, "Bitte melden sie sich zuerst an", Toast.LENGTH_SHORT).show();
-                        favorit.setChecked(false);
+                    if (!isChecked) {
+                        deleteFromFavList();
                     }
+                }
 
-                }
-                if(!isChecked) {
-                    deleteFromFavList();
-                }
             }
-        });
-
-
+        };
     }
+
 
     private void deleteFromFavList() {
 
@@ -128,7 +156,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String place = (String) dataSnapshot.getValue();
-                if(place.equals(place_id)) {
+                if (place.equals(place_id)) {
                     dataSnapshot.getRef().removeValue();
                     refQuery.removeEventListener(this);
                 }
@@ -162,7 +190,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         FirebaseUser user = auth.getCurrentUser();
         String userID = user.getUid();
 
-        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/"+userID+"/Favourites").push();
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites").push();
         refReview.setValue(place_id, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -182,12 +210,8 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         data.setOnRestaurantDetailDataProviderListener(this);
     }
 
-    private void getIntentdata()
-    {
+    private void getIntentdata() {
         place_id = getIntent().getStringExtra("name");
-        String fav = getIntent().getStringExtra("favored");
-        if(fav.equals("yes")) {isFavored=true;}
-        else {isFavored=false;}
     }
 
     //Display all the data for the specific restaurant
@@ -197,19 +221,17 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         Log.d(String.valueOf(res));
         name = res.getName();
         if (!res.getImages().isEmpty()) {
-            numberimages=res.getImages().size();
+            numberimages = res.getImages().size();
             Log.d("imagesArrayanzahl1", String.valueOf(numberimages));
             Log.d("imagesArrayanzahl2", String.valueOf(res.getImages().size()));
-            for(int i=0;i<res.getImages().size()-1;i++){
+            for (int i = 0; i < res.getImages().size() - 1; i++) {
                 data.getRestaurantPicturefromURL(res.getImages().get(i));
             }
             data.getRestaurantPicturefromURL(res.getImages().get(0));
-        }else {
+
+        } else {
             ViewPager slideshow = (ViewPager) findViewById(R.id.restaurant_detail_slideshow);
             slideshow.setVisibility(View.GONE);
-            ProgressBar spinnerImage = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
-            spinnerImage.setVisibility(View.GONE);
-
         }
 
 
@@ -231,13 +253,13 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     }
 
     private void showUi() {
-        ProgressBar spinner = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarScreen);
+        ProgressBar spinner = (ProgressBar) findViewById(R.id.restaurant_detail_progressBarScreen);
         spinner.setVisibility(View.GONE);
         LinearLayout layout_top = (LinearLayout) findViewById(R.id.restaurant_detail_linearlayout_top);
         layout_top.setVisibility(View.VISIBLE);
         LinearLayout layout_dish = (LinearLayout) findViewById(R.id.restaurant_detail_dishlayout);
         layout_dish.setVisibility(View.VISIBLE);
-        ProgressBar spinnerImage = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
+        ProgressBar spinnerImage = (ProgressBar) findViewById(R.id.restaurant_detail_progressBarImage);
         spinnerImage.setVisibility(View.VISIBLE);
 
 
@@ -258,18 +280,18 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         //nur fürs ErsteBild Imageview bis alle anderen geladen sind?
         //ProgressBar spinner = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
         //spinner.setVisibility(View.GONE);
-       // ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
-       // image.setVisibility(View.VISIBLE);
-       // image.setImageBitmap(result);
+        // ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
+        // image.setVisibility(View.VISIBLE);
+        // image.setImageBitmap(result);
 
         images.add(result);
         Log.d("images", String.valueOf(images.size()));
 
-        if(numberimages==images.size()){
-        ProgressBar spinner = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
-        spinner.setVisibility(View.GONE);
-            viewpager=(ViewPager) findViewById(R.id.restaurant_detail_slideshow);
-            adapter = new adaper_viewpager(this,images);
+        if (numberimages == images.size()) {
+            ProgressBar spinner = (ProgressBar) findViewById(R.id.restaurant_detail_progressBarImage);
+            spinner.setVisibility(View.GONE);
+            viewpager = (ViewPager) findViewById(R.id.restaurant_detail_slideshow);
+            adapter = new adaper_viewpager(this, images);
             viewpager.setAdapter(adapter);
         }
 
@@ -280,7 +302,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     //TODO dish Counter überarbeiten dauert noch zu lange
     private void setDishesCounter() {
         DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews");
-        Query queryReviewRestaurant= refReview.orderByChild("place_id").equalTo(place_id);
+        Query queryReviewRestaurant = refReview.orderByChild("place_id").equalTo(place_id);
         queryReviewRestaurant.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -306,4 +328,46 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         }
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        favorit.setOnCheckedChangeListener(null);
+        favorit.setChecked(false);
+        if(!userSignedIn()) {favorit.setOnCheckedChangeListener(changeLis);}
+        if (userSignedIn()) {
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser user = auth.getCurrentUser();
+            String userID = user.getUid();
+
+
+            DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites");
+            Query queryRef = refReview;
+            queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Iterator<DataSnapshot> it = dataSnapshot.getChildren().iterator();
+                    while(it.hasNext()) {
+                        String placeID = it.next().getValue().toString();
+                        if(placeID.equals(place_id)) {
+                            favorit.setChecked(true);
+                        }
+                    }
+                    favorit.setOnCheckedChangeListener(changeLis);
+
+                }
+
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+
+    }
 }
+
+

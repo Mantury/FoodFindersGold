@@ -143,6 +143,7 @@ public class JSONtoObjectConverter {
             detailedRest.setDetails(images, number, rating, openweekday, commentlist);
         } catch (JSONException e) {
             e.printStackTrace();
+
         }
         return detailedRest;
     }

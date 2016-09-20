@@ -92,6 +92,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         sekker();
         updateButton();
         setUpData();
+
     }
 
     @Override
@@ -262,7 +263,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 public void onClick(View v) {
                     Intent i = new Intent(starting_screen_activity.this, login_signup_user.class);
                     i.putExtra("intentData", "login");
-                    ;
                     startActivity(i);
                     FavDrawer.closeDrawer(FavList);
                     ArrangeDrawer();
