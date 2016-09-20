@@ -204,10 +204,12 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                 data.getRestaurantPicturefromURL(res.getImages().get(i));
             }
             data.getRestaurantPicturefromURL(res.getImages().get(0));
-
         }else {
             ViewPager slideshow = (ViewPager) findViewById(R.id.restaurant_detail_slideshow);
-             slideshow.setVisibility(View.GONE);
+            slideshow.setVisibility(View.GONE);
+            ProgressBar spinnerImage = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
+            spinnerImage.setVisibility(View.GONE);
+
         }
 
 

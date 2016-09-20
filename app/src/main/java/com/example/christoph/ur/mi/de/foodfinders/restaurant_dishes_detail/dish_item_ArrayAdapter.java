@@ -16,7 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
+import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.List;
 
@@ -71,6 +79,22 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         }
         vegan.setText("Vegan: " + dish.getVegan());
         gluten.setText("Glutenfrei: " + dish.getGluten());
+        //färbt Review blau ein, wenn Account erstellt wurde
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        final FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+
+            if(user.getUid().equals(dish.getAuthorID())){
+                linlayout.setBackgroundResource(R.color.blue);
+                layout.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        onDetailRequestedListener.onDishDeletedListener(dish.getDishId(),user.getUid());
+                        return true;
+                    }
+                });
+            }
+        }
         return v;
     }
 
@@ -80,5 +104,8 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
 
     public interface OnDetailRequestedListener {
         public void onDetailRequested(String reviewid);
+        public void onDishDeletedListener(String dishId,String UID);
     }
+
+
 }

@@ -92,7 +92,6 @@ public class JSONtoObjectConverter {
             String number = jsonrestaurant.optString(FORMATTEDPHONENUMBER);
             String name = jsonrestaurant.getString(NAME);
             String id = jsonrestaurant.getString(ID);
-
             JSONObject openinghours = jsonrestaurant.optJSONObject(OPENINGHOURS);
             int open;
             String openweekday="notfound";

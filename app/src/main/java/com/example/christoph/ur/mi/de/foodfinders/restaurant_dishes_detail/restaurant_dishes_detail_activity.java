@@ -144,4 +144,56 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
         startActivity(in);
     }
 
+    @Override
+    public void onDishDeletedListener(String dishId, String userUID) {
+        Log.d("delete",dishId);
+        removeFromFirebase(userUID);
+        removeFromArraylist(dishId);
+
+    }
+
+    private void removeFromArraylist(String dishId) {
+        for (int i=0;i<dishes.size();i++){
+            if(dishes.get(i).dishId.equals(dishId)){
+                dishes.remove(i);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+//TODO toast Review gelöscht
+    private void removeFromFirebase(String userUID){
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews/");
+        final Query queryRef= refReview.orderByChild("authorID").equalTo(userUID);
+
+        queryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                Log.d(dataSnapshot.toString());
+                dataSnapshot.getRef().removeValue();
+                queryRef.removeEventListener(this);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 }

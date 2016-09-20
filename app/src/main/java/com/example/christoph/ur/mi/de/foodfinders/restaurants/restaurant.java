@@ -22,7 +22,6 @@ public class restaurant {
 
     public restaurant (String name, double latitude, double longitude, String place_id, int open, String address) {
         this.name = name;
-        Log.d("name",name);
         this.latitude = latitude;
         this.longitude = longitude;
         this.place_id = place_id;
