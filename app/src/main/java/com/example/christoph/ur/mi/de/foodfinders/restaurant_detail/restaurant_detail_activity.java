@@ -2,21 +2,16 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurant_detail;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.opengl.Visibility;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,16 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.restaurant_dishes_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
 import com.example.christoph.ur.mi.de.foodfinders.starting_screen.login_signup_user;
-import com.google.android.gms.ads.mediation.customevent.CustomEvent;
-import com.google.android.gms.vision.text.Line;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -43,11 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
 
 //This activity displays a selected restaurant from the "starting_screen_activity" with more details.
 //The screen provides openning hours, address, phone number, google comments, and  access to the app-only-dish data.
@@ -61,8 +49,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     private adaper_viewpager adapter;
     private ViewPager viewpager;
     private int numberimages;
-
-
     private Switch favorit;
     private CompoundButton.OnCheckedChangeListener changeLis;
 
@@ -79,7 +65,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         LinearLayout newDish = (LinearLayout) findViewById(R.id.restaurant_detail_dishlayout);
         Button addButton = (Button) findViewById(R.id.restaurant_detail_dishaddbutton);
         addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
+           @Override
             public void onClick(View v) {
                 Intent in = new Intent(restaurant_detail_activity.this, restaurant_dishes_detail_activity.class);
                 in.putExtra("place_id", place_id);
@@ -96,7 +82,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                 startActivity(in);
             }
         });
-
         setDishesCounter();
 
         favorit = (Switch) findViewById(R.id.restaurant_detail_favswitch);
@@ -218,20 +203,17 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     @Override
     public void onRestaurantDetailDataReceived(restaurant res) {
         showUi();
-        Log.d(String.valueOf(res));
         name = res.getName();
         if (!res.getImages().isEmpty()) {
             numberimages = res.getImages().size();
-            Log.d("imagesArrayanzahl1", String.valueOf(numberimages));
-            Log.d("imagesArrayanzahl2", String.valueOf(res.getImages().size()));
-            for (int i = 0; i < res.getImages().size() - 1; i++) {
+            for (int i = 0; i < res.getImages().size() ; i++) {
                 data.getRestaurantPicturefromURL(res.getImages().get(i));
             }
-            data.getRestaurantPicturefromURL(res.getImages().get(0));
-
         } else {
             ViewPager slideshow = (ViewPager) findViewById(R.id.restaurant_detail_slideshow);
             slideshow.setVisibility(View.GONE);
+            ProgressBar spinnerImage = (ProgressBar) findViewById(R.id.restaurant_detail_progressBarImage);
+            spinnerImage.setVisibility(View.GONE);
         }
 
 
@@ -261,8 +243,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         layout_dish.setVisibility(View.VISIBLE);
         ProgressBar spinnerImage = (ProgressBar) findViewById(R.id.restaurant_detail_progressBarImage);
         spinnerImage.setVisibility(View.VISIBLE);
-
-
     }
 
     private String parseOpenninghours(String openWeekday) {
@@ -277,16 +257,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     //Sets the header picture.
     @Override
     public void onRestaurantDetailPictureReceived(Bitmap result) {
-        //nur fürs ErsteBild Imageview bis alle anderen geladen sind?
-        //ProgressBar spinner = (ProgressBar)findViewById(R.id.restaurant_detail_progressBarImage);
-        //spinner.setVisibility(View.GONE);
-        // ImageView image = (ImageView) findViewById(R.id.restaurant_detail_imageview);
-        // image.setVisibility(View.VISIBLE);
-        // image.setImageBitmap(result);
-
         images.add(result);
-        Log.d("images", String.valueOf(images.size()));
-
         if (numberimages == images.size()) {
             ProgressBar spinner = (ProgressBar) findViewById(R.id.restaurant_detail_progressBarImage);
             spinner.setVisibility(View.GONE);
@@ -294,11 +265,8 @@ public class restaurant_detail_activity extends Activity implements download.OnR
             adapter = new adaper_viewpager(this, images);
             viewpager.setAdapter(adapter);
         }
-
-
     }
 
-    //Adds up all in-app-dishes and displays it.
     //TODO dish Counter überarbeiten dauert noch zu lange
     private void setDishesCounter() {
         DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews");
