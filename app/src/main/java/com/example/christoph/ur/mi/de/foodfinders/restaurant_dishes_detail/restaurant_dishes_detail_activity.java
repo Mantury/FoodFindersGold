@@ -1,22 +1,23 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.add_dish.add_dish_activity;
 import com.example.christoph.ur.mi.de.foodfinders.dish_detail.dish_detail_activity;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-import com.example.christoph.ur.mi.de.foodfinders.starting_screen.download;
+import com.example.christoph.ur.mi.de.foodfinders.starting_screen.login_signup_user;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -25,9 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
 import java.util.ArrayList;
-import java.util.List;
 
 //This activity shows all the dishes from a restaurant found in the cloud storage. The user also has the possibility to add own dishes and rate.
 public class restaurant_dishes_detail_activity extends Activity implements dish_item_ArrayAdapter.OnDetailRequestedListener {
@@ -66,8 +65,6 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
 
     private void initDishList() {
         dishes.clear();
-        Toast.makeText(restaurant_dishes_detail_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
-
         DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews");
         Query queryRef= refReview.orderByChild("place_id").equalTo(place_id);
         queryRef.addChildEventListener(new ChildEventListener() {
@@ -117,11 +114,31 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
                     startActivity(i);
                 } else {
                     // User is signed out
+                    showAlert();
                     //TODO Toast bitte anmelden oder Intent zum LoginScreen
+
                 }
 
             }
         });
+    }
+
+    private void showAlert() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(restaurant_dishes_detail_activity.this);
+                builder.setPositiveButton("Anmelden", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent i = new Intent(restaurant_dishes_detail_activity.this, login_signup_user.class);
+                        i.putExtra("intentData", "login");
+                        startActivity(i);
+                    }
+                });
+                builder.setNeutralButton("Zurück", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+                builder.setMessage("Bitte melden sie sich zuerst an");
+                AlertDialog dialog = builder.create();
+                dialog.show();
     }
 
     private void getIntentData() {
@@ -146,7 +163,6 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
 
     @Override
     public void onDishDeletedListener(String dishId, String userUID) {
-        Log.d("delete",dishId);
         removeFromFirebase(userUID);
         removeFromArraylist(dishId);
 
@@ -160,7 +176,7 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
             }
         }
     }
-//TODO toast Review gelöscht
+    //TODO toast Review gelöscht
     private void removeFromFirebase(String userUID){
         DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews/");
         final Query queryRef= refReview.orderByChild("authorID").equalTo(userUID);
@@ -170,7 +186,12 @@ public class restaurant_dishes_detail_activity extends Activity implements dish_
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 Log.d(dataSnapshot.toString());
-                dataSnapshot.getRef().removeValue();
+                dataSnapshot.getRef().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                      Toast.makeText(restaurant_dishes_detail_activity.this, "Ihr Gericht wurde erfolgreich gelöscht", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 queryRef.removeEventListener(this);
             }
 

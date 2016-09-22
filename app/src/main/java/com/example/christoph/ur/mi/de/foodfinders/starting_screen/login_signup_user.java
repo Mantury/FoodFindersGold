@@ -61,7 +61,7 @@ public class login_signup_user extends Activity {
                    signup(name.getText().toString(),email.getText().toString(),password.getText().toString());
                } else{
                    //passwort muss mindestens 6 Zeichenhaben
-                   TextView wrongData= (TextView) findViewById(R.id.login_wrongData);
+                   TextView wrongData= (TextView) findViewById(R.id.signup_wrongData);
                    wrongData.setText("Ihr Passwort muss mindestens 6 Zeichen haben!!!");
                    wrongData.setVisibility(View.VISIBLE);
 
@@ -79,6 +79,7 @@ public class login_signup_user extends Activity {
     }
 
     private void signup(final String name, String email, String password) {
+        //TODO
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         startProgress();
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -90,23 +91,20 @@ public class login_signup_user extends Activity {
                     updateTask.addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("FirebaseSignup",task.isSuccessful()+"user login");
                             if(task.isSuccessful()){
                                 showToastlogin(auth.getCurrentUser().getDisplayName());
                                 finish();
-                                Log.d("firebaselogin","Anzeigename des Users"+auth.getCurrentUser().getDisplayName()+"  UserUID"+auth.getCurrentUser().getUid());
-                            }
-                            if (!task.isSuccessful()) {
-                                //Falsche Eingabe
-                                Log.d("firebaselogin", "signInWithEmail:failed"+ task.getException());
-                                TextView wrongData= (TextView) findViewById(R.id.signup_wrongData);
-                                wrongData.setVisibility(View.VISIBLE);
-                                progress.dismiss();
-
                             }
                         }
                     });
                             }
+                else {
+                    //Falsche Eingabe email
+                    TextView wrongData= (TextView) findViewById(R.id.signup_wrongData);
+                    wrongData.setText("Ungültige Eingabe!!");
+                    wrongData.setVisibility(View.VISIBLE);
+                    progress.dismiss();
+                }
                     }
         });
     }
@@ -122,7 +120,6 @@ public class login_signup_user extends Activity {
                 login(email.getText().toString(),password.getText().toString());
             }
         });
-
         TextView signup=(TextView) findViewById(R.id.signup_link_login);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
