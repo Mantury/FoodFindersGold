@@ -48,6 +48,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 //This activity is the starting screen of the app.
@@ -183,28 +184,14 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
 
             DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites");
-            Query queryRef = refReview;
-
-            queryRef.addChildEventListener(new ChildEventListener() {
+            refReview.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    String place_id = dataSnapshot.getValue().toString();
-                    setUpFavDownload(place_id);
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Iterator<DataSnapshot> it = dataSnapshot.getChildren().iterator();
+                    while(it.hasNext()) {
+                        String placeID = it.next().getValue().toString();
+                        setUpFavDownload(placeID);
+                    }
                 }
 
                 @Override
@@ -212,6 +199,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
                 }
             });
+
         }
         if (FavAdapter != null) {
             FavAdapter.notifyDataSetChanged();
@@ -275,7 +263,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private void setUpFavDownload(String place_id) {
         if (place_id != null) {
             data.getrestaurantdata(place_id);
-            data.setOnRestaurantDetailDataProviderListener(this);
+           // data.setOnRestaurantDetailDataProviderListener(this);
         }
     }
 
@@ -304,6 +292,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         data = new download();
         getData();
         data.setRestaurantDataProviderListener(this);
+        data.setOnRestaurantDetailDataProviderListener(this);
     }
 
     private void getData() {
@@ -496,20 +485,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private void openRestaurantDetail(String place_id) {
         Intent i = new Intent(starting_screen_activity.this, restaurant_detail_activity.class);
         i.putExtra("name", place_id);
-        if(isFavoredRestaurant(place_id)) {
-            i.putExtra("favored","yes");
-        }  else {
-            i.putExtra("favored","no");
-        }
         startActivity(i);
     }
 
-    private boolean isFavoredRestaurant(String place_id) {
-        for (int i = 0; i < favoriteRestaurants.size(); i++) {
-            if (favoriteRestaurants.get(i).getPlace_id().equals(place_id)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
