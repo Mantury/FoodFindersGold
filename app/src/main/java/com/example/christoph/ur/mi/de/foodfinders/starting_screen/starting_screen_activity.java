@@ -263,7 +263,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private void setUpFavDownload(String place_id) {
         if (place_id != null) {
             data.getrestaurantdata(place_id);
-           // data.setOnRestaurantDetailDataProviderListener(this);
+
         }
     }
 
