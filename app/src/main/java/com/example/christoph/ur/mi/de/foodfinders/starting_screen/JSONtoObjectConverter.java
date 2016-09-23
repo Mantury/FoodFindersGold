@@ -36,6 +36,7 @@ public class JSONtoObjectConverter {
     private static final String USERRATINGSTOTAL="user_ratings_total";
     private static final String PHOTOS="photos";
     private static final String PHOTOREFERENCE="photo_reference";
+    private static final String WEBSITE="website";
     private ArrayList<restaurant> list;
     public int open;
 
@@ -91,7 +92,7 @@ public class JSONtoObjectConverter {
             String number = jsonrestaurant.optString(FORMATTEDPHONENUMBER);
             String name = jsonrestaurant.getString(NAME);
             String id = jsonrestaurant.getString(ID);
-
+            String website = jsonrestaurant.optString(WEBSITE);
             JSONObject openinghours = jsonrestaurant.optJSONObject(OPENINGHOURS);
             int open;
             String openweekday="notfound";
@@ -128,7 +129,7 @@ public class JSONtoObjectConverter {
                 //image_ref = image1.getString(PHOTOREFERENCE);
             }
             detailedRest = new restaurant(name,0,0 ,id, open, address);
-            detailedRest.setDetails(images, number, rating, openweekday);
+            detailedRest.setDetails(images, number, rating, openweekday, website);
         } catch (JSONException e) {
             e.printStackTrace();
 

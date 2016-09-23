@@ -17,6 +17,7 @@
     <string name="noInternetCon_ger">Keine Verbindung</string>
     <string name="test">test</string>
     <string name="noPhone_ger">Telefon: Keine Nummer angegben</string>
+    <string name="noWebsite_ger">Website: Keine Website angegben</string>
 
     <string name="name_ger">Name</string>
     <string name="email_ger">Em@il</string>

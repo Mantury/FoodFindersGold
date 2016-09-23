@@ -100,6 +100,19 @@
             android:linksClickable="true"
             android:autoLink="phone"
             android:textSize="16sp" />
+
+        <View style="@style/Divider"/>
+
+        <TextView
+            android:id="@+id/restaurant_detail_textview_website"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/waiting_string"
+            android:linksClickable="true"
+            android:autoLink="web"
+            android:textSize="16sp" />
+
         <View style="@style/Divider"/>
 
 

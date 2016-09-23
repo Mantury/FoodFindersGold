@@ -233,6 +233,15 @@ public class restaurant_detail_activity extends Activity implements download.OnR
             number.setText(R.string.noPhone_ger);
             number.setClickable(false);
         }
+        TextView website = (TextView) findViewById(R.id.restaurant_detail_textview_website);
+        if(!(res.getWebsite() == "")) {
+            website.setText("Website: " + res.getWebsite());
+            website.setTextColor(getResources().getColor(R.color.blue));
+        }else{
+            website.setText(R.string.noPhone_ger);
+            website.setClickable(false);
+        }
+
         TextView address = (TextView) findViewById(R.id.restaurant_detail_textview_address);
         address.setText(res.getAddress());
     }

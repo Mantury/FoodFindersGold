@@ -17,6 +17,7 @@ public class restaurant {
     private String number;
     private String rating;
     private String openweekday;
+    private String website;
 
     public restaurant (String name, double latitude, double longitude, String place_id, int open, String address) {
         this.name = name;
@@ -27,11 +28,12 @@ public class restaurant {
         this.address = address;
     }
 
-    public void setDetails(ArrayList<String> images, String number, String rating, String openweekday) {
+    public void setDetails(ArrayList<String> images, String number, String rating, String openweekday, String website) {
         this.images = images;
         this.number = number;
         this.rating = rating;
         this.openweekday = openweekday;
+        this.website = website;
     }
 
     public double getLatitude() {
@@ -65,6 +67,10 @@ public class restaurant {
 
     public String getNumber() {
         return number;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 
 
