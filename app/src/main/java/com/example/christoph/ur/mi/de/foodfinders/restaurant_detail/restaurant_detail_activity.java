@@ -338,17 +338,11 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                     favorit.setOnCheckedChangeListener(changeLis);
 
                 }
-
-
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
-
         }
-
     }
 }
 
