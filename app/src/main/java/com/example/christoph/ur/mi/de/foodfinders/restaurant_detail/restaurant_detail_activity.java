@@ -343,6 +343,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                 }
             });
         }
+
     }
 }
 
