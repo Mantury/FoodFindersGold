@@ -16,6 +16,7 @@
     <string name="restaurant_detail_rate_restaurant">Restaurant bewerten</string>
     <string name="noInternetCon_ger">Keine Verbindung</string>
     <string name="test">test</string>
+    <string name="noPhone_ger">Telefon: Keine Nummer angegben</string>
 
     <string name="name_ger">Name</string>
     <string name="email_ger">Em@il</string>
@@ -32,4 +33,9 @@
 
     <string name="pleaseLogIn_ger">Bitte melden Sie sich an</string>
     <string name="switchText_ger">Restaurant merken:</string>
+
+    <plurals name="numberOfDishes_ger">
+        <item quantity="one">eingetragenes Gericht</item>
+        <item quantity="other">eingetragene Gerichte</item>
+    </plurals>
 </resources>

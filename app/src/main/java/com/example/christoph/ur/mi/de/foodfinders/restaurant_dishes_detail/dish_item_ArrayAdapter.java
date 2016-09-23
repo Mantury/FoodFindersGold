@@ -85,7 +85,7 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         if (user != null) {
 
             if(user.getUid().equals(dish.getAuthorID())){
-                linlayout.setBackgroundResource(R.color.blue);
+                linlayout.setBackgroundResource(R.color.bright_green);
                 layout.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {

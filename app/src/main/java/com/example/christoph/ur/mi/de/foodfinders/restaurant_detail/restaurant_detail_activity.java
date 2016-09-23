@@ -111,7 +111,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                         });
 
                         builder.setMessage("Bitte melden sie sich zuerst an");
-                        builder.setCancelable(false);
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
@@ -227,7 +226,13 @@ public class restaurant_detail_activity extends Activity implements download.OnR
             öffnungzeiten.setText(parseOpenninghours(res.getOpenweekday()));
         }
         TextView number = (TextView) findViewById(R.id.restaurant_detail_textview_telephonenumber);
-        number.setText("Telefon: " + res.getNumber());
+        if(!(res.getNumber() == "")) {
+            number.setText("Telefon: " + res.getNumber());
+            number.setTextColor(getResources().getColor(R.color.blue));
+        }else{
+            number.setText(R.string.noPhone_ger);
+            number.setClickable(false);
+        }
         TextView address = (TextView) findViewById(R.id.restaurant_detail_textview_address);
         address.setText(res.getAddress());
     }
@@ -272,8 +277,10 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         queryReviewRestaurant.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int dishesCount = (int) dataSnapshot.getChildrenCount();
                 TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
-                dishcounter.setText(dataSnapshot.getChildrenCount() + " eingetragene Gerichte");
+
+                dishcounter.setText(dishesCount + (getResources().getQuantityString(R.plurals.numberOfDishes_ger,dishesCount)));
             }
 
             @Override
@@ -327,7 +334,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    Log.d("request cancelled");
+
                 }
             });
 

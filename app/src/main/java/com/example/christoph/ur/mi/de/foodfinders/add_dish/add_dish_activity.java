@@ -96,7 +96,7 @@ public class add_dish_activity extends Activity {
         String gerichtname = String.valueOf(name.getText());
         if(gerichtname.equals("")){
             ready=false;
-            Toast.makeText(add_dish_activity.this, "Bitte geben Sie den Namen des Gerichts an", Toast.LENGTH_SHORT).show();
+            Toast.makeText(add_dish_activity.this, "Bitte geben Sie einen Namen ein", Toast.LENGTH_SHORT).show();
         }
         String gluten = getGlutenRadiodata();
         String vegan = getVeganRadiodata();
