@@ -57,13 +57,15 @@ public class login_signup_user extends Activity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(password.getText().length()>=6){
-                   signup(name.getText().toString(),email.getText().toString(),password.getText().toString());
+                String stringEmail= String.valueOf(email.getText());
+                String stringPassword= String.valueOf(password.getText());
+                String stringName= String.valueOf(name.getText());
+               if(!stringPassword.isEmpty()&&!stringEmail.isEmpty()&&!stringName.isEmpty()&&!stringPassword.isEmpty()){
+                   signup(stringName,stringEmail,stringPassword);
                } else{
-                   //passwort muss mindestens 6 Zeichenhaben
+                   //passwort muss mindestens 6 Zeichenhaben und Felder nicht leer
                    TextView wrongData= (TextView) findViewById(R.id.signup_wrongData);
-                   wrongData.setText("Ihr Passwort muss mindestens 6 Zeichen haben!!!");
-                   wrongData.setVisibility(View.VISIBLE);
+                  wrongData.setVisibility(View.VISIBLE);
 
                }
             }
@@ -117,7 +119,17 @@ public class login_signup_user extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login(email.getText().toString(),password.getText().toString());
+                String stringEmail= String.valueOf(email.getText());
+                String stringPassword= String.valueOf(password.getText());
+
+                Log.d("absturz ",String.valueOf(stringEmail.isEmpty()));
+                Log.d("absturz ",String.valueOf(stringPassword.isEmpty()));
+                if(stringEmail.isEmpty()||stringPassword.isEmpty()){
+                    TextView wrongData= (TextView) findViewById(R.id.login_wrongData);
+                    wrongData.setVisibility(View.VISIBLE);
+                }else{
+                    login(stringEmail,stringPassword);
+                }
             }
         });
         TextView signup=(TextView) findViewById(R.id.signup_link_login);
@@ -136,9 +148,7 @@ public class login_signup_user extends Activity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("firebaselogin", "signInWithEmail:onComplete:" + task.isSuccessful());
                         if(task.isSuccessful()){
-                            Log.d("firebaselogin","Anzeigename des Users"+auth.getCurrentUser().getDisplayName()+"  UserUID"+auth.getCurrentUser().getUid());
                             showToastlogin(auth.getCurrentUser().getDisplayName());
                             finish();
                         }

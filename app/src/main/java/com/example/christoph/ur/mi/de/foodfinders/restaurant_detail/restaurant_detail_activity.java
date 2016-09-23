@@ -230,9 +230,6 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         number.setText("Telefon: " + res.getNumber());
         TextView address = (TextView) findViewById(R.id.restaurant_detail_textview_address);
         address.setText(res.getAddress());
-        ListView disheslist = (ListView) findViewById(R.id.restaurant_detail_commentlistview);//Kommentare??? arraylist(String) aus item!!!
-        Adapter aa = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, res.getComments());
-        disheslist.setAdapter((ListAdapter) aa);
     }
 
     private void showUi() {
