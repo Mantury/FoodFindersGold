@@ -280,7 +280,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                 int dishesCount = (int) dataSnapshot.getChildrenCount();
                 TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
 
-                dishcounter.setText(dishesCount + (getResources().getQuantityString(R.plurals.numberOfDishes_ger,dishesCount)));
+                dishcounter.setText(dishesCount + " " + (getResources().getQuantityString(R.plurals.numberOfDishes_ger,dishesCount)));
             }
 
             @Override
