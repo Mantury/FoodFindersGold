@@ -111,6 +111,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                         });
 
                         builder.setMessage("Bitte melden sie sich zuerst an");
+                        builder.setCancelable(false);
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }

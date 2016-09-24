@@ -108,7 +108,7 @@ public class add_dish_activity extends Activity {
         }
         //vorrübergehend deaktiviert
         if(!saveimage){
-     //       ready=false;
+            ready=false;
             Toast.makeText(add_dish_activity.this, "Bitte fügen Sie ein Bild hinzu", Toast.LENGTH_SHORT).show();
        }
 
