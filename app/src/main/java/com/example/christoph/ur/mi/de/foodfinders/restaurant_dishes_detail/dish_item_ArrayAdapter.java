@@ -17,10 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
-
 //This class lists all dishes from the cloud storage in a list.
 
 public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
+
 
     private List<dish_item> dishes;
     private Context context;
@@ -60,14 +60,15 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         image.setImageBitmap(
                 BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
         );
-        author.setText((R.string.byColon_ger) + dish.getAuthor());
+        author.setText(context.getString(R.string.byColon_ger) + dish.getAuthor());
         rating.setRating(dish.getRating());
         if (dish.getRating() >= 4) {
             layout.setBackgroundResource(R.color.green);
 
         }
-        vegan.setText((R.string.veganColon_ger) + dish.getVegan());
-        gluten.setText(R.string.glutenfreeColon_ger + dish.getGluten());
+
+        vegan.setText(context.getString(R.string.veganColon_ger) + dish.getVegan());
+        gluten.setText(context.getString(R.string.glutenfreeColon_ger) + dish.getGluten());
         FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
