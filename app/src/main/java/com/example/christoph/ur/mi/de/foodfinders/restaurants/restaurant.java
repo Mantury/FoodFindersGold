@@ -1,7 +1,5 @@
 package com.example.christoph.ur.mi.de.foodfinders.restaurants;
 
-import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-
 import java.util.ArrayList;
 
 
@@ -19,7 +17,7 @@ public class restaurant {
     private String openweekday;
     private String website;
 
-    public restaurant (String name, double latitude, double longitude, String place_id, int open, String address) {
+    public restaurant(String name, double latitude, double longitude, String place_id, int open, String address) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -28,6 +26,7 @@ public class restaurant {
         this.address = address;
     }
 
+    //sets the Detailinfo if the user loads the detail_detail_activty
     public void setDetails(ArrayList<String> images, String number, String rating, String openweekday, String website) {
         this.images = images;
         this.number = number;
@@ -72,7 +71,6 @@ public class restaurant {
     public String getWebsite() {
         return website;
     }
-
 
     public String getAddress() {
         return address;

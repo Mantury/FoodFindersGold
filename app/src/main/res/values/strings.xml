@@ -5,9 +5,11 @@
     <string name="add_dish_layout_cancelbutton_text">Abbrechen</string>
     <string name="add_dish_layout_addbutton_text">Hinzufügen</string>
     <string name="add_dish_layout_Gericht_zum_Kommentar">Kommentar zum Gericht</string>
+
     <string name="add_dish_layout_radio_noinfo">Nicht angegeben</string>
     <string name="add_dish_layout_radio_yes">Ja</string>
     <string name="add_dish_layout_radio_no">Nein</string>
+
     <string name="waiting_string">Kurzen Moment ...</string>
     <string name="add_dish_add_photo">Photo hinzufügen</string>
     <string name="add_dish_add_name">Name des Gerichts</string>
@@ -18,6 +20,41 @@
     <string name="test">test</string>
     <string name="noPhone_ger">Telefon: Keine Nummer angegben</string>
     <string name="noWebsite_ger">Website: Keine Website angegben</string>
+    <string name="noOppeningHours_ger">Keine Öffnungszeiten verfügbar!</string>
+    <string name="phone_ger">Telefon: </string>
+    <string name="website_ger">Website: </string>
+
+    <string name="byColon_ger">Von:</string>
+    <string name="veganColon_ger">Vegan:</string>
+    <string name="glutenfreeColon_ger">Glutenfrei:</string>
+
+    <string name="back_ger">Zurück</string>
+    <string name="plsLogin_ger">Bitte melden Sie sich an</string>
+    <string name="dologin_ger">Anmelden</string>
+
+    <string name="removedFav_ger">Aus Favoriten entfernt</string>
+    <string name="favSaveError_ger">Fehler beim Speichern als Favorit</string>
+    <string name="addedFav_ger">Zu Favoriten hinzugefügt</string>
+
+    <string name="dishRemovedSucces_ger">Ihr Gericht wurde erfolgreich gelöscht</string>
+    <string name="wrongInput_ger">Ungültige Eingabe!</string>
+
+    <string name="loginProcess_ger">Anmeldung</string>
+    <string name="loginInProcessCheck_ger">Ihre Anmeldedaten werden überprüft</string>
+
+    <string name="oppeningHoursOpen_ger">Offen</string>
+    <string name="oppeningHoursClosed_ger">Geschlossen</string>
+
+
+
+
+
+    <string name="inputNamepls_ger">Bitte geben Sie einen Namen ein</string>
+    <string name="inputRatingpls_ger">Bitte bewerten sie das Gericht</string>
+    <string name="inputImagepls_ger">Bitte fügen Sie ein Bild hinzu</string>
+
+    <string name="imageULerror_ger">Fehler beim hochloden der Daten</string>
+    <string name="imageULsuccess_ger">Ihre Daten wurden erfolgreich hochgeladen</string>
 
     <string name="name_ger">Name</string>
     <string name="email_ger">Em@il</string>

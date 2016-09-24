@@ -9,9 +9,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by juli on 09.09.15.
- */
 public class JSONtoObjectConverter {
 
     private String JSONResponse;
@@ -22,26 +19,25 @@ public class JSONtoObjectConverter {
     private static final String OPEN = "open_now";
     private static final String ADDRESS = "vicinity";
     private static final String ID = "place_id";
-    private static final String RESULTS="results";
-    private static final String GEOMETRY="geometry";
-    private static final String LOCATION="location";
-    private static final String OPENINGHOURS="opening_hours";
-    private static final String WEEKDAYTEXT="weekday_text";
-    private static final String OPENNOW="open_now";
-    private static final String RESULT="result";
-    private static final String FORMATTEDADDRESS="formatted_address";
-    private static final String FORMATTEDPHONENUMBER="formatted_phone_number";
-    private static final String REVIEWS="reviews";
-    private static final String TEXT="text";
-    private static final String USERRATINGSTOTAL="user_ratings_total";
-    private static final String PHOTOS="photos";
-    private static final String PHOTOREFERENCE="photo_reference";
-    private static final String WEBSITE="website";
+    private static final String RESULTS = "results";
+    private static final String GEOMETRY = "geometry";
+    private static final String LOCATION = "location";
+    private static final String OPENINGHOURS = "opening_hours";
+    private static final String WEEKDAYTEXT = "weekday_text";
+    private static final String OPENNOW = "open_now";
+    private static final String RESULT = "result";
+    private static final String FORMATTEDADDRESS = "formatted_address";
+    private static final String FORMATTEDPHONENUMBER = "formatted_phone_number";
+    private static final String REVIEWS = "reviews";
+    private static final String TEXT = "text";
+    private static final String USERRATINGSTOTAL = "user_ratings_total";
+    private static final String PHOTOS = "photos";
+    private static final String PHOTOREFERENCE = "photo_reference";
+    private static final String WEBSITE = "website";
     private ArrayList<restaurant> list;
     public int open;
 
     public JSONtoObjectConverter(String JSONResponse) {
-        Log.d("Set up converter");
         this.JSONResponse = JSONResponse;
     }
 
@@ -58,7 +54,7 @@ public class JSONtoObjectConverter {
                 double lng = latlngobject.getDouble(LNG);
                 double lat = latlngobject.getDouble(LAT);
                 String name = jsonObject.getString(NAME);
-                Log.d("name",name);
+                Log.d("name", name);
                 JSONObject openobject = jsonObject.optJSONObject(OPENINGHOURS);
                 if (openobject != null) {
                     if (openobject.getBoolean(OPENNOW)) {
@@ -66,7 +62,6 @@ public class JSONtoObjectConverter {
                     } else {
                         open = 2;
                     }
-
                 } else {
                     open = 0;
                 }
@@ -87,17 +82,14 @@ public class JSONtoObjectConverter {
         try {
             JSONObject jsonOb = new JSONObject(JSONResponse);
             JSONObject jsonrestaurant = jsonOb.getJSONObject(RESULT);
-            String address = "nicht in google vorhanden";
-            address = jsonrestaurant.optString(FORMATTEDADDRESS);
+            String address = jsonrestaurant.optString(FORMATTEDADDRESS);
             String number = jsonrestaurant.optString(FORMATTEDPHONENUMBER);
             String name = jsonrestaurant.getString(NAME);
             String id = jsonrestaurant.getString(ID);
             String website = jsonrestaurant.optString(WEBSITE);
             JSONObject openinghours = jsonrestaurant.optJSONObject(OPENINGHOURS);
             int open;
-            String openweekday="notfound";
-
-
+            String openweekday = "notfound";
             if (openinghours != null) {
                 openweekday = openinghours.getString(WEEKDAYTEXT);
                 if (openinghours.getBoolean(OPENNOW)) {
@@ -108,31 +100,22 @@ public class JSONtoObjectConverter {
             } else {
                 open = 0;
             }
-
             String rating = "no ratings";
             rating = jsonrestaurant.optString(USERRATINGSTOTAL);
-            //Arraylist sollte leer sein
-            ArrayList<String>images = new ArrayList<>();
+            ArrayList<String> images = new ArrayList<>();
             JSONArray jsonImage = jsonrestaurant.optJSONArray(PHOTOS);
             if (jsonImage != null) {
-                //TODO für alle Images machen
-               // images=new ArrayList<>();
-                Log.d("imageanzahl",String.valueOf(jsonImage.length()));
-                for(int i =0;i<jsonImage.length();i++){
-
+                Log.d("imageanzahl", String.valueOf(jsonImage.length()));
+                for (int i = 0; i < jsonImage.length(); i++) {
                     JSONObject image1 = jsonImage.getJSONObject(i);
                     String image_ref = image1.getString(PHOTOREFERENCE);
                     images.add(image_ref);
                 }
-                Log.d("images", images.toString());
-                //JSONObject image1 = jsonImage.getJSONObject(0);
-                //image_ref = image1.getString(PHOTOREFERENCE);
             }
-            detailedRest = new restaurant(name,0,0 ,id, open, address);
+            detailedRest = new restaurant(name, 0, 0, id, open, address);
             detailedRest.setDetails(images, number, rating, openweekday, website);
         } catch (JSONException e) {
             e.printStackTrace();
-
         }
         return detailedRest;
     }

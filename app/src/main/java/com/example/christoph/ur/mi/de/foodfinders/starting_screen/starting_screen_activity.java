@@ -22,9 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.christoph.ur.mi.de.foodfinders.R;
-import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurant_detail.restaurant_detail_activity;
-import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,17 +37,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
 //This activity is the starting screen of the app.
 
@@ -67,6 +62,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private String placesearchurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=";
     private String placesearchparameter1 = "&radius=";
     private String placesearchparameter2 = "&types=restaurant&key=AIzaSyBWuaV6fCf_Ha8ITK4p8oRKHS1X5-mNIaA&language=de";
+    private String FIREBASEUSERURL = "https://foodfindersgold.firebaseio.com/user/";
+    private String FIREBASEFAVURL = "/Favourites";
     private int placesearchparameterradius = 1500;
     private Circle myCircle;
     private boolean drag = false;
@@ -85,7 +82,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     @Override
     public void onMapReady(GoogleMap map) {
-        //TODO höhe einstellen?
         mMap = map;
         setUpMarker();
         draggablePosition();
@@ -111,20 +107,17 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
-            Log.d("firebaselogin:", "user:" + auth.getCurrentUser().getUid());
             return true;
         } else {
             return false;
         }
-
     }
-
 
     private boolean checkInternetConn() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
         if (ni == null) {
-            Toast.makeText(starting_screen_activity.this, "No Internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(starting_screen_activity.this, getString(R.string.noInternetCon_ger), Toast.LENGTH_SHORT).show();
             finish();
             return false;
         } else {
@@ -150,23 +143,17 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         footer = (ViewGroup) inflater.inflate(R.layout.drawer_footer, FavList, false);
         header = (ViewGroup) inflater.inflate(R.layout.drawer_header, FavList, false);
         footerOutlogged = (ViewGroup) inflater.inflate(R.layout.drawer_footer_outlogged, FavList, false);
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-
         if (userSignedIn()) {
-
             TextView userName = (TextView) header.findViewById(R.id.drawerUser);
             userName.setText(user.getDisplayName());
-
         }
-
         FavAdapter = new Favourites_ArrayAdapter(favoriteRestaurants, this);
         FavList.setAdapter(FavAdapter);
         FavList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 restaurant clickedRest = (restaurant) FavList.getItemAtPosition(position);
                 FavDrawer.closeDrawer(FavList);
                 openRestaurantDetail(clickedRest.getPlace_id());
@@ -175,15 +162,12 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     }
 
     private void getFavListItems() {
-
         favoriteRestaurants.clear();
         if (userSignedIn()) {
             FirebaseAuth auth = FirebaseAuth.getInstance();
             FirebaseUser user = auth.getCurrentUser();
             String userID = user.getUid();
-
-
-            DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites");
+            DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASEUSERURL + userID + FIREBASEFAVURL);
             refReview.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -193,22 +177,17 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                         setUpFavDownload(placeID);
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
-
         }
         if (FavAdapter != null) {
             FavAdapter.notifyDataSetChanged();
         }
-
     }
 
     private void ArrangeDrawer() {
-
         getFavListItems();
         if (header != null) {
             FavList.removeHeaderView(header);
@@ -219,17 +198,13 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         if (footerOutlogged != null) {
             FavList.removeFooterView(footerOutlogged);
         }
-
         if (userSignedIn()) {
-
             FavList.addHeaderView(header, null, false);
             FavList.addFooterView(footer, null, false);
-
             TextView userName = (TextView) header.findViewById(R.id.drawerUser);
             FirebaseAuth auth = FirebaseAuth.getInstance();
             FirebaseUser user = auth.getCurrentUser();
             userName.setText(user.getDisplayName());
-
             Button drawerLogout = (Button) findViewById(R.id.drawerLogoutButton);
             drawerLogout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -239,11 +214,9 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                     FavDrawer.closeDrawer(FavList);
                     makeLogoutToast().show();
                     ArrangeDrawer();
-
                 }
             });
         } else {
-
             FavList.addFooterView(footerOutlogged, null, false);
             Button drawerLogin = (Button) findViewById(R.id.drawerLoginButton);
             drawerLogin.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +227,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                     startActivity(i);
                     FavDrawer.closeDrawer(FavList);
                     ArrangeDrawer();
-
                 }
             });
         }
@@ -263,7 +235,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     private void setUpFavDownload(String place_id) {
         if (place_id != null) {
             data.getrestaurantdata(place_id);
-
         }
     }
 
@@ -277,7 +248,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
 
     @Override
     public void onRestaurantDetailPictureReceived(Bitmap result) {
-
     }
 
     private Toast makeLogoutToast() {
@@ -296,7 +266,7 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     }
 
     private void getData() {
-        data.getlocationdata(placesearchurl + position.latitude + "," + position.longitude + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
+        data.getCloseRestaurantsdata(placesearchurl + position.latitude + "," + position.longitude + placesearchparameter1 + placesearchparameterradius + placesearchparameter2);
         //Toast.makeText(starting_screen_activity.this, "Loading...", Toast.LENGTH_SHORT).show();
     }
 
@@ -306,7 +276,6 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         super.onResume();
         ArrangeDrawer();
         updateButton();
-        Log.d("RESUMED");
     }
 
     private void draggablePosition() {
@@ -362,24 +331,18 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         seeker.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seeker, int progress, boolean fromUser) {
-
-
                 CircleOptions circleOptions = new CircleOptions()
                         .center(position)   //set center
                         .radius(placesearchparameterradius * 1.2)   //set radius in meters
                         .fillColor(Color.TRANSPARENT)  //default
                         .strokeColor(R.color.green)
                         .strokeWidth(5);
-
                 myCircle = mMap.addCircle(circleOptions);
                 placesearchparameterradius = progress;
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 mMap.clear();
@@ -397,21 +360,16 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         LocationManager locationManager = (LocationManager) getSystemService(locService);
         String provider = LocationManager.NETWORK_PROVIDER;
         Location location = locationManager.getLastKnownLocation(provider);
-
         if (drag) {
             mMap.addMarker(new MarkerOptions().position(position).title(draggedLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
             update = CameraUpdateFactory.newLatLng(position);
             mMap.moveCamera(update);
-
         } else {
-
             if (location != null) {
-
                 position = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(position).title(yourLocation).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).draggable(true));
                 update = CameraUpdateFactory.newLatLngZoom(position, 13.0f);
                 mMap.moveCamera(update);
-
             } else {
                 LatLng defaultUr = new LatLng(latUr, lngUr);
                 position = defaultUr;
@@ -432,11 +390,8 @@ public class starting_screen_activity extends FragmentActivity implements downlo
     //Sets up the markers for all found restaurants and colours them accordingly to their openninghours
     @Override
     public void onRestaurantDataReceived(ArrayList<restaurant> restaurants) {
-
         this.restaurants = restaurants;
-
         if (restaurants == null) {
-
         } else {
             for (int i = 0; i < restaurants.size(); i++) {
                 restaurant res = restaurants.get(i);
@@ -444,25 +399,22 @@ public class starting_screen_activity extends FragmentActivity implements downlo
                 String name = res.getName();
                 String opennow;
                 if (res.getOpen() == 0) {
-                    opennow = "Öffnungszeiten n.a.";
+                    opennow = getString(R.string.noOppeningHours_ger);
                     mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(opennow));
                 } else {
                     if (res.getOpen() == 1) {
-                        opennow = "Offen";
+                        opennow = getString(R.string.oppeningHoursOpen_ger);
                         mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(opennow));
                     }
                     if (res.getOpen() == 2) {
-                        opennow = "Geschlossen";
+                        opennow = getString(R.string.oppeningHoursClosed_ger);
                         mMap.addMarker(new MarkerOptions().position(positionitem).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).snippet(opennow));
                     }
                 }
                 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        Log.d(yourLocation + marker.getTitle());
-
                         if (yourLocation.equals(marker.getTitle()) || draggedLocation.equals(marker.getTitle()) || defaultLocation.equals(marker.getTitle())) {
-
                         } else {
                             openRestaurantDetail(getPlaceId(marker.getTitle()));
                         }
@@ -487,5 +439,4 @@ public class starting_screen_activity extends FragmentActivity implements downlo
         i.putExtra("name", place_id);
         startActivity(i);
     }
-
 }

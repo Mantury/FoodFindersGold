@@ -2,29 +2,19 @@ package com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.text.Layout;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.christoph.ur.mi.de.foodfinders.R;
-import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import java.util.List;
 
@@ -56,7 +46,6 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
         RatingBar rating = (RatingBar) v.findViewById(R.id.dish_ratingbar);
         TextView vegan = (TextView) v.findViewById(R.id.dish_vegan);
         TextView gluten = (TextView) v.findViewById(R.id.dish_gluten);
-        RelativeLayout linlayout = (RelativeLayout) v.findViewById(R.id.dish_layout);
         final dish_item dish = dishes.get(position);
         RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.dish_layout);
         layout.setOnClickListener(new View.OnClickListener() {
@@ -66,30 +55,29 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
             }
         });
         name.setText(dish.getNameDish());
-        String firepicture=dish.getImage();
+        String firepicture = dish.getImage();
         byte[] imageAsBytes = Base64.decode(firepicture.getBytes(), Base64.DEFAULT);
         image.setImageBitmap(
                 BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)
         );
-        author.setText("Von: " + dish.getAuthor());
+        author.setText((R.string.byColon_ger) + dish.getAuthor());
         rating.setRating(dish.getRating());
         if (dish.getRating() >= 4) {
-            linlayout.setBackgroundResource(R.color.green);
+            layout.setBackgroundResource(R.color.green);
 
         }
-        vegan.setText("Vegan: " + dish.getVegan());
-        gluten.setText("Glutenfrei: " + dish.getGluten());
-        //färbt Review blau ein, wenn Account erstellt wurde
+        vegan.setText((R.string.veganColon_ger) + dish.getVegan());
+        gluten.setText(R.string.glutenfreeColon_ger + dish.getGluten());
         FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
 
-            if(user.getUid().equals(dish.getAuthorID())){
-                linlayout.setBackgroundResource(R.color.bright_green);
+            if (user.getUid().equals(dish.getAuthorID())) {
+                layout.setBackgroundResource(R.color.bright_green);
                 layout.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        onDetailRequestedListener.onDishDeletedListener(dish.getDishId(),user.getUid());
+                        onDetailRequestedListener.onDishDeletedListener(dish.getDishId(), user.getUid());
                         return true;
                     }
                 });
@@ -104,7 +92,8 @@ public class dish_item_ArrayAdapter extends ArrayAdapter<dish_item> {
 
     public interface OnDetailRequestedListener {
         public void onDetailRequested(String reviewid);
-        public void onDishDeletedListener(String dishId,String UID);
+
+        public void onDishDeletedListener(String dishId, String UID);
     }
 
 

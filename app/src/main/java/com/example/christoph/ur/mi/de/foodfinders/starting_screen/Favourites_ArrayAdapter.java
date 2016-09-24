@@ -19,33 +19,26 @@ public class Favourites_ArrayAdapter extends ArrayAdapter<restaurant> {
     private Context context;
 
     public Favourites_ArrayAdapter(List<restaurant> restaurants, Context context) {
-        super(context, R.layout.favourites_item,restaurants);
+        super(context, R.layout.favourites_item, restaurants);
         this.restaurants = restaurants;
         this.context = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         View v = convertView;
-
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.favourites_item, null);
         }
-
         restaurant Rest = restaurants.get(position);
-
         if (Rest != null) {
             TextView restName = (TextView) v.findViewById(R.id.restListName);
             TextView restCity = (TextView) v.findViewById(R.id.restListCity);
-
             restName.setText(Rest.getName());
             restCity.setText(Rest.getAddress());
         }
-
         return v;
     }
-
 }

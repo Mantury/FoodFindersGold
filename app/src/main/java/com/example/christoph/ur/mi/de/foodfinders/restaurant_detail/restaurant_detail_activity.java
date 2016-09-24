@@ -8,17 +8,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.christoph.ur.mi.de.foodfinders.R;
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
@@ -34,11 +31,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
 //This activity displays a selected restaurant from the "starting_screen_activity" with more details.
-//The screen provides openning hours, address, phone number, google comments, and  access to the app-only-dish data.
+//The screen provides openning hours, address, phone number, and  access to the app-only-dish data.
 
 public class restaurant_detail_activity extends Activity implements download.OnRestaurantDetailDataProviderListener {
 
@@ -51,6 +49,9 @@ public class restaurant_detail_activity extends Activity implements download.OnR
     private int numberimages;
     private Switch favorit;
     private CompoundButton.OnCheckedChangeListener changeLis;
+    private final String FIREBASEUSERURL = "https://foodfindersgold.firebaseio.com/user/";
+    private final String FIREBASEREVURL = "https://foodfindersgold.firebaseio.com/reviews";
+    private final String FIREBASEUSERURLFAV = "/Favourites";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +59,14 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         setContentView(R.layout.restaurant_detail_layout);
         getIntentdata();
         setUpDownload();
-        setUpUi();
+        setUpUI();
     }
 
-    private void setUpUi() {
+    private void setUpUI() {
         LinearLayout newDish = (LinearLayout) findViewById(R.id.restaurant_detail_dishlayout);
         Button addButton = (Button) findViewById(R.id.restaurant_detail_dishaddbutton);
         addButton.setOnClickListener(new View.OnClickListener() {
-           @Override
+            @Override
             public void onClick(View v) {
                 Intent in = new Intent(restaurant_detail_activity.this, restaurant_dishes_detail_activity.class);
                 in.putExtra("place_id", place_id);
@@ -83,37 +84,13 @@ public class restaurant_detail_activity extends Activity implements download.OnR
             }
         });
         setDishesCounter();
-
         favorit = (Switch) findViewById(R.id.restaurant_detail_favswitch);
-
         changeLis = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                 if (!userSignedIn()) {
                     if (isChecked) {
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(restaurant_detail_activity.this);
-
-
-                        builder.setPositiveButton("Anmelden", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent i = new Intent(restaurant_detail_activity.this, login_signup_user.class);
-                                i.putExtra("intentData", "login");
-                                startActivity(i);
-
-                            }
-                        });
-                        builder.setNeutralButton("Zurück", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                favorit.setChecked(false);
-                            }
-                        });
-
-                        builder.setMessage("Bitte melden sie sich zuerst an");
-                        builder.setCancelable(false);
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        showLoginAlert();
                     }
                 } else {
                     if (isChecked) {
@@ -123,20 +100,37 @@ public class restaurant_detail_activity extends Activity implements download.OnR
                         deleteFromFavList();
                     }
                 }
-
             }
         };
     }
 
+    private void showLoginAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(restaurant_detail_activity.this);
+        builder.setPositiveButton(getString(R.string.dologin_ger), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Intent i = new Intent(restaurant_detail_activity.this, login_signup_user.class);
+                i.putExtra("intentData", "login");
+                startActivity(i);
+            }
+        });
+        builder.setNeutralButton(getString(R.string.back_ger), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                favorit.setChecked(false);
+            }
+        });
+        builder.setMessage(getString(R.string.plsLogin_ger));
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     private void deleteFromFavList() {
-
-        Toast.makeText(restaurant_detail_activity.this, "Aus Favoriten entfernt", Toast.LENGTH_SHORT).show();
+        Toast.makeText(restaurant_detail_activity.this, getString(R.string.removedFav_ger), Toast.LENGTH_SHORT).show();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         String userID = user.getUid();
 
-        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites");
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASEUSERURL + userID + FIREBASEUSERURLFAV);
         final Query refQuery = refReview;
         refReview.addChildEventListener(new ChildEventListener() {
             @Override
@@ -150,40 +144,36 @@ public class restaurant_detail_activity extends Activity implements download.OnR
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
+
         });
     }
 
+    //Saving restaurant to favliist for the specific UserID
     private void addToFavList() {
-
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         String userID = user.getUid();
-
-        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites").push();
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASEUSERURL + userID + FIREBASEUSERURLFAV).push();
         refReview.setValue(place_id, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError != null) {
-                    Toast.makeText(restaurant_detail_activity.this, "Fehler beim speichern als Favorit", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(restaurant_detail_activity.this, getString(R.string.favSaveError_ger), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(restaurant_detail_activity.this, "Zu Favoriten hinzugefügt", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(restaurant_detail_activity.this, getString(R.string.addedFav_ger), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -207,7 +197,7 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         name = res.getName();
         if (!res.getImages().isEmpty()) {
             numberimages = res.getImages().size();
-            for (int i = 0; i < res.getImages().size() ; i++) {
+            for (int i = 0; i < res.getImages().size(); i++) {
                 data.getRestaurantPicturefromURL(res.getImages().get(i));
             }
         } else {
@@ -222,24 +212,24 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         name.setText(res.getName());
         TextView öffnungzeiten = (TextView) findViewById(R.id.restaurant_detail_textview_openinghours);
         if (res.getOpenweekday().equals("notfound")) {
-            öffnungzeiten.setText("Keine Öffnungszeiten verfügbar!");
+            öffnungzeiten.setText(getString(R.string.noOppeningHours_ger));
         } else {
             öffnungzeiten.setText(parseOpenninghours(res.getOpenweekday()));
         }
         TextView number = (TextView) findViewById(R.id.restaurant_detail_textview_telephonenumber);
-        if(!(res.getNumber() == "")) {
-            number.setText("Telefon: " + res.getNumber());
+        if (!(res.getNumber().isEmpty())) {
+            number.setText(getString(R.string.phone_ger) + res.getNumber());
             number.setTextColor(getResources().getColor(R.color.blue));
-        }else{
+        } else {
             number.setText(R.string.noPhone_ger);
             number.setClickable(false);
         }
         TextView website = (TextView) findViewById(R.id.restaurant_detail_textview_website);
-        if(!(res.getWebsite() == "")) {
-            website.setText("Website: " + res.getWebsite());
+        if (!(res.getWebsite().isEmpty())) {
+            website.setText(getString(R.string.website_ger) + res.getWebsite());
             website.setTextColor(getResources().getColor(R.color.blue));
-        }else{
-            website.setText(R.string.noPhone_ger);
+        } else {
+            website.setText(R.string.noWebsite_ger);
             website.setClickable(false);
         }
 
@@ -280,22 +270,20 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         }
     }
 
-    //TODO dish Counter überarbeiten dauert noch zu lange
+    //Setting the number of dishes found for the restaurant using a quantity string
     private void setDishesCounter() {
-        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/reviews");
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASEREVURL);
         Query queryReviewRestaurant = refReview.orderByChild("place_id").equalTo(place_id);
         queryReviewRestaurant.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int dishesCount = (int) dataSnapshot.getChildrenCount();
                 TextView dishcounter = (TextView) findViewById(R.id.restaurant_detail_dishcounter);
-
-                dishcounter.setText(dishesCount + " " + (getResources().getQuantityString(R.plurals.numberOfDishes_ger,dishesCount)));
+                dishcounter.setText(dishesCount + " " + (getResources().getQuantityString(R.plurals.numberOfDishes_ger, dishesCount)));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getMessage());
             }
         });
     }
@@ -309,7 +297,31 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         } else {
             return false;
         }
+    }
 
+    private void checkForFavButtonSet() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        String userID = user.getUid();
+        DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASEUSERURL + userID + FIREBASEUSERURLFAV);
+        Query queryRef = refReview;
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> it = dataSnapshot.getChildren().iterator();
+                while (it.hasNext()) {
+                    String placeID = it.next().getValue().toString();
+                    if (placeID.equals(place_id)) {
+                        favorit.setChecked(true);
+                    }
+                }
+                favorit.setOnCheckedChangeListener(changeLis);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
@@ -317,35 +329,15 @@ public class restaurant_detail_activity extends Activity implements download.OnR
         super.onResume();
         favorit.setOnCheckedChangeListener(null);
         favorit.setChecked(false);
-        if(!userSignedIn()) {favorit.setOnCheckedChangeListener(changeLis);}
+        if (!userSignedIn()) {
+            favorit.setOnCheckedChangeListener(changeLis);
+        }
         if (userSignedIn()) {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            FirebaseUser user = auth.getCurrentUser();
-            String userID = user.getUid();
-
-
-            DatabaseReference refReview = FirebaseDatabase.getInstance().getReferenceFromUrl("https://foodfindersgold.firebaseio.com/user/" + userID + "/Favourites");
-            Query queryRef = refReview;
-            queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Iterator<DataSnapshot> it = dataSnapshot.getChildren().iterator();
-                    while(it.hasNext()) {
-                        String placeID = it.next().getValue().toString();
-                        if(placeID.equals(place_id)) {
-                            favorit.setChecked(true);
-                        }
-                    }
-                    favorit.setOnCheckedChangeListener(changeLis);
-
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+            checkForFavButtonSet();
         }
 
     }
+
 }
 
 

@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.example.christoph.ur.mi.de.foodfinders.log.Log;
-import com.example.christoph.ur.mi.de.foodfinders.restaurant_dishes_detail.dish_item;
 import com.example.christoph.ur.mi.de.foodfinders.restaurants.restaurant;
 
 import java.io.BufferedReader;
@@ -16,16 +15,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-//this class downloads all information needed from the Google-APIs.
+//This class downloads all information needed from the Google-APIs.
 
 public class download {
 
     private ArrayList<restaurant> restaurants;
     private OnRestaurantDataProviderListener onrestaurantDataProviderListener;
     private OnRestaurantDetailDataProviderListener onRestaurantDetailDataProviderListener;
-    private final String restaurantdetailurl = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
-    private final String restaurantdetailphotourl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
-    private final String restaurantsearchparametersurl = "&language=de&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA";
+    private final String RESTAURANDETAILURL = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
+    private final String RESTAURANTDETAILIMGURL= "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
+    private final String RESTAURANTRADIUSURL = "&language=de&key=AIzaSyCOHM5VRlRjToNU48ncifgtSOcD5TpMTjA";
 
     //For the starting_screen_activity.
     public void setRestaurantDataProviderListener(OnRestaurantDataProviderListener onrestaurantDataProviderListener) {
@@ -39,7 +38,8 @@ public class download {
 
     //For the starting_screen_activity.
     //Gets the data in an Arraylist from converter.convertJSONToMensaDishList();.
-    public void getlocationdata(String request) {
+
+    public void getCloseRestaurantsdata(String request) {
         new RestaurantAsyncTask().execute(request);
 
     }
@@ -60,7 +60,6 @@ public class download {
             String jsonString = "";
             try {
                 URL url = new URL(params[0]);
-                Log.d("restaruantall",params[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 int responseCode = conn.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -79,12 +78,12 @@ public class download {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.d(jsonString);
             return jsonString;
         }
 
         @Override
-        protected void onPostExecute(String result) {//Creates an ArrayList with JSONtoObjectConverter
+        //Creates an ArrayList with JSONtoObjectConverter
+        protected void onPostExecute(String result) {
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
             restaurants = new ArrayList<restaurant>();
@@ -100,10 +99,7 @@ public class download {
         protected String doInBackground(String... params) {
             String jsonString = "";
             try {
-                URL url = new URL(restaurantdetailurl + params[0] + restaurantsearchparametersurl);
-                Log.d("restaruantdetailurl",restaurantdetailurl + params[0] + restaurantsearchparametersurl);
-
-
+                URL url = new URL(RESTAURANDETAILURL + params[0] + RESTAURANTRADIUSURL);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 int responseCode = conn.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -130,7 +126,6 @@ public class download {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             JSONtoObjectConverter converter = new JSONtoObjectConverter(result);
-            Log.d("opens converter"+result);
             restaurant restaurant = converter.convertToDetailedRestaurant();
             onRestaurantDetailDataProviderListener.onRestaurantDetailDataReceived(restaurant);
         }
@@ -141,10 +136,7 @@ public class download {
         protected Bitmap doInBackground(String... params) {
             Bitmap picture = null;
             try {
-                URL url = new URL(restaurantdetailphotourl + params[0] + restaurantsearchparametersurl);
-
-                Log.d("imagelink",restaurantdetailphotourl + params[0] + restaurantsearchparametersurl);
-
+                URL url = new URL(RESTAURANTDETAILIMGURL+ params[0] + RESTAURANTRADIUSURL);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoInput(true);
                 conn.connect();
