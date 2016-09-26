@@ -39,9 +39,6 @@ public class add_dish_activity extends Activity {
     private String firepicture;
     private boolean saveimage = false;
     private Button addimage;
-    private String yes = getString(R.string.add_dish_layout_radio_yes);
-    private String no = getString(R.string.add_dish_layout_radio_no);
-    private String noinfo = getString(R.string.add_dish_layout_radio_noinfo);
     private final String FirebaseReviewURL = "https://foodfindersgold.firebaseio.com/reviews";
 
     @Override
@@ -144,11 +141,11 @@ public class add_dish_activity extends Activity {
         RadioButton glutenNo = (RadioButton) findViewById(R.id.radio_glutenfree_no);
         String gluten;
         if (glutenYes.isChecked()) {
-            gluten = yes;
+            gluten = getString(R.string.add_dish_layout_radio_yes);
         } else if (glutenNo.isChecked()) {
-            gluten = no;
+            gluten = getString(R.string.add_dish_layout_radio_no);
         } else {
-            gluten = noinfo;
+            gluten = getString(R.string.add_dish_layout_radio_noinfo);
             glutenNoInfo.toggle();
         }
         return gluten;
@@ -160,11 +157,11 @@ public class add_dish_activity extends Activity {
         RadioButton veganNo = (RadioButton) findViewById(R.id.radio_vegan_no);
         String vegan;
         if (veganYes.isChecked()) {
-            vegan = yes;
+            vegan = getString(R.string.add_dish_layout_radio_yes);
         } else if (veganNo.isChecked()) {
-            vegan = no;
+            vegan = getString(R.string.add_dish_layout_radio_no);
         } else {
-            vegan = noinfo;
+            vegan = getString(R.string.add_dish_layout_radio_noinfo);
             veganNoInfo.toggle();
         }
         return vegan;
